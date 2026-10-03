@@ -72,10 +72,12 @@ export function MatchResults({
         </span>
       </div>
       <p className="muted">
-        {result.mode.explanation === "azure" ||
-        result.mode.explanation === "openai"
-          ? "Wyjaśnienia wygenerowane przez AI — wymagają oceny."
-          : "Wyjaśnienia szablonowe. Wyniki nie są rekomendacją wdrożenia."}
+        {result.mode.explanation === "mock"
+          ? "Wynik demonstracyjny — bez wywołania AI."
+          : result.mode.explanation === "azure" ||
+              result.mode.explanation === "openai"
+            ? "Wyjaśnienia wygenerowane przez AI — wymagają oceny."
+            : "Wyjaśnienia szablonowe. Wyniki nie są rekomendacją wdrożenia."}
       </p>
       {result.warnings.map((w) => (
         <p className="notice" key={w}>
