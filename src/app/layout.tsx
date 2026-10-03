@@ -63,9 +63,7 @@ export default function RootLayout({
             </span>
           </Link>
           <nav aria-label="Menu główne">
-            <Link href="/#jak-to-dziala">Jak to działa</Link>
             <Link href="/innowacje">Katalog innowacji</Link>
-            <Link href="/wiedza">Wiedza</Link>
             <Link href="/pomysly/nowy">Mam pomysł</Link>
             <Link href="/moje-sprawy">Moje sprawy</Link>
             <a
@@ -79,15 +77,52 @@ export default function RootLayout({
           <Accessibility />
         </header>
         <main id="main">{children}</main>
-        <footer>
-          <Link className="brand" href="/">
-            Pomocny Punkt
-          </Link>
-          <p>Od lokalnej potrzeby do wspólnego działania.</p>
-          <Link href="/admin">Strefa personelu</Link>
-          <a href="https://www.malopolska.pl" target="_blank" rel="noreferrer">
-            Małopolska — portal województwa ↗
-          </a>
+        <footer className="site-footer">
+          <div className="footer-main">
+            <div className="footer-intro">
+              <Link className="brand" href="/">
+                Pomocny Punkt
+                <span className="footer-dot" aria-hidden="true">
+                  .
+                </span>
+              </Link>
+              <p>Każda pomoc zaczyna się od rozmowy.</p>
+              <p className="footer-description">
+                Łączymy lokalne potrzeby z pomysłami i możliwościami wsparcia.
+                Razem tworzymy silniejszą Małopolskę.
+              </p>
+            </div>
+            <nav aria-label="Znajdź wsparcie — stopka">
+              <h2>Znajdź wsparcie</h2>
+              <Link href="/potrzeby/nowa">Opisz swoją potrzebę</Link>
+              <Link href="/moje-sprawy">Moje sprawy</Link>
+            </nav>
+            <nav aria-label="Odkrywaj i działaj — stopka">
+              <h2>Odkrywaj i działaj</h2>
+              <Link href="/innowacje">Katalog innowacji</Link>
+              <Link href="/pomysly/nowy">Podziel się pomysłem</Link>
+            </nav>
+            <div className="footer-region">
+              <span className="eyebrow">Blisko ludzi</span>
+              <h2>
+                Małopolska.
+                <br />
+                Razem możemy więcej.
+              </h2>
+              <a
+                href="https://www.malopolska.pl"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Poznaj nasz region <span aria-hidden="true">↗</span>
+              </a>
+            </div>
+          </div>
+          <div className="footer-bottom">
+            <span>© {new Date().getFullYear()} Pomocny Punkt</span>
+            <span>Od lokalnej potrzeby do wspólnego działania.</span>
+            <Link href="/admin">Strefa personelu</Link>
+          </div>
         </footer>
       </body>
     </html>

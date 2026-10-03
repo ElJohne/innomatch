@@ -2,6 +2,10 @@ import { it, expect, vi, afterEach } from "vitest";
 import fixtures from "../../data/demo/innovations.json";
 import { innovationSchema, type Need } from "@/lib/contracts";
 const records = fixtures.map((x) => innovationSchema.parse(x));
+vi.mock("@/server/services/catalog", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@/server/services/catalog")>()),
+  locallyManagedRecords: async () => [],
+}));
 vi.mock("@/server/services/repository", () => ({
   listInnovations: async () => fixtures,
   listEmbeddings: async () => [],

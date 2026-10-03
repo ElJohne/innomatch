@@ -80,7 +80,7 @@ export function IdeaEditor({ initial }: { initial?: Idea }) {
     }
   };
   return (
-    <div className="stack">
+    <div className="stack idea-editor">
       <p className="notice">
         {submitted
           ? "Pomysł przekazany do konsultacji. Personel widzi kartę oraz późniejsze zapisane zmiany. Karta nie jest publiczna."
@@ -138,7 +138,7 @@ export function IdeaEditor({ initial }: { initial?: Idea }) {
           {Object.entries(ideaLabels).map(([key, label]) => {
             const k = key as keyof typeof ideaLabels;
             return (
-              <div key={key}>
+              <div key={key} className="idea-field">
                 <label htmlFor={`idea-${key}`}>{label}</label>
                 {k === "title" ? (
                   <input

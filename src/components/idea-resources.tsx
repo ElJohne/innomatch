@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { listKnowledge } from "@/server/services/repository";
 export async function IdeaResources() {
   const canvas = (await listKnowledge()).find(
@@ -8,7 +7,7 @@ export async function IdeaResources() {
     <aside className="note">
       <h2>Materiały i nabory grantowe</h2>
       <p>
-        To ogólna karta pomysłu MI Connect. Nie zastępuje oficjalnej Canwy
+        To ogólna karta pomysłu Pomocny Punkt. Nie zastępuje oficjalnej Canwy
         Innowacji Społecznych.
       </p>
       <p>
@@ -20,7 +19,6 @@ export async function IdeaResources() {
         <div>
           <h3>{canvas.title}</h3>
           <p>{canvas.description}</p>
-          <Link href={`/wiedza#${canvas.id}`}>Opis i źródła materiału →</Link>
           {canvas.sources
             .filter((s) => s.sourceUrl)
             .map((s) => (
@@ -37,7 +35,6 @@ export async function IdeaResources() {
           powyżej pozostaje ogólną kartą pomysłu.
         </p>
       )}
-      <Link href="/wiedza">Przejrzyj dostępne materiały wiedzy →</Link>
     </aside>
   );
 }

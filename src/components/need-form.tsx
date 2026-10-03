@@ -146,10 +146,10 @@ export function NeedForm() {
   return (
     <>
       <FlowSteps current={1} />
-      <section className="help-hero">
+      <section className="help-hero inclusive-hero">
         <div className="hero-photo">
           <Image
-            src="/images/community-hero.png"
+            src="/images/community-conversation.png"
             alt=""
             fill
             priority
@@ -167,19 +167,6 @@ export function NeedForm() {
             rozwiązania i podpowiemy, co zrobić dalej.
           </p>
         </div>
-        <span className="hero-sticker" aria-hidden="true">
-          Małe kroki.
-          <br />
-          Wielka zmiana.
-          <br />
-          <span>♡</span>
-        </span>
-        <span className="hero-sticker hero-sticker-together" aria-hidden="true">
-          Silniejsza
-          <br />
-          Małopolska
-          <br />— razem ♡
-        </span>
         <form onSubmit={review} className="form card home-form">
           <label htmlFor="description">Jakiej pomocy potrzebujesz?</label>
           <textarea
@@ -260,39 +247,6 @@ export function NeedForm() {
             </button>
           </div>
         </form>
-      </section>
-      <section className="how-it-works" id="jak-to-dziala">
-        <div>
-          <p className="eyebrow">Jesteśmy po Twojej stronie</p>
-          <h2>
-            Od potrzeby do działania.
-            <br />
-            Krok po kroku.
-          </h2>
-        </div>
-        <ol>
-          <li>
-            <span>1</span>
-            <div>
-              <strong>Opisz i potwierdź</strong>
-              <p>Nie musisz wiedzieć, jak nazywa się rozwiązanie.</p>
-            </div>
-          </li>
-          <li>
-            <span>2</span>
-            <div>
-              <strong>Wybierz organizację</strong>
-              <p>Sprawdź propozycje związane z Twoją potrzebą.</p>
-            </div>
-          </li>
-          <li>
-            <span>3</span>
-            <div>
-              <strong>Zobacz, co dalej</strong>
-              <p>Otrzymasz wskazówki i tekst do rozmowy.</p>
-            </div>
-          </li>
-        </ol>
       </section>
       <div className="catalog-invite">
         <span>Wolisz najpierw poznać dostępne rozwiązania?</span>

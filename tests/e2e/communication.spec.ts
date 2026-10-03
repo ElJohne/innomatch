@@ -4,8 +4,9 @@ import AxeBuilder from "@axe-core/playwright";
 test("private need → coordinator inbox → reply → unread receipt; other session denied", async ({
   page,
   browser,
+  baseURL,
 }) => {
-  const origin = "http://localhost:3000";
+  const origin = new URL(baseURL!).origin;
   const description =
     "Syntetyczna potrzeba: seniorzy potrzebują wspólnych spotkań i świetlicy.";
   const created = await page.request.post("/api/needs", {
@@ -136,7 +137,7 @@ test("private need → coordinator inbox → reply → unread receipt; other ses
 test("innovation contact is idempotent; forged roles and incorrect login are rejected", async ({
   page,
 }) => {
-  const origin = "http://localhost:3000";
+  const origin = "http://127.0.0.1:3100";
   const data = {
     innovationId: "demo-sasiedzki-stol",
     body: "Syntetyczne pytanie o współpracę.",

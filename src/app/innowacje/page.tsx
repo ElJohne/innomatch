@@ -1,6 +1,7 @@
 import { listInnovations } from "@/server/services/repository";
 import { normalize } from "@/server/search/ranking";
 import { InnovationCard } from "@/components/innovation-card";
+import Link from "next/link";
 export default async function Catalog({
   searchParams,
 }: {
@@ -24,12 +25,14 @@ export default async function Catalog({
       (!p.stage || r.maturity === p.stage),
   );
   return (
-    <section className="section">
-      <p className="eyebrow">Biblioteka inspiracji</p>
-      <h1>Znajdź punkt wyjścia do zmiany.</h1>
-      <p className="lead">
-        Poznaj rozwiązania, ich źródła i warunki zastosowania.
-      </p>
+    <section className="section innovation-catalog">
+      <div className="catalog-heading">
+        <p className="eyebrow">Biblioteka inspiracji</p>
+        <h1>Znajdź punkt wyjścia do zmiany.</h1>
+        <p className="lead">
+          Poznaj rozwiązania, ich źródła i warunki zastosowania.
+        </p>
+      </div>
       <form className="filters card">
         <div>
           <label htmlFor="q">Szukaj w katalogu</label>
@@ -73,7 +76,14 @@ export default async function Catalog({
         </div>
         <button type="submit">Szukaj</button>
       </form>
-      <p className="muted">Liczba wyników: {records.length}</p>
+      <div className="catalog-results-bar">
+        <p className="muted">
+          Liczba wyników: <strong>{records.length}</strong>
+        </p>
+        {(p.q || p.group || p.category || p.stage) && (
+          <Link href="/innowacje">Wyczyść filtry</Link>
+        )}
+      </div>
       <div className="grid">
         {records.map((item) => (
           <InnovationCard key={item.id} item={item} />

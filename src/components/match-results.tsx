@@ -233,10 +233,21 @@ export function MatchResults({
             if (!resource) return null;
             return (
               <div key={resource.id}>
-                <h4>
-                  <Link href={`/wiedza#${resource.id}`}>{resource.title}</Link>
-                </h4>
+                <h4>{resource.title}</h4>
                 <p>{item.reason}</p>
+                {resource.sources
+                  .filter((source) => source.sourceUrl)
+                  .map((source) => (
+                    <p key={source.id}>
+                      <a
+                        href={source.sourceUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        {source.sourceTitle} ↗
+                      </a>
+                    </p>
+                  ))}
                 <p className="help">{coverageLabels[resource.coverage]}</p>
               </div>
             );

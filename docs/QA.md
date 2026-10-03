@@ -343,3 +343,24 @@ Build, lint, typecheck: PASS. Unit: 16 PASS; E2E: 10 PASS; corpus: 114/69 valid.
 Оновлено mock repository у тесті Azure fallback для нового listKnowledge.
 Integration: 1 skipped (TEST_DATABASE_URL відсутній). Реальні AI-виклики не виконувалися.
 Пакет GitHub Actions доповнено public, щоб зберегти hero image у standalone release.
+
+Inclusive hero: перевірено у вбудованому браузері 1008×600 — люди не перекриті
+формою, поле і кнопки видимі на першому екрані. Нові тести для заміни фото не додавалися.
+
+## Mam pomysł: перевірка дизайну
+
+Build, typecheck, lint PASS; 22 unit PASS. 10 flow E2E PASS; 2 communication E2E
+PASS після виправлення старого origin localhost:3000 у тестах. Azure unit mock
+доповнено locallyManagedRecords, щоб ізолювати його від PostgreSQL після upstream змін.
+Integration: 2 skipped без TEST_DATABASE_URL. Desktop і viewport 390px перевірено
+у вбудованому браузері; горизонтального переповнення не виявлено.
+
+Каталог: typecheck і git diff --check PASS; візуально перевірено у вбудованому браузері. Додаткові тести для оформлення не додавалися.
+
+Wiedza design: typecheck i git diff --check PASS. Wbudowany przegląd lokalnego fixtures potwierdza nagłówek, filtry i stan pusty (0 materiałów); nie dodawano sztucznych materiałów do prezentacji kart.
+
+Контраст: build/typecheck PASS. Нові 4 E2E перевіряють головну, каталог, Wiedza, Mam pomysł у стандартній і трьох контрастних палітрах (16 axe аудитів без порушень), placeholder, focus та 200% текст на 390px без overflow. Це автоматичні перевірки, не повний WCAG аудит.
+
+Hover: build PASS; 4 contrast page scenarios PASS. Новий hover E2E перевірив зміну фону кнопок, рамки, підкреслення посилань, поля та axe в усіх 4 палітрах — PASS після виправлення specificity старого підкреслення карток.
+
+Видалення Wiedza: перевірено відсутність /wiedza та KnowledgeCard у src і E2E; навігацію переглянуто у браузері; git diff --check PASS.
