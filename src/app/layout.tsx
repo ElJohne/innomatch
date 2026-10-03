@@ -50,7 +50,7 @@ export default function RootLayout({
               ? "Dane syntetyczne. Zgłoszenia są tymczasowe i znikają po restarcie serwera."
               : "Katalog może zawierać oznaczone dane syntetyczne."}{" "}
             {c.AI_PROVIDER === "mock" &&
-              "AI: tryb testowy, bez połączenia z Azure."}
+              "AI: tryb testowy, bez połączenia z dostawcą AI."}
           </aside>
         )}
         <main id="main">{children}</main>

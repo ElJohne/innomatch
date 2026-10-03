@@ -72,7 +72,7 @@ export const matchResponseSchema = explanationSchema.extend({
   ),
   mode: z.object({
     retrieval: z.enum(["semantic", "keyword", "mock"]),
-    explanation: z.enum(["azure", "template", "mock"]),
+    explanation: z.enum(["azure", "openai", "template", "mock"]),
     data: z.enum(["source_backed", "synthetic", "mixed"]),
   }),
   warnings: z.array(z.string()),

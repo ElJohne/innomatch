@@ -72,7 +72,8 @@ export function MatchResults({
         </span>
       </div>
       <p className="muted">
-        {result.mode.explanation === "azure"
+        {result.mode.explanation === "azure" ||
+        result.mode.explanation === "openai"
           ? "Wyjaśnienia wygenerowane przez AI — wymagają oceny."
           : "Wyjaśnienia szablonowe. Wyniki nie są rekomendacją wdrożenia."}
       </p>

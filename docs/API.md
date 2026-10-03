@@ -12,6 +12,7 @@ Zod DTO: `src/lib/contracts/index.ts`. Всі JSON-відповіді — Cache-
 | GET | /api/innovations | `{items,total,page}`, по 12; q/group/category/stage/page |
 | GET | /api/innovations/:id | Опублікований Innovation; прихований/невідомий → 404 |
 | GET | /api/health | `{status:"ok"}` — стан процесу, не proof доступності залежностей |
+| GET | /api/ready | Стан БД/міграції та наявності AI конфігурації; 503 при недоступності, без live AI-запиту |
 | * | /api/admin/* | 403 до реалізації авторизації персоналу |
 
 POST вимагає Origin=APP_URL і Content-Type: application/json. Створення потреби також
@@ -21,5 +22,7 @@ Idempotency-Key (16–80 ASCII літер/цифр/дефісів); ключ н�
 ліміт за IP та довготривалі staff accounts заплановані наступною ітерацією.
 
 Приватні результати повторно перевіряють статус публікації перед видачею.
+`MatchResponse.mode.explanation`: `openai`, `azure`, `template` або `mock`.
+OpenAI повертає strict structured output; ID додатково перевіряються за переданими кандидатами.
 У PostgreSQL advisory lock серіалізує запуск пошуку однієї потреби між процесами.
 Plans, messages, knowledge API та staff auth ще не реалізовано; їхні маршрути зі SPEC — цільові.

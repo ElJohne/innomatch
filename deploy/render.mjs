@@ -10,7 +10,7 @@ const pod = {
     containers: [{
       name: 'app', image: 'node:24.19.0-bookworm-slim', workingDir: '/app',
       command: ['node', 'server.js'],
-      envFrom: [{ secretRef: { name: 'app-env' } }],
+      envFrom: [{ secretRef: { name: 'app-env' } }, { secretRef: { name: 'openai-env' } }],
       env: [{ name: 'NODE_ENV', value: 'production' }, { name: 'HOSTNAME', value: '0.0.0.0' }, { name: 'PORT', value: '3000' }, { name: 'NEXT_TELEMETRY_DISABLED', value: '1' }],
       ports: [{ containerPort: 3000 }],
       securityContext: { allowPrivilegeEscalation: false, capabilities: { drop: ['ALL'] } },
@@ -29,6 +29,7 @@ if (process.argv[2] === 'migration') {
   pod.spec.restartPolicy = 'Never';
   pod.metadata.labels.app = 'innomatch-migration';
   pod.spec.containers[0].command = ['node', 'scripts/migrate.mjs'];
+  pod.spec.containers[0].envFrom = [{ secretRef: { name: 'app-env' } }];
   delete pod.spec.containers[0].readinessProbe;
   delete pod.spec.containers[0].livenessProbe;
   manifest = { apiVersion: 'batch/v1', kind: 'Job', metadata: { name: job, namespace }, spec: { backoffLimit: 0, activeDeadlineSeconds: 150, ttlSecondsAfterFinished: 86400, template: pod } };

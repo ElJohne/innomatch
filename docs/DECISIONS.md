@@ -1,5 +1,15 @@
 # Рішення
 
+2026-10-03, OpenAI API:
+- Власник замінив вимогу Azure на прямий OpenAI API та додав repository secret OPENAI_API_KEY.
+- OpenAI Responses + strict JSON Schema; моделі gpt-6-luna / text-embedding-3-small,
+  вибір можна змінити repository Variables. Azure адаптер збережено для сумісності.
+- Ключ отримує тільки deploy step; namespaced runner патчить тільки openai-env через stdin.
+- Порожній production каталог не надсилає опис потреби до AI без кандидатів.
+- Офіційні джерела: https://developers.openai.com/api/docs/models/gpt-6-luna,
+  https://developers.openai.com/api/docs/models/text-embedding-3-small,
+  https://developers.openai.com/api/docs/guides/structured-outputs.
+
 2026-10-03, production за дорученням власника:
 - Ціль: наявний `dev-k3s` / `localserver`, окремий namespace `innomatch`;
   це уточнення попереднього обмеження SPEC щодо Kubernetes.

@@ -1,5 +1,15 @@
 # Перевірки — 2026-10-03, Windows / Node 24.19.0
 
+## OpenAI API — поточна ітерація
+
+- Публічний `https://innomatch.brandly-io.com/api/ready`: HTTP 200, ok перед змінами.
+- Наявність repository secret OPENAI_API_KEY підтверджено без читання значення.
+- npm ci: PASS (409 пакетів), системний npm-cli.js викликано напряму через Node 22.16.0.
+- npm run lint: PASS; npm run typecheck: PASS.
+- node --check для нових deployment/diagnostic scripts і git diff --check: PASS.
+- Unit/integration/E2E не запускались, як наказав власник.
+- Production build, rollout та явні live Responses/embeddings: ще не виконано для цієї зміни.
+
 ## Поточна production-ітерація
 
 - `node --check` для `deploy/render.mjs`, `scripts/migrate.mjs`: PASS.

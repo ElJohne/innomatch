@@ -12,7 +12,8 @@ import {
   listEmbeddings,
 } from "../src/server/services/repository";
 import { content, contentHash } from "../src/server/search/ranking";
-import { AzureAiProvider } from "../src/server/ai/provider";
+import { createLiveAiProvider } from "../src/server/ai/provider";
+import { checkOpenAi } from "./check-openai.mjs";
 
 const command = process.argv[2];
 const args = process.argv.slice(3);
@@ -20,10 +21,14 @@ async function doctor() {
   const names = [
     "DATABASE_URL",
     "AUTH_SECRET",
-    "AZURE_OPENAI_BASE_URL",
-    "AZURE_OPENAI_API_KEY",
-    "AZURE_OPENAI_CHAT_DEPLOYMENT",
-    "AZURE_OPENAI_EMBEDDING_DEPLOYMENT",
+    ...(config().AI_PROVIDER === "openai"
+      ? ["OPENAI_API_KEY"]
+      : [
+          "AZURE_OPENAI_BASE_URL",
+          "AZURE_OPENAI_API_KEY",
+          "AZURE_OPENAI_CHAT_DEPLOYMENT",
+          "AZURE_OPENAI_EMBEDDING_DEPLOYMENT",
+        ]),
   ];
   for (const name of names)
     console.log(`${name}: ${process.env[name] ? "configured" : "missing"}`);
@@ -40,6 +45,10 @@ async function doctor() {
     }
   }
   if (!args.includes("--live")) return;
+  if (config().AI_PROVIDER === "openai") {
+    if (!(await checkOpenAi())) process.exitCode = 1;
+    return;
+  }
   if (
     names.filter((n) => n.startsWith("AZURE_")).some((n) => !process.env[n])
   ) {
@@ -142,10 +151,10 @@ async function main() {
   if (command === "index") {
     if (
       config().DATA_PROVIDER !== "postgres" ||
-      config().AI_PROVIDER !== "azure"
+      config().AI_PROVIDER === "mock"
     )
       throw new Error("LIVE_CONFIGURATION_REQUIRED");
-    const ai = new AzureAiProvider();
+    const ai = createLiveAiProvider();
     const records = await listInnovations();
     const previous = await listEmbeddings();
     let indexed = 0;

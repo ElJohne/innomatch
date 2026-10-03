@@ -11,8 +11,10 @@ GitHub-hosted Ubuntu + Node 24.19.0 виконує `npm ci` та `npm run build`
 standalone output. Тести навмисно пропущено за дорученням власника.
 Namespaced runner `innomatch-prod-k3s` завантажує artifact на PVC `releases`,
 виконує SQL-міграції як Job, потім перемикає Deployment на окрему директорію релізу.
+OPENAI_API_KEY береться з GitHub repository secret лише в deploy step; у build його немає.
 Жодних registry credentials, SSH private keys або kubeconfig у GitHub secrets немає.
-Runner має лише Role у namespace `innomatch`, без host mounts і cluster-admin.
+Runner має лише Role у namespace `innomatch`, без host mounts і cluster-admin;
+для секретів дозволені лише GET/PATCH конкретного `openai-env` (kubectl patch потребує GET), без LIST.
 Не додавати `pull_request` / `pull_request_target` запусків на production runner.
 
 `deploy/bootstrap.py` створює інфраструктуру через наявний kubeconfig, приймає
@@ -24,9 +26,9 @@ Runner має лише Role у namespace `innomatch`, без host mounts і clus
 PostgreSQL 17.11: окрема БД `innomatch`, окремий login без superuser, PVC 5 GiB.
 БД доступна лише всередині namespace через ClusterIP + NetworkPolicy.
 `app-env` містить DATABASE_URL, AUTH_SECRET, APP_URL та режими; значення не друкувати.
-Початковий режим: postgres + явно позначений mock AI; каталог порожній, demo seed відсутній.
-Для Azure оновити secret приватним операторським способом і виконати rollout restart;
-індексацію/імпорт запускати окремо лише для дозволених матеріалів.
+Production використовує postgres; OpenAI-конфігурація накладається через окремий secret
+`openai-env`, який Actions оновлює через stdin без запису ключа на диск або в argv.
+Каталог порожній, demo seed відсутній. Імпорт та індексацію виконувати лише для дозволених матеріалів.
 
 Ingress очікує Cloudflare Tunnel public hostname `innomatch.brandly-io.com`
 із service `http://localhost:80` і оригінальним Host header. TLS завершується на Cloudflare.
@@ -77,7 +79,33 @@ Seed вимагає DEMO_DATA_ENABLED=true, виконує upsert без вид�
 Джерельні записи вимагають evidenceExcerpt; імпортувати лише дозволені дані без ПД.
 Операція доступна тільки оператору CLI із серверними обліковими даними; публічного import API немає.
 
-## Azure
+## OpenAI API — поточний production провайдер
+
+`AI_PROVIDER=openai`, `DATA_PROVIDER=postgres`, `OPENAI_API_KEY` — єдиний обов'язковий
+OpenAI secret. За замовчуванням `OPENAI_CHAT_MODEL=gpt-6-luna`,
+`OPENAI_EMBEDDING_MODEL=text-embedding-3-small`. У GitHub це необов'язкові repository Variables;
+після зміни secret/Variables запустити Deploy production вручну або зробити push у master.
+Відсутній OPENAI_API_KEY зупиняє deploy; автоматичного переходу на mock немає.
+
+Генерація: Responses API, strict JSON Schema, Zod + серверна allowlist джерел, `store:false`.
+GPT-5/6 використовують reasoning effort `none` для швидкого короткого пояснення.
+Embeddings мають provider-qualified ID `openai:<model>`; зміна моделі потребує переіндексації.
+Квоти, concurrency, timeout і usage залишаються серверними. Порожній каталог не викликає API.
+
+```sh
+npm run doctor
+npm run doctor -- --live
+npm run data:index
+# У production pod; дві короткі синтетичні операції, без retries:
+kubectl -n innomatch exec deployment/innomatch -- node scripts/check-openai.mjs --live
+```
+
+Live diagnostic запускається лише явно оператором, не автоматично у workflow.
+Він перевіряє Responses із JSON Schema та embeddings, не друкує текстів/ключів.
+Вартість двох діагностичних запитів не потрапляє в application ai_usage.
+Потрібні активні API billing/кредити та права ключа на Responses і Embeddings.
+
+## Azure — збережений опційний адаптер
 
 AI_PROVIDER=azure; DATA_PROVIDER=postgres. Потрібні AZURE_OPENAI_BASE_URL
 (`https://…/openai/v1/`), API_KEY, CHAT_DEPLOYMENT, EMBEDDING_DEPLOYMENT.

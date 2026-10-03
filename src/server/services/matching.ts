@@ -5,7 +5,7 @@ import {
   type Need,
 } from "@/lib/contracts";
 import { config } from "@/server/config";
-import { AzureAiProvider } from "@/server/ai/provider";
+import { createLiveAiProvider } from "@/server/ai/provider";
 import { listInnovations, listEmbeddings, saveMatch } from "./repository";
 import {
   keywordCandidates,
@@ -40,10 +40,10 @@ export async function visibleMatch(
 export async function matchNeed(need: Need): Promise<MatchResponse> {
   if (need.match) return visibleMatch(need.match);
   const c = config();
-  // Validate Azure configuration before entering the transient fallback path.
-  const azure = c.AI_PROVIDER === "azure" ? new AzureAiProvider() : null;
-  if (azure && c.DATA_PROVIDER !== "postgres")
-    throw new Error("AZURE_REQUIRES_POSTGRES");
+  // Validate live AI configuration before entering the transient fallback path.
+  const ai = c.AI_PROVIDER === "mock" ? null : createLiveAiProvider();
+  if (ai && c.DATA_PROVIDER !== "postgres")
+    throw new Error("LIVE_AI_REQUIRES_POSTGRES");
   const records = await listInnovations();
   const query = [need.description, need.constraints, ...need.targetGroups]
     .filter(Boolean)
@@ -53,16 +53,16 @@ export async function matchNeed(need: Need): Promise<MatchResponse> {
   let explanation: MatchResponse["mode"]["explanation"] =
     c.AI_PROVIDER === "mock" ? "mock" : "template";
   const warnings: string[] = [];
-  if (azure) {
+  if (ai && records.length) {
     try {
-      const [vector] = await azure.embed([query]);
+      const [vector] = await ai.embed([query]);
       const index = await listEmbeddings();
       const ranked = records
         .map((record) => {
           const e = index.find(
             (e) =>
               e.recordId === record.id &&
-              compatible(e, record, azure.embeddingDeployment, vector.length),
+              compatible(e, record, ai.embeddingDeployment, vector.length),
           );
           return { record, score: e ? (cosine(vector, e.vector) ?? -1) : -1 };
         })
@@ -100,10 +100,10 @@ export async function matchNeed(need: Need): Promise<MatchResponse> {
     },
     candidates,
   );
-  if (azure && candidates.length) {
+  if (ai && candidates.length) {
     try {
       result = validateExplanation(
-        await azure.generateStructured(
+        await ai.generateStructured(
           "Wybierz do 3 propozycji. Wskaż ograniczenia i dozwolone sourceIds.",
           {
             need: {
@@ -117,7 +117,7 @@ export async function matchNeed(need: Need): Promise<MatchResponse> {
         ),
         candidates,
       );
-      explanation = "azure";
+      explanation = c.AI_PROVIDER === "openai" ? "openai" : "azure";
     } catch {
       warnings.push(
         "Wyjaśnienie AI jest niedostępne. Pokazujemy opis szablonowy.",

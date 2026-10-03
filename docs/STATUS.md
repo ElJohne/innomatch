@@ -1,6 +1,14 @@
 # Стан — 2026-10-03
 
-## Production deployment — DONE на сервері, public DNS PENDING
+## OpenAI API — впровадження
+
+Власник дозволив реалізацію прямого OpenAI API замість Azure та надав GitHub secret.
+Додано Responses strict JSON Schema, embeddings, server-only credential wiring, doctor/index
+для обох live провайдерів. Моделі: gpt-6-luna / text-embedding-3-small.
+Build, rollout і live-перевірка цієї зміни ще виконуються; новий режим поки не підтверджено.
+DNS/HTTPS уже працює: readiness повернув 200 / ok перед змінами.
+
+## Production deployment — попередня успішна версія
 
 Власник дозволив production на `dev-k3s`, GitHub Actions і пропуск тестів.
 Створено окремий namespace `innomatch`, PostgreSQL 17.11 з PVC 5 GiB,

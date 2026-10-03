@@ -21,6 +21,8 @@ for attempt in $(seq 1 90); do
 done
 [[ "$state" == *Complete* ]] || exit 1
 kubectl -n innomatch logs "job/$job"
+node deploy/sync-openai.mjs
+unset OPENAI_API_KEY
 previous=$(kubectl -n innomatch get deployment innomatch -o jsonpath='{.metadata.annotations.deployment\.kubernetes\.io/revision}' --ignore-not-found)
 node deploy/render.mjs app | kubectl -n innomatch apply -f -
 if ! kubectl -n innomatch rollout status deployment/innomatch --timeout=180s; then
