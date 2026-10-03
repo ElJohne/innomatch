@@ -65,6 +65,11 @@ export default async function NewThread({
         <div className="card">
           <h2>Twoja potrzeba</h2>
           <p>{need.description}</p>
+          {need.clarifications?.map((x, i) => (
+            <p key={i}>
+              <strong>{x.question}</strong> {x.answer}
+            </p>
+          ))}
         </div>
       )}
       <p className="notice">

@@ -1,0 +1,1112 @@
+{
+  "synthetic": true,
+  "suite": "2026-10-03-v1",
+  "results": [
+    {
+      "id": "therapy-direct",
+      "expected": [
+        {
+          "id": "rops-therapy-set-76f33283",
+          "rank": 1,
+          "score": 0.7224115252710692,
+          "inSemantic": true,
+          "inKeyword": true
+        }
+      ],
+      "semantic": [
+        {
+          "id": "rops-therapy-set-76f33283",
+          "score": 0.7224115252710692
+        },
+        {
+          "id": "rops-terapeuta-przestrzeni-99960f70",
+          "score": 0.719875064564768
+        },
+        {
+          "id": "rops-mobilne-centrum-pomocy-dla-osob-starszych-b7760778",
+          "score": 0.665544386887102
+        },
+        {
+          "id": "rops-organizator-kompleksowej-opieki-w-miejscu-zamieszkania-602380c0",
+          "score": 0.6635221755321734
+        },
+        {
+          "id": "rops-bawita-a7351986",
+          "score": 0.6565841159768471
+        },
+        {
+          "id": "rops-kody-qr-na-pomoc-seniorom-169ce452",
+          "score": 0.6300705625677895
+        },
+        {
+          "id": "rops-centrum-antydepresyjne-dd621421",
+          "score": 0.6281530333105655
+        },
+        {
+          "id": "rops-sciezka-treningu-umyslu-9253884a",
+          "score": 0.6217623484556767
+        }
+      ],
+      "keyword": [
+        {
+          "id": "rops-therapy-set-76f33283",
+          "score": 13
+        },
+        {
+          "id": "rops-rodzinny-system-wzajemnej-pomocy-06abcd4e",
+          "score": 7
+        },
+        {
+          "id": "rops-mobilne-centrum-pomocy-dla-osob-starszych-b7760778",
+          "score": 5
+        },
+        {
+          "id": "rops-niepelnosprawnosc-szansa-na-pelnosprawnosc-w-pracy-i-zyciu-a84ed91d",
+          "score": 5
+        },
+        {
+          "id": "rops-organizator-kompleksowej-opieki-w-miejscu-zamieszkania-602380c0",
+          "score": 5
+        },
+        {
+          "id": "rops-hop-hop-mobilny-plac-zabaw-200bb289",
+          "score": 4
+        },
+        {
+          "id": "rops-jezykolamacz-0990a709",
+          "score": 4
+        },
+        {
+          "id": "rops-kody-qr-na-pomoc-seniorom-169ce452",
+          "score": 4
+        }
+      ]
+    },
+    {
+      "id": "therapy-colloquial",
+      "expected": [
+        {
+          "id": "rops-therapy-set-76f33283",
+          "rank": 2,
+          "score": 0.5156359798280394,
+          "inSemantic": true,
+          "inKeyword": true
+        },
+        {
+          "id": "rops-bawita-a7351986",
+          "rank": 1,
+          "score": 0.5656973669081484,
+          "inSemantic": true,
+          "inKeyword": false
+        }
+      ],
+      "semantic": [
+        {
+          "id": "rops-bawita-a7351986",
+          "score": 0.5656973669081484
+        },
+        {
+          "id": "rops-therapy-set-76f33283",
+          "score": 0.5156359798280394
+        },
+        {
+          "id": "rops-organizator-kompleksowej-opieki-w-miejscu-zamieszkania-602380c0",
+          "score": 0.5055465050843497
+        },
+        {
+          "id": "rops-korytarz-wspomnien-62ca984d",
+          "score": 0.5041364782541065
+        },
+        {
+          "id": "rops-kody-qr-na-pomoc-seniorom-169ce452",
+          "score": 0.5017703585568739
+        },
+        {
+          "id": "rops-hop-hop-mobilny-plac-zabaw-200bb289",
+          "score": 0.497410742747986
+        },
+        {
+          "id": "rops-sciezka-treningu-umyslu-9253884a",
+          "score": 0.48483883447920667
+        },
+        {
+          "id": "rops-terapeuta-przestrzeni-99960f70",
+          "score": 0.4812158381598192
+        }
+      ],
+      "keyword": [
+        {
+          "id": "rops-rodzinny-system-wzajemnej-pomocy-06abcd4e",
+          "score": 4
+        },
+        {
+          "id": "rops-telerehabilitacja-oddechowa-4dcab029",
+          "score": 4
+        },
+        {
+          "id": "rops-therapy-set-76f33283",
+          "score": 4
+        },
+        {
+          "id": "rops-autyzm-i-ja-6630d785",
+          "score": 3
+        },
+        {
+          "id": "rops-hop-hop-mobilny-plac-zabaw-200bb289",
+          "score": 3
+        },
+        {
+          "id": "rops-jezykolamacz-0990a709",
+          "score": 3
+        },
+        {
+          "id": "rops-korytarz-wspomnien-62ca984d",
+          "score": 3
+        },
+        {
+          "id": "rops-obu-obuwie-po-domu-8bedaa46",
+          "score": 3
+        }
+      ]
+    },
+    {
+      "id": "digital-direct",
+      "expected": [
+        {
+          "id": "rops-merkury-4f7b04cf",
+          "rank": 1,
+          "score": 0.7040913563372766,
+          "inSemantic": true,
+          "inKeyword": true
+        }
+      ],
+      "semantic": [
+        {
+          "id": "rops-merkury-4f7b04cf",
+          "score": 0.7040913563372766
+        },
+        {
+          "id": "rops-zakupy-bez-barier-1b49e89a",
+          "score": 0.5572242776867006
+        },
+        {
+          "id": "rops-kody-qr-na-pomoc-seniorom-169ce452",
+          "score": 0.5193753316096286
+        },
+        {
+          "id": "rops-sciezka-motosensoryczna-1229283d",
+          "score": 0.5102436295346696
+        },
+        {
+          "id": "rops-stworzenie-narzedzia-ulatwiajacego-seniorom-prawidlowe-regul-d520dc9b",
+          "score": 0.4987973710580024
+        },
+        {
+          "id": "rops-straznik-d94d6fa0",
+          "score": 0.48363101741978715
+        },
+        {
+          "id": "rops-nakreceni-na-aktywnosc-1753b55a",
+          "score": 0.4824910460113759
+        },
+        {
+          "id": "rops-zeglowanie-w-wyobrazni-czyli-sposob-na-strachy-na-wodzie-ceae371c",
+          "score": 0.4815837889159643
+        }
+      ],
+      "keyword": [
+        {
+          "id": "rops-merkury-4f7b04cf",
+          "score": 10
+        },
+        {
+          "id": "rops-marina-pai-e1d17550",
+          "score": 3
+        },
+        {
+          "id": "rops-sciezka-motosensoryczna-1229283d",
+          "score": 3
+        },
+        {
+          "id": "rops-dostepny-transport-publiczny-a4ea5d7a",
+          "score": 2
+        },
+        {
+          "id": "rops-edu-gra-hahaha-d9f9be93",
+          "score": 2
+        },
+        {
+          "id": "rops-mobilne-centrum-pomocy-dla-osob-starszych-b7760778",
+          "score": 2
+        },
+        {
+          "id": "rops-ngoz-nawigacja-glosowa-osob-zaleznych-f64abbf5",
+          "score": 2
+        },
+        {
+          "id": "rops-rodzina-adopcyjna-dorasta-cff999aa",
+          "score": 2
+        }
+      ]
+    },
+    {
+      "id": "digital-typos",
+      "expected": [
+        {
+          "id": "rops-merkury-4f7b04cf",
+          "rank": 1,
+          "score": 0.5015533717082785,
+          "inSemantic": true,
+          "inKeyword": true
+        }
+      ],
+      "semantic": [
+        {
+          "id": "rops-merkury-4f7b04cf",
+          "score": 0.5015533717082785
+        },
+        {
+          "id": "rops-kody-qr-na-pomoc-seniorom-169ce452",
+          "score": 0.4892653425414137
+        },
+        {
+          "id": "rops-zakupy-bez-barier-1b49e89a",
+          "score": 0.4879879494274143
+        },
+        {
+          "id": "rops-oddawacze-662013d2",
+          "score": 0.4656654543939953
+        },
+        {
+          "id": "rops-e-rzecznik-konsumenta-seniora-6a1f0310",
+          "score": 0.4512071203303761
+        }
+      ],
+      "keyword": [
+        {
+          "id": "rops-merkury-4f7b04cf",
+          "score": 3
+        },
+        {
+          "id": "rops-centrum-antydepresyjne-dd621421",
+          "score": 2
+        },
+        {
+          "id": "rops-obu-obuwie-po-domu-8bedaa46",
+          "score": 2
+        },
+        {
+          "id": "rops-przewodnik-dla-osob-z-asd-moje-potrzeby-gdzie-i-jak-je-reali-21d938b9",
+          "score": 2
+        },
+        {
+          "id": "rops-rodzinny-system-wzajemnej-pomocy-06abcd4e",
+          "score": 2
+        },
+        {
+          "id": "rops-senior-cuder-3e4f7869",
+          "score": 2
+        },
+        {
+          "id": "rops-terapeuta-przestrzeni-99960f70",
+          "score": 2
+        },
+        {
+          "id": "rops-zakupy-bez-barier-1b49e89a",
+          "score": 2
+        }
+      ]
+    },
+    {
+      "id": "loneliness-broad",
+      "expected": [
+        {
+          "id": "rops-senior-cuder-3e4f7869",
+          "rank": 38,
+          "score": 0.4535959308482624,
+          "inSemantic": false,
+          "inKeyword": true
+        },
+        {
+          "id": "rops-edu-gra-hahaha-d9f9be93",
+          "rank": 94,
+          "score": 0.3923072090757889,
+          "inSemantic": false,
+          "inKeyword": false
+        }
+      ],
+      "semantic": [
+        {
+          "id": "rops-mobilne-centrum-pomocy-dla-osob-starszych-b7760778",
+          "score": 0.5766586940845349
+        },
+        {
+          "id": "rops-teleasystent-43e31467",
+          "score": 0.5542770287954245
+        },
+        {
+          "id": "rops-terapeuta-przestrzeni-99960f70",
+          "score": 0.553104507846264
+        },
+        {
+          "id": "rops-czas-na-aktywnosc-b954fc08",
+          "score": 0.5447359987440588
+        },
+        {
+          "id": "rops-centrum-antydepresyjne-dd621421",
+          "score": 0.5445669256104309
+        },
+        {
+          "id": "rops-organizator-kompleksowej-opieki-w-miejscu-zamieszkania-602380c0",
+          "score": 0.537150356215538
+        },
+        {
+          "id": "rops-spotkania-kulturlove-6d48925c",
+          "score": 0.5281663293839092
+        },
+        {
+          "id": "rops-therapy-set-76f33283",
+          "score": 0.520154292604209
+        }
+      ],
+      "keyword": [
+        {
+          "id": "rops-senior-cuder-3e4f7869",
+          "score": 4
+        },
+        {
+          "id": "rops-centrum-antydepresyjne-dd621421",
+          "score": 3
+        },
+        {
+          "id": "rops-organizator-kompleksowej-opieki-w-miejscu-zamieszkania-602380c0",
+          "score": 3
+        },
+        {
+          "id": "rops-terapeuta-przestrzeni-99960f70",
+          "score": 3
+        },
+        {
+          "id": "rops-czas-na-aktywnosc-b954fc08",
+          "score": 2
+        },
+        {
+          "id": "rops-e-rzecznik-konsumenta-seniora-6a1f0310",
+          "score": 2
+        },
+        {
+          "id": "rops-innotextil-179d5e75",
+          "score": 2
+        },
+        {
+          "id": "rops-jezykolamacz-0990a709",
+          "score": 2
+        }
+      ]
+    },
+    {
+      "id": "autism-school",
+      "expected": [
+        {
+          "id": "rops-mobilny-pomocnik-dydaktyczno-sensoryczny-dla-uczniowstudento-0213ff6e",
+          "rank": 1,
+          "score": 0.6027229720930166,
+          "inSemantic": true,
+          "inKeyword": true
+        }
+      ],
+      "semantic": [
+        {
+          "id": "rops-mobilny-pomocnik-dydaktyczno-sensoryczny-dla-uczniowstudento-0213ff6e",
+          "score": 0.6027229720930166
+        },
+        {
+          "id": "rops-jezykolamacz-0990a709",
+          "score": 0.5643228307136099
+        },
+        {
+          "id": "rops-autyzm-i-ja-6630d785",
+          "score": 0.5318398260603121
+        },
+        {
+          "id": "rops-przewodnik-dla-osob-z-asd-moje-potrzeby-gdzie-i-jak-je-reali-21d938b9",
+          "score": 0.5199650528111592
+        },
+        {
+          "id": "rops-wibraap-c33c87b3",
+          "score": 0.516197620747706
+        },
+        {
+          "id": "rops-ta-sciezka-terapeutyczna-sciezka-kulturowa-dla-dzieci-i-doro-6fca4030",
+          "score": 0.512814071088146
+        },
+        {
+          "id": "rops-osa-i-eco-puzzle-1600b8d4",
+          "score": 0.49751977802699143
+        },
+        {
+          "id": "rops-mix-ar-i-vr-dla-koordynacji-ruchowej-b6aa067a",
+          "score": 0.49435874349283176
+        }
+      ],
+      "keyword": [
+        {
+          "id": "rops-rodzinny-system-wzajemnej-pomocy-06abcd4e",
+          "score": 6
+        },
+        {
+          "id": "rops-mobilny-pomocnik-dydaktyczno-sensoryczny-dla-uczniowstudento-0213ff6e",
+          "score": 5
+        },
+        {
+          "id": "rops-himalaje-autyzmu-2700f9ad",
+          "score": 3
+        },
+        {
+          "id": "rops-jezykolamacz-0990a709",
+          "score": 3
+        },
+        {
+          "id": "rops-marina-pai-e1d17550",
+          "score": 3
+        },
+        {
+          "id": "rops-mix-ar-i-vr-dla-koordynacji-ruchowej-b6aa067a",
+          "score": 3
+        },
+        {
+          "id": "rops-przewodnik-dla-osob-z-asd-moje-potrzeby-gdzie-i-jak-je-reali-21d938b9",
+          "score": 3
+        },
+        {
+          "id": "rops-talerze-zdrowia-49de2c36",
+          "score": 3
+        }
+      ]
+    },
+    {
+      "id": "blind-wayfinding",
+      "expected": [
+        {
+          "id": "rops-ngoz-nawigacja-glosowa-osob-zaleznych-f64abbf5",
+          "rank": 2,
+          "score": 0.6153480109162892,
+          "inSemantic": true,
+          "inKeyword": true
+        }
+      ],
+      "semantic": [
+        {
+          "id": "rops-my-way-to-culture-2f265f29",
+          "score": 0.6309618763549251
+        },
+        {
+          "id": "rops-ngoz-nawigacja-glosowa-osob-zaleznych-f64abbf5",
+          "score": 0.6153480109162892
+        },
+        {
+          "id": "rops-spotkania-kulturlove-6d48925c",
+          "score": 0.5795968122032338
+        },
+        {
+          "id": "rops-nakreceni-na-aktywnosc-1753b55a",
+          "score": 0.5648963764886678
+        },
+        {
+          "id": "rops-wsparcie-imprez-masowych-dla-osob-z-niepelnosprawnoscia-wzro-62548947",
+          "score": 0.5594114787984256
+        },
+        {
+          "id": "rops-zakupy-bez-barier-1b49e89a",
+          "score": 0.544922934680969
+        },
+        {
+          "id": "rops-zmysly-w-ruchu-model-choreografii-dla-osob-niewidomych-370acc14",
+          "score": 0.5439537118698311
+        },
+        {
+          "id": "rops-dostepny-wniosek-dla-ggluchych-7d576423",
+          "score": 0.5391324819864557
+        }
+      ],
+      "keyword": [
+        {
+          "id": "rops-ngoz-nawigacja-glosowa-osob-zaleznych-f64abbf5",
+          "score": 6
+        },
+        {
+          "id": "rops-my-way-to-culture-2f265f29",
+          "score": 4
+        },
+        {
+          "id": "rops-ta-sciezka-terapeutyczna-sciezka-kulturowa-dla-dzieci-i-doro-6fca4030",
+          "score": 4
+        },
+        {
+          "id": "rops-wsparcie-imprez-masowych-dla-osob-z-niepelnosprawnoscia-wzro-62548947",
+          "score": 4
+        },
+        {
+          "id": "rops-blue-sea-eye-f79a8197",
+          "score": 3
+        },
+        {
+          "id": "rops-nakreceni-na-aktywnosc-1753b55a",
+          "score": 3
+        },
+        {
+          "id": "rops-bajkala-a087b52c",
+          "score": 2
+        },
+        {
+          "id": "rops-czas-na-aktywnosc-b954fc08",
+          "score": 2
+        }
+      ]
+    },
+    {
+      "id": "work-rural-women",
+      "expected": [
+        {
+          "id": "rops-mobilna-gielda-pracy-14598a01",
+          "rank": 1,
+          "score": 0.6451761566238341,
+          "inSemantic": true,
+          "inKeyword": true
+        }
+      ],
+      "semantic": [
+        {
+          "id": "rops-mobilna-gielda-pracy-14598a01",
+          "score": 0.6451761566238341
+        },
+        {
+          "id": "rops-agencja-pracy-incydentalnej-28c9cb26",
+          "score": 0.5887805270472786
+        },
+        {
+          "id": "rops-wiejski-program-pomocy-osobom-w-kryzysie-bezdomnosci-sciezka-23283701",
+          "score": 0.5624988385759057
+        },
+        {
+          "id": "rops-czas-na-aktywnosc-b954fc08",
+          "score": 0.5589679379801025
+        },
+        {
+          "id": "rops-mobilne-centrum-pomocy-dla-osob-starszych-b7760778",
+          "score": 0.5511469412762616
+        },
+        {
+          "id": "rops-mobilna-pomoc-terapeutyczna-a98981d4",
+          "score": 0.550391110067456
+        },
+        {
+          "id": "rops-teleasystent-43e31467",
+          "score": 0.5494118086058557
+        },
+        {
+          "id": "rops-niepelnosprawnosc-szansa-na-pelnosprawnosc-w-pracy-i-zyciu-a84ed91d",
+          "score": 0.5420240255611353
+        }
+      ],
+      "keyword": [
+        {
+          "id": "rops-mobilna-gielda-pracy-14598a01",
+          "score": 8
+        },
+        {
+          "id": "rops-niepelnosprawnosc-szansa-na-pelnosprawnosc-w-pracy-i-zyciu-a84ed91d",
+          "score": 7
+        },
+        {
+          "id": "rops-rodzinny-system-wzajemnej-pomocy-06abcd4e",
+          "score": 7
+        },
+        {
+          "id": "rops-niewypaleni-a4584600",
+          "score": 5
+        },
+        {
+          "id": "rops-organizator-kompleksowej-opieki-w-miejscu-zamieszkania-602380c0",
+          "score": 5
+        },
+        {
+          "id": "rops-centrum-antydepresyjne-dd621421",
+          "score": 4
+        },
+        {
+          "id": "rops-konsultant-etr-941e6c2e",
+          "score": 4
+        },
+        {
+          "id": "rops-mobilne-centrum-pomocy-dla-osob-starszych-b7760778",
+          "score": 4
+        }
+      ]
+    },
+    {
+      "id": "migrant-health",
+      "expected": [
+        {
+          "id": "rops-health-guide-pl-c7bfbd72",
+          "rank": 1,
+          "score": 0.690599628232939,
+          "inSemantic": true,
+          "inKeyword": true
+        }
+      ],
+      "semantic": [
+        {
+          "id": "rops-health-guide-pl-c7bfbd72",
+          "score": 0.690599628232939
+        },
+        {
+          "id": "rops-paszport-pacjenta-z-choroba-rzadka-da6cb941",
+          "score": 0.5577187794755186
+        },
+        {
+          "id": "rops-drogowskazy-ajkum-5bbb3e34",
+          "score": 0.5482612624363553
+        },
+        {
+          "id": "rops-dostepna-polska-f43f366d",
+          "score": 0.5273551667528604
+        },
+        {
+          "id": "rops-inteligentny-organizer-do-lekow-290617c5",
+          "score": 0.5054680905462836
+        },
+        {
+          "id": "rops-pelnia-zdrowia-0b922b42",
+          "score": 0.5032812237150246
+        },
+        {
+          "id": "rops-pacjent-pro-31897660",
+          "score": 0.4971255839155197
+        },
+        {
+          "id": "rops-zakupy-bez-barier-1b49e89a",
+          "score": 0.4831931669082863
+        }
+      ],
+      "keyword": [
+        {
+          "id": "rops-health-guide-pl-c7bfbd72",
+          "score": 10
+        },
+        {
+          "id": "rops-paszport-pacjenta-z-choroba-rzadka-da6cb941",
+          "score": 4
+        },
+        {
+          "id": "rops-wortal-informacyjny-11810851",
+          "score": 4
+        },
+        {
+          "id": "rops-autyzm-i-ja-6630d785",
+          "score": 3
+        },
+        {
+          "id": "rops-bajkala-a087b52c",
+          "score": 3
+        },
+        {
+          "id": "rops-dialog-ponad-kulturami-1-231d3e41",
+          "score": 3
+        },
+        {
+          "id": "rops-dostepny-transport-publiczny-a4ea5d7a",
+          "score": 3
+        },
+        {
+          "id": "rops-dostepny-wniosek-dla-ggluchych-7d576423",
+          "score": 3
+        }
+      ]
+    },
+    {
+      "id": "homeless-rural",
+      "expected": [
+        {
+          "id": "rops-wiejski-program-pomocy-osobom-w-kryzysie-bezdomnosci-sciezka-23283701",
+          "rank": 1,
+          "score": 0.6745033946753624,
+          "inSemantic": true,
+          "inKeyword": true
+        }
+      ],
+      "semantic": [
+        {
+          "id": "rops-wiejski-program-pomocy-osobom-w-kryzysie-bezdomnosci-sciezka-23283701",
+          "score": 0.6745033946753624
+        },
+        {
+          "id": "rops-mobilne-centrum-pomocy-dla-osob-starszych-b7760778",
+          "score": 0.5492050478474918
+        },
+        {
+          "id": "rops-mobilna-pomoc-terapeutyczna-a98981d4",
+          "score": 0.5301736469118769
+        },
+        {
+          "id": "rops-przenosne-modularne-lazienki-d62f12d1",
+          "score": 0.5278126752820671
+        },
+        {
+          "id": "rops-kompleksowa-pomoc-dla-osob-po-amputacji-konczyny-dolnej-f572532a",
+          "score": 0.527297721279753
+        },
+        {
+          "id": "rops-sciezka-motosensoryczna-1229283d",
+          "score": 0.525633630601474
+        },
+        {
+          "id": "rops-zakupy-bez-barier-1b49e89a",
+          "score": 0.5227260949388303
+        },
+        {
+          "id": "rops-teleasystent-43e31467",
+          "score": 0.5221183094837301
+        }
+      ],
+      "keyword": [
+        {
+          "id": "rops-wiejski-program-pomocy-osobom-w-kryzysie-bezdomnosci-sciezka-23283701",
+          "score": 7
+        },
+        {
+          "id": "rops-bez-presji-z-depresji-44ca029f",
+          "score": 5
+        },
+        {
+          "id": "rops-agencja-pracy-incydentalnej-28c9cb26",
+          "score": 4
+        },
+        {
+          "id": "rops-mobilna-pomoc-terapeutyczna-a98981d4",
+          "score": 4
+        },
+        {
+          "id": "rops-centrum-antydepresyjne-dd621421",
+          "score": 3
+        },
+        {
+          "id": "rops-czas-na-aktywnosc-b954fc08",
+          "score": 3
+        },
+        {
+          "id": "rops-dostepny-wniosek-dla-ggluchych-7d576423",
+          "score": 3
+        },
+        {
+          "id": "rops-kompleksowa-pomoc-dla-osob-po-amputacji-konczyny-dolnej-f572532a",
+          "score": 3
+        }
+      ]
+    },
+    {
+      "id": "deaf-library",
+      "expected": [
+        {
+          "id": "rops-gluchy-czytelnik-w-bibliotece-70106b9e",
+          "rank": 1,
+          "score": 0.6650835583450041,
+          "inSemantic": true,
+          "inKeyword": true
+        }
+      ],
+      "semantic": [
+        {
+          "id": "rops-gluchy-czytelnik-w-bibliotece-70106b9e",
+          "score": 0.6650835583450041
+        },
+        {
+          "id": "rops-glucha-ankieta-d3512afd",
+          "score": 0.5463303999248635
+        },
+        {
+          "id": "rops-straznik-d94d6fa0",
+          "score": 0.5310475748721757
+        },
+        {
+          "id": "rops-dostepny-wniosek-dla-ggluchych-7d576423",
+          "score": 0.5298845725162392
+        },
+        {
+          "id": "rops-my-way-to-culture-2f265f29",
+          "score": 0.5232190331630145
+        },
+        {
+          "id": "rops-spotkania-kulturlove-6d48925c",
+          "score": 0.5210222100165466
+        },
+        {
+          "id": "rops-hear-it-a90cc913",
+          "score": 0.5140623391624519
+        },
+        {
+          "id": "rops-ngoz-nawigacja-glosowa-osob-zaleznych-f64abbf5",
+          "score": 0.5073117340470695
+        }
+      ],
+      "keyword": [
+        {
+          "id": "rops-gluchy-czytelnik-w-bibliotece-70106b9e",
+          "score": 6
+        },
+        {
+          "id": "rops-glucha-ankieta-d3512afd",
+          "score": 5
+        },
+        {
+          "id": "rops-rodzinny-system-wzajemnej-pomocy-06abcd4e",
+          "score": 5
+        },
+        {
+          "id": "rops-autyzm-i-ja-6630d785",
+          "score": 4
+        },
+        {
+          "id": "rops-agencja-pracy-incydentalnej-28c9cb26",
+          "score": 3
+        },
+        {
+          "id": "rops-dostepna-szermierka-65db6664",
+          "score": 3
+        },
+        {
+          "id": "rops-dostepny-wniosek-dla-ggluchych-7d576423",
+          "score": 3
+        },
+        {
+          "id": "rops-edu-gra-hahaha-d9f9be93",
+          "score": 3
+        }
+      ]
+    },
+    {
+      "id": "care-after-hospital",
+      "expected": [
+        {
+          "id": "rops-organizator-kompleksowej-opieki-w-miejscu-zamieszkania-602380c0",
+          "rank": 1,
+          "score": 0.5866824872246391,
+          "inSemantic": true,
+          "inKeyword": true
+        }
+      ],
+      "semantic": [
+        {
+          "id": "rops-organizator-kompleksowej-opieki-w-miejscu-zamieszkania-602380c0",
+          "score": 0.5866824872246391
+        },
+        {
+          "id": "rops-rodzinny-system-wzajemnej-pomocy-06abcd4e",
+          "score": 0.5330749754321846
+        },
+        {
+          "id": "rops-kompleksowa-pomoc-dla-osob-po-amputacji-konczyny-dolnej-f572532a",
+          "score": 0.5251059004764721
+        },
+        {
+          "id": "rops-mobilna-pomoc-terapeutyczna-a98981d4",
+          "score": 0.5208638476440849
+        },
+        {
+          "id": "rops-telerehabilitacja-oddechowa-4dcab029",
+          "score": 0.5148814411723103
+        },
+        {
+          "id": "rops-terapeuta-przestrzeni-99960f70",
+          "score": 0.5044625386043095
+        },
+        {
+          "id": "rops-therapy-set-76f33283",
+          "score": 0.5030254405018236
+        },
+        {
+          "id": "rops-oncotriada-878fa8fc",
+          "score": 0.49735349343701263
+        }
+      ],
+      "keyword": [
+        {
+          "id": "rops-organizator-kompleksowej-opieki-w-miejscu-zamieszkania-602380c0",
+          "score": 9
+        },
+        {
+          "id": "rops-rodzinny-system-wzajemnej-pomocy-06abcd4e",
+          "score": 5
+        },
+        {
+          "id": "rops-dialog-ponad-kulturami-4fd2730c",
+          "score": 4
+        },
+        {
+          "id": "rops-jezykolamacz-0990a709",
+          "score": 4
+        },
+        {
+          "id": "rops-mobilne-centrum-pomocy-dla-osob-starszych-b7760778",
+          "score": 4
+        },
+        {
+          "id": "rops-mobilny-pomocnik-dydaktyczno-sensoryczny-dla-uczniowstudento-0213ff6e",
+          "score": 4
+        },
+        {
+          "id": "rops-puzzle-3d-9fd9219f",
+          "score": 4
+        },
+        {
+          "id": "rops-teleasystent-43e31467",
+          "score": 4
+        }
+      ]
+    },
+    {
+      "id": "school-after-treatment",
+      "expected": [
+        {
+          "id": "rops-bez-presji-z-depresji-44ca029f",
+          "rank": 1,
+          "score": 0.5737865476126082,
+          "inSemantic": true,
+          "inKeyword": true
+        }
+      ],
+      "semantic": [
+        {
+          "id": "rops-bez-presji-z-depresji-44ca029f",
+          "score": 0.5737865476126082
+        },
+        {
+          "id": "rops-gra-o-zdrowie-16ca77c8",
+          "score": 0.46327791706282384
+        },
+        {
+          "id": "rops-oncotriada-878fa8fc",
+          "score": 0.46235281872742323
+        },
+        {
+          "id": "rops-bez-stresu-do-sukcesu-terapia-neurologiczna-przyjazna-dzieck-84ccc595",
+          "score": 0.45648979207941537
+        }
+      ],
+      "keyword": [
+        {
+          "id": "rops-bez-presji-z-depresji-44ca029f",
+          "score": 8
+        },
+        {
+          "id": "rops-bez-stresu-do-sukcesu-terapia-neurologiczna-przyjazna-dzieck-84ccc595",
+          "score": 5
+        },
+        {
+          "id": "rops-dialog-ponad-kulturami-4fd2730c",
+          "score": 4
+        },
+        {
+          "id": "rops-mobilny-pomocnik-dydaktyczno-sensoryczny-dla-uczniowstudento-0213ff6e",
+          "score": 4
+        },
+        {
+          "id": "rops-rodzinny-system-wzajemnej-pomocy-06abcd4e",
+          "score": 4
+        },
+        {
+          "id": "rops-terapeuta-przestrzeni-99960f70",
+          "score": 4
+        },
+        {
+          "id": "rops-agencja-pracy-incydentalnej-28c9cb26",
+          "score": 3
+        },
+        {
+          "id": "rops-brzuszkole-brzuszek-zostaje-w-przedszkolu-13a46fb5",
+          "score": 3
+        }
+      ]
+    },
+    {
+      "id": "fall-prevention-constraints",
+      "expected": [
+        {
+          "id": "rops-terapeuta-przestrzeni-99960f70",
+          "rank": 3,
+          "score": 0.5064085650818478,
+          "inSemantic": true,
+          "inKeyword": false
+        }
+      ],
+      "semantic": [
+        {
+          "id": "rops-obu-obuwie-po-domu-8bedaa46",
+          "score": 0.5986591439729855
+        },
+        {
+          "id": "rops-przenosne-modularne-lazienki-d62f12d1",
+          "score": 0.5433496832817225
+        },
+        {
+          "id": "rops-terapeuta-przestrzeni-99960f70",
+          "score": 0.5064085650818478
+        },
+        {
+          "id": "rops-stworzenie-narzedzia-ulatwiajacego-seniorom-prawidlowe-regul-d520dc9b",
+          "score": 0.49564979444608076
+        },
+        {
+          "id": "rops-bawita-a7351986",
+          "score": 0.4909510830986769
+        },
+        {
+          "id": "rops-merkury-4f7b04cf",
+          "score": 0.4843237769050963
+        },
+        {
+          "id": "rops-puzzles-ramp-cbaf51d0",
+          "score": 0.4768911712147446
+        },
+        {
+          "id": "rops-dostepny-stol-targowy-22ed2c55",
+          "score": 0.4741919207541562
+        }
+      ],
+      "keyword": [
+        {
+          "id": "rops-mobilne-centrum-pomocy-dla-osob-starszych-b7760778",
+          "score": 6
+        },
+        {
+          "id": "rops-obu-obuwie-po-domu-8bedaa46",
+          "score": 5
+        },
+        {
+          "id": "rops-organizator-kompleksowej-opieki-w-miejscu-zamieszkania-602380c0",
+          "score": 5
+        },
+        {
+          "id": "rops-merkury-4f7b04cf",
+          "score": 4
+        },
+        {
+          "id": "rops-talerze-zdrowia-49de2c36",
+          "score": 4
+        },
+        {
+          "id": "rops-telerehabilitacja-oddechowa-4dcab029",
+          "score": 4
+        },
+        {
+          "id": "rops-biustspinka-f7f7a569",
+          "score": 3
+        },
+        {
+          "id": "rops-centrum-antydepresyjne-dd621421",
+          "score": 3
+        }
+      ]
+    }
+  ]
+}

@@ -21,7 +21,11 @@ const records = fixtures.map((x) => innovationSchema.parse(x));
 afterEach(() => vi.unstubAllEnvs());
 describe("contracts and provenance", () => {
   it("rejects short needs and unknown fields", () => {
-    expect(needInput.safeParse({ description: "krótko" }).success).toBe(false);
+    expect(needInput.safeParse({ description: "ab" }).success).toBe(false);
+    expect(needInput.safeParse({ description: " abc " }).success).toBe(true);
+    expect(
+      needInput.safeParse({ description: "Mąż nie oddycha" }).success,
+    ).toBe(true);
     expect(
       needInput.safeParse({ description: "x".repeat(31), ownerId: "admin" })
         .success,

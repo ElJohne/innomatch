@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import Link from "next/link";
+import { MATCHING_VERSION } from "@/server/search/intake";
 import { session } from "@/server/auth/session";
 import {
   getNeed,
@@ -23,22 +23,24 @@ export default async function NeedPage({
     <section className="flow-page">
       <FlowSteps current={3} />
       <MatchResults
+        key={need.id}
         id={need.id}
-        initial={need.match ? await visibleMatch(need.match) : null}
+        initial={
+          need.match?.matchingVersion === MATCHING_VERSION
+            ? await visibleMatch(need.match)
+            : null
+        }
+        input={{
+          description: need.description,
+          municipality: need.municipality,
+          targetGroups: need.targetGroups,
+          constraints: need.constraints,
+          clarifications: need.clarifications,
+        }}
         records={await listInnovations()}
         organizations={listOrganizations()}
         resources={await listKnowledge()}
       />
-      <aside className="note">
-        <h2>Potrzebujesz wsparcia?</h2>
-        <p>
-          Zapytaj o dobór rozwiązania lub współpracę. Koordynator otrzyma opis
-          tej potrzeby i Twoją wiadomość.
-        </p>
-        <Link className="button" href={`/wiadomosci/nowa?needId=${need.id}`}>
-          Zapytaj koordynatora
-        </Link>
-      </aside>
     </section>
   );
 }

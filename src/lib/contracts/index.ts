@@ -6,11 +6,22 @@ export const needInput = z
     description: z
       .string()
       .trim()
-      .min(30, "Opisz potrzebę w co najmniej 30 znakach.")
+      .min(3, "Opisz potrzebę w co najmniej 3 znakach.")
       .max(4000),
     municipality: shortText.optional(),
     targetGroups: z.array(shortText.min(1)).max(10).default([]),
     constraints: z.string().trim().max(1500).optional(),
+    clarifications: z
+      .array(
+        z
+          .object({
+            question: z.string().trim().min(1).max(500),
+            answer: z.string().trim().min(1).max(500),
+          })
+          .strict(),
+      )
+      .max(6)
+      .optional(),
   })
   .strict();
 export type NeedInput = z.infer<typeof needInput>;
@@ -80,14 +91,20 @@ export const explanationSchema = z
   })
   .strict();
 export const matchResponseSchema = explanationSchema.extend({
+  matchingVersion: z.number().int().optional(),
+  guidance: z.enum(["emergency", "support", "clarify"]).optional(),
+  contacts: z
+    .array(z.enum(["112", "999"]))
+    .max(2)
+    .optional(),
   catalogVersions: z.record(z.string(), z.string()).optional(),
   needId: z.string(),
   relatedResources: z.array(
     z.object({ resourceId: z.string(), reason: z.string() }),
   ),
   mode: z.object({
-    retrieval: z.enum(["semantic", "keyword", "mock"]),
-    explanation: z.enum(["azure", "openai", "template", "mock"]),
+    retrieval: z.enum(["semantic", "keyword", "mock", "none"]),
+    explanation: z.enum(["azure", "openai", "template", "mock", "rules"]),
     data: z.enum(["source_backed", "synthetic", "mixed"]),
   }),
   warnings: z.array(z.string()),

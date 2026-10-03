@@ -28,7 +28,8 @@ export default async function PlanPage({
   ).find((x) => x.organization.id === organizationId);
   if (!selected) notFound();
   const { organization, innovation, match } = selected;
-  const message = `Dzień dobry, szukam wsparcia w następującej sprawie: ${need.description}${need.municipality ? ` Gmina: ${need.municipality}.` : ""} Interesuje mnie rozwiązanie „${innovation.title}”. Czy zajmują się Państwo takim obszarem i czy możemy omówić możliwości współpracy?${need.constraints ? ` Nasze zasoby i ograniczenia: ${need.constraints}` : ""}`;
+  const clarification = need.clarifications?.map((x) => x.answer).join(" ");
+  const message = `Dzień dobry, szukam wsparcia w następującej sprawie: ${need.description}${clarification ? ` Doprecyzowanie: ${clarification}` : ""}${need.municipality ? ` Gmina: ${need.municipality}.` : ""} Interesuje mnie rozwiązanie „${innovation.title}”. Czy zajmują się Państwo takim obszarem i czy możemy omówić możliwości współpracy?${need.constraints ? ` Nasze zasoby i ograniczenia: ${need.constraints}` : ""}`;
   return (
     <section className="flow-page plan-page">
       <FlowSteps current={4} />

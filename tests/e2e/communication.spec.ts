@@ -13,6 +13,7 @@ test("private need → coordinator inbox → reply → unread receipt; other ses
     headers: { origin, "idempotency-key": crypto.randomUUID() },
     data: { description },
   });
+  expect(created.status()).toBe(201);
   const { id: needId } = await created.json();
   await page.goto(`/potrzeby/${needId}`);
   await page.getByRole("link", { name: "Zapytaj koordynatora" }).click();
@@ -47,13 +48,21 @@ test("private need → coordinator inbox → reply → unread receipt; other ses
   await staffPage
     .getByLabel("Nowa wiadomość")
     .fill("Zacznijmy od rozmowy o zasobach. Odpowiedź syntetyczna.");
+  const replySaved = staffPage.waitForResponse(
+    (response) =>
+      response.url().endsWith(`/api/threads/${threadId}/messages`) &&
+      response.request().method() === "POST",
+  );
   await staffPage
     .getByRole("button", { name: "Wyślij wiadomość", exact: true })
     .click();
+  expect((await replySaved).status()).toBe(201);
   await expect(
-    staffPage.getByText(
-      "Zacznijmy od rozmowy o zasobach. Odpowiedź syntetyczna.",
-    ),
+    staffPage
+      .locator(".message-body")
+      .filter({
+        hasText: "Zacznijmy od rozmowy o zasobach. Odpowiedź syntetyczna.",
+      }),
   ).toBeVisible();
   await page.goto("/moje-sprawy");
   await expect(page.getByText("Nowe wiadomości: 1")).toBeVisible();
@@ -136,8 +145,9 @@ test("private need → coordinator inbox → reply → unread receipt; other ses
 
 test("innovation contact is idempotent; forged roles and incorrect login are rejected", async ({
   page,
+  baseURL,
 }) => {
-  const origin = "http://127.0.0.1:3100";
+  const origin = new URL(baseURL!).origin;
   const data = {
     innovationId: "demo-sasiedzki-stol",
     body: "Syntetyczne pytanie o współpracę.",

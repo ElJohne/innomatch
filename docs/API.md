@@ -46,9 +46,29 @@ Zod DTO: `src/lib/contracts/index.ts`. Всі JSON-відповіді — Cache-
 
 POST/PUT/PATCH вимагають Origin=APP_URL і Content-Type: application/json. Створення потреби також
 Idempotency-Key (16–80 ASCII літер/цифр/дефісів); ключ належить гостьовій сесії.
-Тіло до 20 KB (редактор каталогу до 160 KB, PATCH плану до 100 KB); description 30–4000 символів; constraints потреби до 1500.
+Тіло до 20 KB (редактор каталогу до 160 KB, PATCH плану до 100 KB); description 3–4000 символів після trim; constraints потреби до 1500.
 30 спроб створення/день і 20 запусків пошуку/день на сесію. Це ще не повний anti-abuse:
 ліміт за IP ще не реалізовано; staff accounts зберігаються у PostgreSQL.
+
+NeedInput також приймає optional `clarifications`: до 6 об'єктів `{question,answer}`,
+кожне поле 1–500 символів. Вони зберігаються в JSON input без нової міграції.
+Уточнення створює нову власну потребу через той самий POST/idempotency key,
+з незміненим description і попередніми відповідями. GET власної потреби повертає
+clarifications; чужій сесії 404. До координатора уточнення потрапляють лише
+разом із явно відкритою автором розмовою; вони також доступні AI-адаптації.
+
+MatchResponse v2: `matchingVersion:2`, optional `guidance: emergency|support|clarify`,
+optional allowlisted `contacts:[112,999]` (рядки), retrieval додатково `none`,
+explanation додатково `rules`. Термінове скерування не містить інновацій/матеріалів.
+Сильні сигнали перевіряються до AI-квоти/слотів після ownership guard; додаткове
+LLM-розпізнавання не є гарантією тріажу. Контакти й сторінка /pilna-pomoc
+працюють незалежно від AI. Власна стара версія кешу оновлюється через штатний
+matching POST із лімітом/lock; успішна v2 повторно не генерується при refresh.
+AI intаke бачить тільки власний опис, ресурси й відповіді, без каталогу. Після
+нормалізації запиту: semantic top-6 з cutoff 0,35 + до 2 додаткових lexical;
+нижчий cutoff лише для кандидатів, які перевіряє reranker. Related resources
+перевіряються AI та серверним allowlist. При відмові reranking — явне попередження
+й уточнення без неперевірених рекомендацій. Глобальна квота провайдера збережена.
 
 M4 контракти: `src/lib/contracts/pilot.ts`. Оцінка 1–5, текст 20–2000 символів,
 пропозиції до 1500, experience=DESCRIPTION/USED (заява автора, не перевірений факт).

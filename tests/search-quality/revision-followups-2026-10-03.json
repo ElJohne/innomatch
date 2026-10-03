@@ -1,0 +1,865 @@
+{
+  "retry": {
+    "synthetic": true,
+    "shadowService": true,
+    "recordedAt": "2026-10-03T19:32:35.221Z",
+    "results": [
+      {
+        "id": "deaf-library",
+        "kind": "positive",
+        "status": "partial",
+        "guidance": null,
+        "ids": ["rops-gluchy-czytelnik-w-bibliotece-70106b9e"],
+        "expectedHit": true,
+        "contacts": [],
+        "questions": 0,
+        "related": 0,
+        "mode": {
+          "retrieval": "semantic",
+          "explanation": "openai",
+          "data": "source_backed"
+        },
+        "warnings": [],
+        "latencyMs": 5739,
+        "response": {
+          "matchingVersion": 2,
+          "catalogVersions": {
+            "innovation:rops-gluchy-czytelnik-w-bibliotece-70106b9e": "a85faed589b8eb507418c3bdf8fb2e027e391a271c9c670e9ec28c04c3bb42e6"
+          },
+          "status": "partial",
+          "matches": [
+            {
+              "innovationId": "rops-gluchy-czytelnik-w-bibliotece-70106b9e",
+              "rank": 1,
+              "reasons": [
+                "Odpowiada bezpośrednio na cel włączenia osób Głuchych do grona czytelników biblioteki.",
+                "Publikacja w PJM i łatwym języku polskim przedstawia bibliotekę oraz podaje wskazówki dotyczące korzystania z niej."
+              ],
+              "limitations": [
+                "To publikacja skierowana szczególnie do osób Głuchych i ich rodzin; nie opisano w niej kompleksowego modelu przygotowania personelu biblioteki do obsługi."
+              ],
+              "sourceIds": [
+                "rops-gluchy-czytelnik-w-bibliotece-70106b9e-source"
+              ]
+            }
+          ],
+          "clarifyingQuestions": [],
+          "needId": "002bbde7-b18e-4a93-91ce-af21d01f991a",
+          "relatedResources": [],
+          "mode": {
+            "retrieval": "semantic",
+            "explanation": "openai",
+            "data": "source_backed"
+          },
+          "warnings": []
+        }
+      },
+      {
+        "id": "one-hand-bra",
+        "kind": "positive",
+        "status": "matched",
+        "guidance": null,
+        "ids": ["rops-biustspinka-f7f7a569"],
+        "expectedHit": true,
+        "contacts": [],
+        "questions": 0,
+        "related": 0,
+        "mode": {
+          "retrieval": "semantic",
+          "explanation": "openai",
+          "data": "source_backed"
+        },
+        "warnings": [],
+        "latencyMs": 5088,
+        "response": {
+          "matchingVersion": 2,
+          "catalogVersions": {
+            "innovation:rops-biustspinka-f7f7a569": "2e93ff73a58813fe993fb32309dda3b8f974626b857b80d6665786ed8a78b338"
+          },
+          "status": "matched",
+          "matches": [
+            {
+              "innovationId": "rops-biustspinka-f7f7a569",
+              "rank": 1,
+              "reasons": [
+                "Rozwiązanie jest przeznaczone dla kobiet z ograniczeniami ruchowymi, w tym osób z dysfunkcją jednego ramienia.",
+                "Ma wspierać samodzielne zakładanie, zapinanie i zdejmowanie biustonosza — dokładnie odpowiada opisanej trudności z zapięciem z tyłu."
+              ],
+              "limitations": [
+                "Opis nie potwierdza dostępności ani kosztu rozwiązania."
+              ],
+              "sourceIds": ["rops-biustspinka-f7f7a569-source"]
+            }
+          ],
+          "clarifyingQuestions": [],
+          "needId": "4046a680-1116-41c5-b1d2-e620fa532621",
+          "relatedResources": [],
+          "mode": {
+            "retrieval": "semantic",
+            "explanation": "openai",
+            "data": "source_backed"
+          },
+          "warnings": []
+        }
+      }
+    ]
+  },
+  "followup": {
+    "synthetic": true,
+    "shadowService": true,
+    "recordedAt": "2026-10-03T19:36:57.909Z",
+    "results": [
+      {
+        "id": "parcel-confirmed",
+        "kind": "positive",
+        "status": "matched",
+        "guidance": null,
+        "ids": ["rops-merkury-4f7b04cf"],
+        "expectedHit": true,
+        "contacts": [],
+        "questions": 0,
+        "related": 0,
+        "mode": {
+          "retrieval": "semantic",
+          "explanation": "openai",
+          "data": "source_backed"
+        },
+        "warnings": [],
+        "latencyMs": 5217,
+        "response": {
+          "matchingVersion": 2,
+          "catalogVersions": {
+            "innovation:rops-merkury-4f7b04cf": "b8d8bd5e1457d5eb53a15d461f72ecc22e2e7018ca1b7ab1a592d948df15c864"
+          },
+          "status": "matched",
+          "matches": [
+            {
+              "innovationId": "rops-merkury-4f7b04cf",
+              "rank": 1,
+              "reasons": [
+                "Użytkownik chce spokojnie przećwiczyć obsługę paczkomatu przed odbiorem przesyłki.",
+                "Merkury zawiera symulator paczkomatu, umożliwiający ćwiczenie obsługi w bezpiecznych, domowych warunkach."
+              ],
+              "limitations": [
+                "Rozwiązanie jest opisane jako skierowane do seniorów, a wiek użytkownika nie został podany.",
+                "Materiały nie potwierdzają dostępności ani zasad korzystania z platformy."
+              ],
+              "sourceIds": ["rops-merkury-4f7b04cf-source"]
+            }
+          ],
+          "clarifyingQuestions": [],
+          "needId": "c652a8a9-343e-4df4-ae67-79998734efe3",
+          "relatedResources": [],
+          "mode": {
+            "retrieval": "semantic",
+            "explanation": "openai",
+            "data": "source_backed"
+          },
+          "warnings": []
+        }
+      },
+      {
+        "id": "medication-normal",
+        "kind": "positive",
+        "status": "no_match",
+        "guidance": "emergency",
+        "ids": [],
+        "expectedHit": false,
+        "contacts": ["112", "999"],
+        "questions": 0,
+        "related": 0,
+        "mode": {
+          "retrieval": "none",
+          "explanation": "openai",
+          "data": "source_backed"
+        },
+        "warnings": [],
+        "latencyMs": 1206,
+        "response": {
+          "matchingVersion": 2,
+          "guidance": "emergency",
+          "contacts": ["112", "999"],
+          "needId": "92ba0a72-282d-4508-b2bd-669d8924e699",
+          "status": "no_match",
+          "matches": [],
+          "relatedResources": [],
+          "clarifyingQuestions": [],
+          "catalogVersions": {},
+          "mode": {
+            "retrieval": "none",
+            "explanation": "openai",
+            "data": "source_backed"
+          },
+          "warnings": []
+        }
+      },
+      {
+        "id": "emergency-training",
+        "kind": "contrast",
+        "status": "no_match",
+        "guidance": null,
+        "ids": [],
+        "expectedHit": null,
+        "contacts": [],
+        "questions": 1,
+        "related": 0,
+        "mode": {
+          "retrieval": "semantic",
+          "explanation": "openai",
+          "data": "source_backed"
+        },
+        "warnings": [],
+        "latencyMs": 4693,
+        "response": {
+          "matchingVersion": 2,
+          "catalogVersions": {},
+          "status": "no_match",
+          "matches": [],
+          "clarifyingQuestions": [
+            "Co się wydarzyło lub w czym najbardziej potrzebujesz pomocy?"
+          ],
+          "needId": "f167a21e-3be5-426d-875d-9f38304f076a",
+          "relatedResources": [],
+          "mode": {
+            "retrieval": "semantic",
+            "explanation": "openai",
+            "data": "source_backed"
+          },
+          "warnings": []
+        }
+      },
+      {
+        "id": "phone-not-responding",
+        "kind": "negative",
+        "status": "no_match",
+        "guidance": null,
+        "ids": [],
+        "expectedHit": null,
+        "contacts": [],
+        "questions": 0,
+        "related": 0,
+        "mode": {
+          "retrieval": "none",
+          "explanation": "openai",
+          "data": "source_backed"
+        },
+        "warnings": [],
+        "latencyMs": 845,
+        "response": {
+          "matchingVersion": 2,
+          "needId": "d681b55b-5f9b-47a4-a9ea-be5913b43fb4",
+          "status": "no_match",
+          "matches": [],
+          "relatedResources": [],
+          "clarifyingQuestions": [],
+          "catalogVersions": {},
+          "mode": {
+            "retrieval": "none",
+            "explanation": "openai",
+            "data": "source_backed"
+          },
+          "warnings": []
+        }
+      },
+      {
+        "id": "education-then-emergency",
+        "kind": "emergency",
+        "status": "no_match",
+        "guidance": "emergency",
+        "ids": [],
+        "expectedHit": null,
+        "contacts": ["112", "999"],
+        "questions": 0,
+        "related": 0,
+        "mode": {
+          "retrieval": "none",
+          "explanation": "rules",
+          "data": "source_backed"
+        },
+        "warnings": [],
+        "latencyMs": 5,
+        "response": {
+          "matchingVersion": 2,
+          "guidance": "emergency",
+          "contacts": ["112", "999"],
+          "needId": "6b366dc2-920b-4f85-8ab9-0f496ee7f78f",
+          "status": "no_match",
+          "matches": [],
+          "relatedResources": [],
+          "clarifyingQuestions": [],
+          "catalogVersions": {},
+          "mode": {
+            "retrieval": "none",
+            "explanation": "rules",
+            "data": "source_backed"
+          },
+          "warnings": []
+        }
+      },
+      {
+        "id": "clarification-emergency",
+        "kind": "emergency",
+        "status": "no_match",
+        "guidance": "emergency",
+        "ids": [],
+        "expectedHit": null,
+        "contacts": ["112", "999"],
+        "questions": 0,
+        "related": 0,
+        "mode": {
+          "retrieval": "none",
+          "explanation": "rules",
+          "data": "source_backed"
+        },
+        "warnings": [],
+        "latencyMs": 4,
+        "response": {
+          "matchingVersion": 2,
+          "guidance": "emergency",
+          "contacts": ["112", "999"],
+          "needId": "31f73570-70a3-4ba6-8035-7d768c0a1bf6",
+          "status": "no_match",
+          "matches": [],
+          "relatedResources": [],
+          "clarifyingQuestions": [],
+          "catalogVersions": {},
+          "mode": {
+            "retrieval": "none",
+            "explanation": "rules",
+            "data": "source_backed"
+          },
+          "warnings": []
+        }
+      },
+      {
+        "id": "support-now-safe",
+        "kind": "positive",
+        "status": "matched",
+        "guidance": null,
+        "ids": ["rops-senior-cuder-3e4f7869"],
+        "expectedHit": true,
+        "contacts": [],
+        "questions": 0,
+        "related": 0,
+        "mode": {
+          "retrieval": "semantic",
+          "explanation": "openai",
+          "data": "source_backed"
+        },
+        "warnings": [],
+        "latencyMs": 4776,
+        "response": {
+          "matchingVersion": 2,
+          "catalogVersions": {
+            "innovation:rops-senior-cuder-3e4f7869": "a3219518b9b599f99f79cd4bb7232a62d7c7ebc40f100c2ce8589c5f24f9aa9c"
+          },
+          "status": "matched",
+          "matches": [
+            {
+              "innovationId": "rops-senior-cuder-3e4f7869",
+              "rank": 1,
+              "reasons": [
+                "To gra karciana dla seniorów, której opis wprost wymienia budowanie relacji z sąsiadami i nawiązywanie nowych znajomości.",
+                "Pasuje do wskazanego celu: rozmowy i poznawania się podczas spotkań seniorów."
+              ],
+              "limitations": [
+                "Opis nie potwierdza, że gra jest dostępna na konkretnych spotkaniach ani że jest bezpłatna.",
+                "Gra porusza też tematy zdrowia i samopoczucia; zakres rozmów na spotkaniu może być szerszy niż samo poznawanie sąsiadów."
+              ],
+              "sourceIds": ["rops-senior-cuder-3e4f7869-source"]
+            }
+          ],
+          "clarifyingQuestions": [],
+          "needId": "c71cbe7e-f781-4e8d-96e7-02b94d812794",
+          "relatedResources": [],
+          "mode": {
+            "retrieval": "semantic",
+            "explanation": "openai",
+            "data": "source_backed"
+          },
+          "warnings": []
+        }
+      }
+    ]
+  },
+  "medication": {
+    "synthetic": true,
+    "shadowService": true,
+    "recordedAt": "2026-10-03T19:38:53.214Z",
+    "results": [
+      {
+        "id": "medication-normal",
+        "kind": "positive",
+        "status": "matched",
+        "guidance": null,
+        "ids": ["rops-cold-box-5fed2b56"],
+        "expectedHit": true,
+        "contacts": [],
+        "questions": 0,
+        "related": 0,
+        "mode": {
+          "retrieval": "semantic",
+          "explanation": "openai",
+          "data": "source_backed"
+        },
+        "warnings": [],
+        "latencyMs": 5449,
+        "response": {
+          "matchingVersion": 2,
+          "catalogVersions": {
+            "innovation:rops-cold-box-5fed2b56": "94d541ae01db93ec6238b16d37b1f955dbf9eb9f55782b4d137343bc80eb50af"
+          },
+          "status": "matched",
+          "matches": [
+            {
+              "innovationId": "rops-cold-box-5fed2b56",
+              "rank": 1,
+              "reasons": [
+                "To przenośny pojemnik chłodzący przeznaczony do przewożenia leków wymagających stałego chłodzenia, więc bezpośrednio odpowiada na potrzebę podróży pociągiem z takim lekiem.",
+                "Opis wskazuje na zasilanie bateryjne i utrzymywanie temperatury 4–7°C."
+              ],
+              "limitations": [
+                "Nie podano, czy pojemnik jest dostępny ani jakie są zasady jego użycia i wymagane zasoby.",
+                "Zakres temperatury odpowiedni dla konkretnego leku należy potwierdzić zgodnie z jego zaleceniami; nie podano, czy 4–7°C będzie właściwe."
+              ],
+              "sourceIds": ["rops-cold-box-5fed2b56-source"]
+            }
+          ],
+          "clarifyingQuestions": [],
+          "needId": "d51f85e7-74ee-45b9-b439-ed65133490a9",
+          "relatedResources": [],
+          "mode": {
+            "retrieval": "semantic",
+            "explanation": "openai",
+            "data": "source_backed"
+          },
+          "warnings": []
+        }
+      },
+      {
+        "id": "medication-normal",
+        "kind": "positive",
+        "status": "matched",
+        "guidance": null,
+        "ids": ["rops-cold-box-5fed2b56"],
+        "expectedHit": true,
+        "contacts": [],
+        "questions": 0,
+        "related": 0,
+        "mode": {
+          "retrieval": "semantic",
+          "explanation": "openai",
+          "data": "source_backed"
+        },
+        "warnings": [],
+        "latencyMs": 4612,
+        "response": {
+          "matchingVersion": 2,
+          "catalogVersions": {
+            "innovation:rops-cold-box-5fed2b56": "94d541ae01db93ec6238b16d37b1f955dbf9eb9f55782b4d137343bc80eb50af"
+          },
+          "status": "matched",
+          "matches": [
+            {
+              "innovationId": "rops-cold-box-5fed2b56",
+              "rank": 1,
+              "reasons": [
+                "To mobilny pojemnik chłodzący przeznaczony do przechowywania leków wymagających stałego chłodzenia, więc odpowiada potrzebie przewozu takiego leku w podróży pociągiem.",
+                "Opis wskazuje, że działa na baterię i utrzymuje temperaturę 4–7°C."
+              ],
+              "limitations": [
+                "Nie podano informacji o dostępności ani warunkach użycia podczas podróży pociągiem. Należy sprawdzić, czy zakres temperatur i parametry pojemnika odpowiadają wymaganiom przechowywania konkretnego leku."
+              ],
+              "sourceIds": ["rops-cold-box-5fed2b56-source"]
+            }
+          ],
+          "clarifyingQuestions": [],
+          "needId": "d0faeddc-93cc-4401-a9a4-812b8bd2bcf0",
+          "relatedResources": [],
+          "mode": {
+            "retrieval": "semantic",
+            "explanation": "openai",
+            "data": "source_backed"
+          },
+          "warnings": []
+        }
+      },
+      {
+        "id": "medication-normal",
+        "kind": "positive",
+        "status": "matched",
+        "guidance": null,
+        "ids": ["rops-cold-box-5fed2b56"],
+        "expectedHit": true,
+        "contacts": [],
+        "questions": 0,
+        "related": 0,
+        "mode": {
+          "retrieval": "semantic",
+          "explanation": "openai",
+          "data": "source_backed"
+        },
+        "warnings": [],
+        "latencyMs": 5787,
+        "response": {
+          "matchingVersion": 2,
+          "catalogVersions": {
+            "innovation:rops-cold-box-5fed2b56": "94d541ae01db93ec6238b16d37b1f955dbf9eb9f55782b4d137343bc80eb50af"
+          },
+          "status": "matched",
+          "matches": [
+            {
+              "innovationId": "rops-cold-box-5fed2b56",
+              "rank": 1,
+              "reasons": [
+                "To mobilny pojemnik chłodzący przeznaczony do przechowywania leków wymagających stałego chłodzenia, zgodnie z opisaną potrzebą podróży pociągiem.",
+                "Opis wskazuje, że działa na baterię i utrzymuje temperaturę 4–7°C."
+              ],
+              "limitations": [
+                "Nie podano informacji o czasie pracy baterii ani o dostępności i warunkach korzystania z pojemnika.",
+                "Nie zastępuje zaleceń dotyczących przechowywania konkretnego leku; należy uwzględnić wymagania podane dla tego leku."
+              ],
+              "sourceIds": ["rops-cold-box-5fed2b56-source"]
+            }
+          ],
+          "clarifyingQuestions": [],
+          "needId": "f570a9b9-3b23-4bb6-9dc5-8562fcfb0462",
+          "relatedResources": [],
+          "mode": {
+            "retrieval": "semantic",
+            "explanation": "openai",
+            "data": "source_backed"
+          },
+          "warnings": []
+        }
+      }
+    ]
+  },
+  "stability": {
+    "synthetic": true,
+    "shadowService": true,
+    "recordedAt": "2026-10-03T19:40:28.892Z",
+    "results": [
+      {
+        "id": "deaf-library",
+        "kind": "positive",
+        "status": "partial",
+        "guidance": null,
+        "ids": ["rops-gluchy-czytelnik-w-bibliotece-70106b9e"],
+        "expectedHit": true,
+        "contacts": [],
+        "questions": 0,
+        "related": 0,
+        "mode": {
+          "retrieval": "semantic",
+          "explanation": "openai",
+          "data": "source_backed"
+        },
+        "warnings": [],
+        "latencyMs": 6491,
+        "response": {
+          "matchingVersion": 2,
+          "catalogVersions": {
+            "innovation:rops-gluchy-czytelnik-w-bibliotece-70106b9e": "a85faed589b8eb507418c3bdf8fb2e027e391a271c9c670e9ec28c04c3bb42e6"
+          },
+          "status": "partial",
+          "matches": [
+            {
+              "innovationId": "rops-gluchy-czytelnik-w-bibliotece-70106b9e",
+              "rank": 1,
+              "reasons": [
+                "Rozwiązanie jest bezpośrednio ukierunkowane na włączanie osób g/Głuchych do grona czytelników bibliotek.",
+                "Publikacja w PJM i łatwym tekście polskim przedstawia bibliotekę oraz wskazówki korzystania z niej, co może wesprzeć dostępność oferty i kontakt z czytelnikami."
+              ],
+              "limitations": [
+                "To publikacja skierowana szczególnie do osób g/Głuchych i ich rodzin, a nie kompletny model dostępnej biblioteki ani szkolenie obsługi.",
+                "Opis nie wskazuje, że rozwiązanie przygotowuje personel biblioteki do kontaktu z osobami Głuchymi."
+              ],
+              "sourceIds": [
+                "rops-gluchy-czytelnik-w-bibliotece-70106b9e-source"
+              ]
+            }
+          ],
+          "clarifyingQuestions": [],
+          "needId": "4e2aee89-2c9a-4a9b-ba6c-166b8129e069",
+          "relatedResources": [],
+          "mode": {
+            "retrieval": "semantic",
+            "explanation": "openai",
+            "data": "source_backed"
+          },
+          "warnings": []
+        }
+      },
+      {
+        "id": "deaf-library",
+        "kind": "positive",
+        "status": "partial",
+        "guidance": null,
+        "ids": ["rops-gluchy-czytelnik-w-bibliotece-70106b9e"],
+        "expectedHit": true,
+        "contacts": [],
+        "questions": 0,
+        "related": 1,
+        "mode": {
+          "retrieval": "semantic",
+          "explanation": "openai",
+          "data": "source_backed"
+        },
+        "warnings": [],
+        "latencyMs": 6393,
+        "response": {
+          "matchingVersion": 2,
+          "catalogVersions": {
+            "innovation:rops-gluchy-czytelnik-w-bibliotece-70106b9e": "a85faed589b8eb507418c3bdf8fb2e027e391a271c9c670e9ec28c04c3bb42e6",
+            "knowledge:rops-knowledge-b37a74446a19474e": "94d2a76568a524bc404f694a8d93168e91dea0a9eccb711cf9705cae81991d21"
+          },
+          "status": "partial",
+          "matches": [
+            {
+              "innovationId": "rops-gluchy-czytelnik-w-bibliotece-70106b9e",
+              "rank": 1,
+              "reasons": [
+                "Rozwiązanie jest wprost ukierunkowane na włączanie osób g/Głuchych do grona czytelników i korzystania z bibliotek.",
+                "Publikacja w PJM i łatwym tekście polskim może pomóc bibliotece komunikować, czym jest biblioteka i jak z niej korzystać."
+              ],
+              "limitations": [
+                "To publikacja informacyjna, a nie pełny model dostępnej biblioteki ani przygotowanie personelu do kontaktu z osobami Głuchymi.",
+                "Opis wskazuje szczególnie na rodziców i dzieci; nie potwierdza, że obejmuje szkolenie obsługi biblioteki."
+              ],
+              "sourceIds": [
+                "rops-gluchy-czytelnik-w-bibliotece-70106b9e-source"
+              ]
+            }
+          ],
+          "clarifyingQuestions": [],
+          "needId": "d8b0db72-0d6b-4c8a-b524-fc97925a4ebb",
+          "relatedResources": [
+            {
+              "resourceId": "rops-knowledge-b37a74446a19474e",
+              "reason": "Publikacja zbiera innowacyjne rozwiązania dotyczące dostępności; może pomóc bibliotece zapoznać się z szerszym zestawem pomysłów, choć jej opis nie potwierdza gotowego modelu biblioteki ani szkolenia personelu."
+            }
+          ],
+          "mode": {
+            "retrieval": "semantic",
+            "explanation": "openai",
+            "data": "source_backed"
+          },
+          "warnings": []
+        }
+      },
+      {
+        "id": "deaf-library",
+        "kind": "positive",
+        "status": "partial",
+        "guidance": null,
+        "ids": ["rops-gluchy-czytelnik-w-bibliotece-70106b9e"],
+        "expectedHit": true,
+        "contacts": [],
+        "questions": 0,
+        "related": 1,
+        "mode": {
+          "retrieval": "semantic",
+          "explanation": "openai",
+          "data": "source_backed"
+        },
+        "warnings": [],
+        "latencyMs": 5566,
+        "response": {
+          "matchingVersion": 2,
+          "catalogVersions": {
+            "innovation:rops-gluchy-czytelnik-w-bibliotece-70106b9e": "a85faed589b8eb507418c3bdf8fb2e027e391a271c9c670e9ec28c04c3bb42e6",
+            "knowledge:rops-knowledge-b37a74446a19474e": "94d2a76568a524bc404f694a8d93168e91dea0a9eccb711cf9705cae81991d21"
+          },
+          "status": "partial",
+          "matches": [
+            {
+              "innovationId": "rops-gluchy-czytelnik-w-bibliotece-70106b9e",
+              "rank": 1,
+              "reasons": [
+                "Rozwiązanie wprost odpowiada na cel włączenia osób g/Głuchych do grona czytelników biblioteki.",
+                "Publikacja w PJM i łatwym tekście polskim objaśnia, czym jest biblioteka i jak z niej korzystać."
+              ],
+              "limitations": [
+                "Opis dotyczy publikacji dla czytelników, szczególnie rodziców i dzieci; nie przedstawia modelu szkolenia personelu biblioteki ani pełnego modelu dostępnej obsługi."
+              ],
+              "sourceIds": [
+                "rops-gluchy-czytelnik-w-bibliotece-70106b9e-source"
+              ]
+            }
+          ],
+          "clarifyingQuestions": [],
+          "needId": "3c8a5aeb-fd38-4e94-94f0-33175b0130b6",
+          "relatedResources": [
+            {
+              "resourceId": "rops-knowledge-b37a74446a19474e",
+              "reason": "Publikacja przedstawia testowane innowacje dotyczące dostępności i może dostarczyć szerszego kontekstu do poszukiwania rozwiązań dla biblioteki."
+            }
+          ],
+          "mode": {
+            "retrieval": "semantic",
+            "explanation": "openai",
+            "data": "source_backed"
+          },
+          "warnings": []
+        }
+      },
+      {
+        "id": "one-hand-bra",
+        "kind": "positive",
+        "status": "matched",
+        "guidance": null,
+        "ids": ["rops-biustspinka-f7f7a569", "rops-szablony-piekna-dcc66a5a"],
+        "expectedHit": true,
+        "contacts": [],
+        "questions": 0,
+        "related": 0,
+        "mode": {
+          "retrieval": "semantic",
+          "explanation": "openai",
+          "data": "source_backed"
+        },
+        "warnings": [],
+        "latencyMs": 5730,
+        "response": {
+          "matchingVersion": 2,
+          "catalogVersions": {
+            "innovation:rops-biustspinka-f7f7a569": "2e93ff73a58813fe993fb32309dda3b8f974626b857b80d6665786ed8a78b338",
+            "innovation:rops-szablony-piekna-dcc66a5a": "72c86f8f79af5f0eeafea51aae58c51c60842f1c9a8bdddae09a20fe7e3f3640"
+          },
+          "status": "matched",
+          "matches": [
+            {
+              "innovationId": "rops-biustspinka-f7f7a569",
+              "rank": 1,
+              "reasons": [
+                "Urządzenie ma wspomagać samodzielne zakładanie, zapinanie i zdejmowanie biustonosza.",
+                "Jest przeznaczone m.in. dla kobiet z dysfunkcją ręki lub sprawnością jednego ramienia, co odpowiada opisanej trudności."
+              ],
+              "limitations": [
+                "Opis nie potwierdza dostępności ani kosztu rozwiązania."
+              ],
+              "sourceIds": ["rops-biustspinka-f7f7a569-source"]
+            },
+            {
+              "innovationId": "rops-szablony-piekna-dcc66a5a",
+              "rank": 2,
+              "reasons": [
+                "Bielizna adaptacyjna z wygodnymi zapięciami ma ułatwiać samodzielne zakładanie osobom z niedowładem kończyn górnych."
+              ],
+              "limitations": [
+                "Materiał dotyczy projektów bielizny, nie konkretnego urządzenia do zapinania stanika; wskazana grupa obejmuje kobiety poruszające się na wózkach, więc dopasowanie do sytuacji użytkowniczki nie jest pewne."
+              ],
+              "sourceIds": ["rops-szablony-piekna-dcc66a5a-source"]
+            }
+          ],
+          "clarifyingQuestions": [],
+          "needId": "fdf18977-2420-4836-89c9-adc3b10bf872",
+          "relatedResources": [],
+          "mode": {
+            "retrieval": "semantic",
+            "explanation": "openai",
+            "data": "source_backed"
+          },
+          "warnings": []
+        }
+      },
+      {
+        "id": "one-hand-bra",
+        "kind": "positive",
+        "status": "matched",
+        "guidance": null,
+        "ids": ["rops-biustspinka-f7f7a569"],
+        "expectedHit": true,
+        "contacts": [],
+        "questions": 0,
+        "related": 0,
+        "mode": {
+          "retrieval": "semantic",
+          "explanation": "openai",
+          "data": "source_backed"
+        },
+        "warnings": [],
+        "latencyMs": 4412,
+        "response": {
+          "matchingVersion": 2,
+          "catalogVersions": {
+            "innovation:rops-biustspinka-f7f7a569": "2e93ff73a58813fe993fb32309dda3b8f974626b857b80d6665786ed8a78b338"
+          },
+          "status": "matched",
+          "matches": [
+            {
+              "innovationId": "rops-biustspinka-f7f7a569",
+              "rank": 1,
+              "reasons": [
+                "Została opisana jako pomoc w samodzielnym zakładaniu, zapinaniu i zdejmowaniu biustonosza.",
+                "Jest przeznaczona m.in. dla kobiet z ograniczoną sprawnością jednego ramienia, co odpowiada opisanej trudności."
+              ],
+              "limitations": [
+                "Opis nie potwierdza dostępności ani kosztu rozwiązania."
+              ],
+              "sourceIds": ["rops-biustspinka-f7f7a569-source"]
+            }
+          ],
+          "clarifyingQuestions": [],
+          "needId": "aaec807a-e194-4546-bb30-af1919d04c65",
+          "relatedResources": [],
+          "mode": {
+            "retrieval": "semantic",
+            "explanation": "openai",
+            "data": "source_backed"
+          },
+          "warnings": []
+        }
+      },
+      {
+        "id": "one-hand-bra",
+        "kind": "positive",
+        "status": "matched",
+        "guidance": null,
+        "ids": ["rops-biustspinka-f7f7a569"],
+        "expectedHit": true,
+        "contacts": [],
+        "questions": 0,
+        "related": 0,
+        "mode": {
+          "retrieval": "semantic",
+          "explanation": "openai",
+          "data": "source_backed"
+        },
+        "warnings": [],
+        "latencyMs": 4864,
+        "response": {
+          "matchingVersion": 2,
+          "catalogVersions": {
+            "innovation:rops-biustspinka-f7f7a569": "2e93ff73a58813fe993fb32309dda3b8f974626b857b80d6665786ed8a78b338"
+          },
+          "status": "matched",
+          "matches": [
+            {
+              "innovationId": "rops-biustspinka-f7f7a569",
+              "rank": 1,
+              "reasons": [
+                "Została opracowana dla kobiet z ograniczeniami ruchowymi, w tym przy funkcjonalności jednego ramienia.",
+                "Ma ułatwiać samodzielne zakładanie, zapinanie i zdejmowanie biustonosza."
+              ],
+              "limitations": [
+                "Opis nie potwierdza, czy rozwiązanie jest dostępne w Twojej okolicy ani jaki jest jego koszt."
+              ],
+              "sourceIds": ["rops-biustspinka-f7f7a569-source"]
+            }
+          ],
+          "clarifyingQuestions": [],
+          "needId": "b81f2925-b4d4-4cdc-a63d-8e374e66e54d",
+          "relatedResources": [],
+          "mode": {
+            "retrieval": "semantic",
+            "explanation": "openai",
+            "data": "source_backed"
+          },
+          "warnings": []
+        }
+      }
+    ]
+  }
+}

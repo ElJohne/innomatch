@@ -108,7 +108,11 @@ export async function getThread(id: string, a: Actor) {
     adaptationUnavailable: Boolean(row.adaptation_id) && !adaptation,
     needId: row.need_id,
     need: need
-      ? { description: need.description, constraints: need.constraints }
+      ? {
+          description: need.description,
+          constraints: need.constraints,
+          clarifications: need.clarifications ?? [],
+        }
       : null,
     innovation: innovation
       ? { id: innovation.id, title: innovation.title }

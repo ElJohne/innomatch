@@ -4,6 +4,8 @@ import { matchNeed } from "@/server/services/matching";
 import { handle, HttpError, json, writeGuard } from "@/server/http";
 import { sqlClient } from "@/server/db/client";
 import { config } from "@/server/config";
+import { MATCHING_VERSION } from "@/server/search/intake";
+import { urgentSignal } from "@/lib/need-guidance";
 const pending = new Map<string, Promise<unknown>>();
 // matchNeed uses the shared pool while its advisory-lock transaction is open.
 // Keep at least three of the five connections free for those queries.
@@ -23,7 +25,21 @@ export async function POST(
         "NOT_FOUND",
         "Nie znaleziono sprawy w tej sesji.",
       );
-    if (need.match) return json(await matchNeed(need));
+    // Emergency contacts must not wait for AI slots or the search quota.
+    if (
+      urgentSignal(
+        [
+          need.description,
+          need.constraints,
+          ...(need.clarifications ?? []).map((x) => x.answer),
+        ]
+          .filter(Boolean)
+          .join("\n"),
+      )
+    )
+      return json(await matchNeed(need));
+    if (need.match?.matchingVersion === MATCHING_VERSION)
+      return json(await matchNeed(need));
     const key = `${s.ownerId}:${id}`;
     if (pending.has(key)) return json(await pending.get(key));
     const run = async () => {

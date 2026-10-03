@@ -66,6 +66,7 @@ export default function RootLayout({
             <Link href="/innowacje">Katalog innowacji</Link>
             <Link href="/pomysly/nowy">Mam pomysł</Link>
             <Link href="/moje-sprawy">Moje sprawy</Link>
+            <Link href="/pilna-pomoc">Pilna pomoc</Link>
             <a
               href="https://www.malopolska.pl"
               target="_blank"

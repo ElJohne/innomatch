@@ -2,6 +2,7 @@ import { it, expect, vi, afterEach } from "vitest";
 import fixtures from "../../data/demo/innovations.json";
 import { innovationSchema, type Need } from "@/lib/contracts";
 const records = fixtures.map((x) => innovationSchema.parse(x));
+// Keep catalog version validation real; only isolate the database lookup.
 vi.mock("@/server/services/catalog", async (importOriginal) => ({
   ...(await importOriginal<typeof import("@/server/services/catalog")>()),
   locallyManagedRecords: async () => [],
@@ -39,7 +40,7 @@ const need: Need = {
   description: "Seniorzy mieszkający samotnie potrzebują spotkań w świetlicy.",
   targetGroups: [],
 };
-it("Azure failure retains actual keyword results with an explicit template warning", async () => {
+it("Azure failure asks for clarification instead of recommending unverified candidates", async () => {
   configure();
   vi.spyOn(AzureAiProvider.prototype, "embed").mockRejectedValue(
     new Error("timeout"),
@@ -53,8 +54,10 @@ it("Azure failure retains actual keyword results with an explicit template warni
     explanation: "template",
     data: "synthetic",
   });
-  expect(result.matches[0].innovationId).toBe(records[0].id);
-  expect(result.warnings).toHaveLength(2);
+  expect(result.matches).toEqual([]);
+  expect(result.relatedResources).toEqual([]);
+  expect(result.clarifyingQuestions.length).toBeGreaterThan(0);
+  expect(result.warnings).toHaveLength(3);
 });
 it("fabricated AI sources never enter saved results", async () => {
   configure();

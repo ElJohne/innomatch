@@ -1,0 +1,67 @@
+{
+  "version": "2026-10-03-followup-v2",
+  "synthetic": true,
+  "labeling": "Provisional synthetic checks defined before this run; includes regressions and new contrast cases, not independent expert evaluation.",
+  "cases": [
+    {
+      "id": "parcel-confirmed",
+      "kind": "positive",
+      "description": "Przyszła wiadomość że paczka w tej metalowej szafie pod sklepem. Ja nie wiem gdzie ten numer wcisnąć, boję się zepsuć. Czy można gdzieś poćwiczyć zanim pójdę?",
+      "clarifications": [
+        {
+          "question": "Czy chodzi o przećwiczenie obsługi skrytki paczkowej przed odbiorem przesyłki?",
+          "answer": "Tak, chodzi o paczkomat. Chcę najpierw poćwiczyć spokojnie obsługę."
+        }
+      ],
+      "expectedIds": ["rops-merkury-4f7b04cf"]
+    },
+    {
+      "id": "medication-normal",
+      "kind": "positive",
+      "description": "Zaraz wezmę tabletki zgodnie z zaleceniem lekarza. Inny lek muszę trzymać w lodówce. Szukam pojemnika chłodzącego na podróż pociągiem, nie porad o dawkowaniu.",
+      "expectedIds": ["rops-cold-box-5fed2b56"]
+    },
+    {
+      "id": "emergency-training",
+      "kind": "contrast",
+      "description": "Organizujemy warsztaty pierwszej pomocy. Chcemy omówić, co zrobić gdy ktoś nie oddycha. Teraz nikt nie potrzebuje ratunku, szukamy materiałów szkoleniowych.",
+      "expectedIds": []
+    },
+    {
+      "id": "phone-not-responding",
+      "kind": "negative",
+      "description": "Telefon nie reaguje na dotyk i ma pęknięty ekran. Potrzebuję punktu napraw telefonów, a nie pomocy opiekuna.",
+      "expectedIds": []
+    },
+    {
+      "id": "education-then-emergency",
+      "kind": "emergency",
+      "description": "Wczoraj były warsztaty pierwszej pomocy. Teraz mąż nie oddycha.",
+      "expectedIds": []
+    },
+    {
+      "id": "clarification-emergency",
+      "kind": "emergency",
+      "description": "Pomocy",
+      "clarifications": [
+        {
+          "question": "Co się wydarzyło?",
+          "answer": "Czuję gaz w kuchni, jestem przy kuchence i boję się."
+        }
+      ],
+      "expectedIds": []
+    },
+    {
+      "id": "support-now-safe",
+      "kind": "positive",
+      "description": "Już mi się nic nie chce, wszystkim tylko zawadzam. Siedzę sama i nie wiem po co wstawać.",
+      "clarifications": [
+        {
+          "question": "Czy jesteś teraz w bezpiecznym miejscu i możesz porozmawiać z kimś zaufanym?",
+          "answer": "Tak, jestem bezpieczna, córka jest ze mną. Nie chcę zrobić sobie krzywdy. Chcemy grę do rozmów i poznawania sąsiadów na spotkaniach seniorów."
+        }
+      ],
+      "expectedIds": ["rops-senior-cuder-3e4f7869"]
+    }
+  ]
+}
