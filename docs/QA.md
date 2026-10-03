@@ -1,5 +1,49 @@
 # Перевірки — 2026-10-03, поточна ітерація та історія
 
+## Стабілізація з реальною PostgreSQL — 20:19 Europe/Warsaw
+
+Середовище: Windows, Node 22.16.0, npm 10.9.2, Chromium; одноразовий контейнер
+`postgres:17.11-alpine`, лише localhost:15432, окрема БД `innomatch_qa`.
+Жодних production-записів, live AI-викликів, push або deployment у цій ітерації.
+
+- Системний npm shim несправний (MODULE_NOT_FOUND). Ті самі npm scripts виконано
+  через `node 'C:\Program Files\nodejs\node_modules\npm\bin\npm-cli.js'`.
+- Початковий unit: 20 PASS / 2 FAIL через непідмінену БД у новій перевірці
+  publication. Ізольовано лише lookup локально змінених записів, реальний hash
+  і перевірку дозволених джерел збережено. Фінально: **22/22 PASS**.
+- Початковий integration підтвердив застарілий setup 0001–0003. Після застосування
+  всіх міграцій нові сценарії відтворили помилку JSON/Date через мутацію клієнта
+  Drizzle. Виправлено окремими пулами ORM/raw SQL і закриттям обох у CLI.
+- Фінально `npm run test:integration`: **8/8 PASS**, без skipped. Нові 6 сценаріїв:
+  concurrent idea creation/submit, assist cache, stale revisions, приватність;
+  M1 → план → редагування → sharing → staff reply/read;
+  4 одночасні pilot requests → один запис/повідомлення, moderation/edit race;
+  recovery rotation/hash/expiry; ADMIN-only SQL aggregates, date boundary,
+  унікальні групи й відсутність приватного тексту; catalog hide/stale writes →
+  вилучення старого embedding, результату й плану. Pool у новому наборі допускає
+  реальні одночасні SQL-транзакції, кожен набір прибирає свою випадкову schema.
+- Штатні `db:migrate` двічі, `db:seed:demo -- --demo`, `auth:staff` — PASS
+  лише на локальній QA-БД; пароль випадковий, у журнали не потрапляв.
+- `npm run test:e2e`: **14/14 PASS**, 18.9 s, fixtures/mock. Виправлено старий
+  origin localhost:3000 у тестах діалогів та очікування збереження відповіді:
+  текст у textarea не є підтвердженням появи повідомлення в історії.
+  Додано UI create/assist/apply/save/reload/submit ідеї та create/reload/recovery
+  адаптації. Anonymous 401 відрізняється від 404 для чужої справи у власній сесії.
+- Ті самі communication/workflows specs із тимчасовою локальною конфігурацією
+  PostgreSQL/mock: **4/4 PASS**, 8.5 s. Відповідь координатора, unread/read,
+  нові ідеї/плани й recovery перевірено через HTTP та браузер з реальною БД.
+- Axe WCAG 2 A/AA + 2.1 AA на перевірених екранах — без порушень; адаптація
+  перевірена на 320px. Це не повна сертифікація доступності.
+- Фінальні lint, typecheck, production build (52 маршрути), operator bundle
+  і `git diff --check` — PASS. Перший operator bundle блокував sandbox-доступ
+  esbuild до батьківського каталогу; запуск із дозволеним доступом пройшов.
+
+Межі: AI у всіх цих тестах mock. Live M3/M7, незалежна retrieval evaluation,
+довготривале навантаження, off-host backup/restore та повний accessibility audit
+не виконані. Виправлення з'єднань ще не розгорнуте. У попередній read-only
+перевірці GitHub workflow 37139928817 і HTTPS readiness production — PASS;
+це не перевірка нової локальної зміни або всіх production-сценаріїв.
+
 ## Merge функцій із origin/master 46019bd
 
 - Після усунення конфліктів: lint, typecheck і production build — PASS (52 маршрути).

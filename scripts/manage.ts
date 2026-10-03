@@ -13,7 +13,7 @@ import { config, required } from "../src/server/config";
 import { randomUUID } from "node:crypto";
 import { hashPassword } from "../src/server/auth/password";
 import { sql } from "drizzle-orm";
-import { sqlClient, db } from "../src/server/db/client";
+import { sqlClient, db, closeDatabase } from "../src/server/db/client";
 import { embeddings, knowledgeEmbeddings } from "../src/server/db/schema";
 import {
   importRecords,
@@ -329,5 +329,5 @@ main()
     process.exitCode = 1;
   })
   .finally(async () => {
-    if (process.env.DATABASE_URL) await sqlClient().end();
+    await closeDatabase();
   });
