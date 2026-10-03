@@ -11,15 +11,15 @@ job="migrate-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
 export MIGRATION_JOB="$job"
 node deploy/render.mjs migration | kubectl -n innomatch apply -f -
 for attempt in $(seq 1 90); do
-  state=$(kubectl -n innomatch get "job/$job" -o jsonpath='{.status.conditions[0].type}')
-  if [[ "$state" == Complete ]]; then break; fi
-  if [[ "$state" == Failed || "$state" == FailureTarget ]]; then
+  state=$(kubectl -n innomatch get "job/$job" -o jsonpath='{.status.conditions[*].type}')
+  if [[ "$state" == *Complete* ]]; then break; fi
+  if [[ "$state" == *Failed* || "$state" == *FailureTarget* ]]; then
     kubectl -n innomatch logs "job/$job" || true
     exit 1
   fi
   sleep 2
 done
-[[ "$state" == Complete ]] || exit 1
+[[ "$state" == *Complete* ]] || exit 1
 kubectl -n innomatch logs "job/$job"
 previous=$(kubectl -n innomatch get deployment innomatch -o jsonpath='{.metadata.annotations.deployment\.kubernetes\.io/revision}' --ignore-not-found)
 node deploy/render.mjs app | kubectl -n innomatch apply -f -
