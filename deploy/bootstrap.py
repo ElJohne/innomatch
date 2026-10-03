@@ -35,7 +35,7 @@ password = base64.b64decode(db_secret['data']['APP_PASSWORD']).decode()
 secret('app-env', {
     'DATABASE_URL': f'postgresql://innomatch:{password}@postgres:5432/innomatch',
     'DATABASE_CONFIRMED_FOR_PROJECT': 'true', 'AUTH_SECRET': secrets.token_hex(48),
-    'APP_URL': 'https://innomatch.brandly-io.com', 'DATA_PROVIDER': 'postgres',
+    'APP_URL': 'https://pomocnypunkt.pl', 'DATA_PROVIDER': 'postgres',
     'AI_PROVIDER': 'mock', 'DEMO_DATA_ENABLED': 'false',
 })
 secret('runner-registration', {'token': token})
@@ -74,7 +74,7 @@ apply(dict(apiVersion='networking.k8s.io/v1', kind='NetworkPolicy', metadata=dic
 }))
 apply(obj('Service', 'innomatch', spec={'selector': {'app': 'innomatch'}, 'ports': [{'name': 'http', 'port': 3000, 'targetPort': 3000}]}))
 apply(dict(apiVersion='networking.k8s.io/v1', kind='Ingress', metadata=dict(name='innomatch', namespace=NS), spec={
-    'ingressClassName': 'traefik', 'rules': [{'host': 'innomatch.brandly-io.com', 'http': {'paths': [{'path': '/', 'pathType': 'Prefix', 'backend': {'service': {'name': 'innomatch', 'port': {'number': 3000}}}}]}}],
+    'ingressClassName': 'traefik', 'rules': [{'host': 'pomocnypunkt.pl', 'http': {'paths': [{'path': '/', 'pathType': 'Prefix', 'backend': {'service': {'name': 'innomatch', 'port': {'number': 3000}}}}]}}],
 }))
 
 apply(obj('ServiceAccount', 'deployer'))

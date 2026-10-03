@@ -54,7 +54,7 @@ Live M7 перевірити окремою синтетичною потреб�
 ## Production: dev-k3s / GitHub Actions
 
 Власник погодив сервер `dev-k3s` (SSH `eljohne`, k3s node `localserver`),
-namespace `innomatch` та `https://innomatch.brandly-io.com` (тимчасово повернуто за вказівкою власника 2026-10-03).
+namespace `innomatch` та `https://pomocnypunkt.pl` (перемкнуто після налаштування Tunnel власником 2026-10-03).
 На сервері kubectl використовує `KUBECONFIG=$HOME/.kube/config`; sudo не потрібен.
 
 `.github/workflows/deploy.yml` запускається після push у `master` або вручну.
@@ -82,7 +82,7 @@ Production використовує postgres; OpenAI-конфігурація н
 У попередньому rollout імпортовано 114 інновацій і 69 матеріалів ROPS, автоматичного demo seed немає.
 Імпорт та індексацію виконувати лише для дозволених матеріалів.
 
-Ingress очікує Cloudflare Tunnel public hostname `innomatch.brandly-io.com`
+Ingress очікує Cloudflare Tunnel public hostname `pomocnypunkt.pl`
 із service `http://localhost:80` і оригінальним Host header. TLS завершується на Cloudflare.
 `/api/health` перевіряє процес, `/api/ready` також перевіряє доступ до БД та міграцію.
 

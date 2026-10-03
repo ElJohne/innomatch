@@ -1,5 +1,17 @@
 # Перевірки — 2026-10-03, поточна ітерація та історія
 
+## Перемикання на pomocnypunkt.pl — 23:20 Europe/Warsaw
+
+- dev-k3s: Ingress і APP_URL оновлено, rollout PASS, Ready 1/1; підтверджено
+  незмінність релізу `4e969253ddbebe61e1172f3d7bac7dda34382d79-37153929340-1`.
+- curl через публічний HTTPS/Cloudflare: `/` HTTP 200, `/api/ready` HTTP 200 / ok.
+  Локальний Ingress із Host нового домену також повертає readiness ok.
+- POST `/api/needs`, порожній `{}`: новий Origin → 400 VALIDATION,
+  старий → 403 ORIGIN; без створення даних і без AI-запитів.
+- Початкова HTTPS-перевірка через Python urllib отримала 403; наступні curl
+  GET/POST пройшли очікувано. Причину відмінності клієнтів не встановлено.
+- Код програми й міграції не змінювались; npm suites/build не запускались.
+
 ## Виправлення M1 — 21:43 Europe/Warsaw
 
 - Мінімум 3 після trim: unit перевіряє 2 reject/3 accept, короткий emergency accept.
