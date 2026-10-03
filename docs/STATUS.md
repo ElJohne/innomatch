@@ -1,12 +1,19 @@
 # Стан — 2026-10-03
 
-## OpenAI API — впровадження
+## OpenAI API — DONE, live підтверджено
 
 Власник дозволив реалізацію прямого OpenAI API замість Azure та надав GitHub secret.
 Додано Responses strict JSON Schema, embeddings, server-only credential wiring, doctor/index
 для обох live провайдерів. Моделі: gpt-6-luna / text-embedding-3-small.
-Build, rollout і live-перевірка цієї зміни ще виконуються; новий режим поки не підтверджено.
-DNS/HTTPS уже працює: readiness повернув 200 / ok перед змінами.
+Production тепер `AI_PROVIDER=openai`; ключ доставлено через Actions → openai-env.
+Два явні синтетичні запити з production pod успішні: Responses із strict JSON Schema
+та embeddings. HTTPS readiness — 200 / ok, головна — 200, mock-banner відсутній.
+Локальні lint/typecheck пройшли; фінальний Linux build і rollout — SUCCESS:
+https://github.com/ElJohne/innomatch/actions/runs/37121047658 (коміт 032506d).
+Збережені mock-результати залишаються явно позначеними навіть після перемикання провайдера.
+Unit/integration/E2E не запускались за дорученням власника.
+Каталог досі порожній: live AI-підключення підтверджено, якість пошуку на реальному корпусі — ні.
+Наступний крок: імпортувати дозволені джерельні записи та виконати `npm run data:index`.
 
 ## Production deployment — попередня успішна версія
 

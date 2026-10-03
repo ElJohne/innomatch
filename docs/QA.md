@@ -8,7 +8,16 @@
 - npm run lint: PASS; npm run typecheck: PASS.
 - node --check для нових deployment/diagnostic scripts і git diff --check: PASS.
 - Unit/integration/E2E не запускались, як наказав власник.
-- Production build, rollout та явні live Responses/embeddings: ще не виконано для цієї зміни.
+- Linux production build та rollout: PASS, Actions run 37120987952 (коміт 4a5a333).
+- Фінальний build + deploy після позначення старих mock-результатів: PASS,
+  https://github.com/ElJohne/innomatch/actions/runs/37121047658 (коміт 032506d).
+- `node scripts/check-openai.mjs --live` у production pod: PASS для Responses strict JSON Schema
+  та embeddings; рівно дві короткі синтетичні API-операції, без retries.
+- Runtime: AI_PROVIDER=openai, gpt-6-luna / text-embedding-3-small; значення ключа не виводилось.
+- Після перемикання HTTPS readiness — 200 / ok, головна — 200, global mock-banner відсутній.
+- Перший OpenAI deploy зупинився через Node socket stdin → kubectl /dev/stdin (ENXIO).
+  Передачу виправлено через POSIX pipe, перевірено без секрету, повторний workflow успішний.
+- Каталог порожній; фактичне зіставлення з source-backed corpus і якість retrieval ще не перевірено.
 
 ## Поточна production-ітерація
 
