@@ -6,7 +6,14 @@ import {
 } from "@/lib/contracts";
 import { config } from "@/server/config";
 import { createLiveAiProvider } from "@/server/ai/provider";
-import { listInnovations, listEmbeddings, saveMatch } from "./repository";
+import {
+  listInnovations,
+  listEmbeddings,
+  listKnowledge,
+  listKnowledgeEmbeddings,
+  saveMatch,
+} from "./repository";
+import { keywordKnowledge, knowledgeHash } from "@/server/search/knowledge";
 import {
   keywordCandidates,
   compatible,
@@ -18,6 +25,7 @@ export async function visibleMatch(
   match: MatchResponse,
 ): Promise<MatchResponse> {
   const records = await listInnovations();
+  const knowledge = await listKnowledge();
   const matches = match.matches
     .filter((m) =>
       records.some(
@@ -31,6 +39,9 @@ export async function visibleMatch(
   return {
     ...match,
     matches,
+    relatedResources: match.relatedResources.filter((r) =>
+      knowledge.some((k) => k.id === r.resourceId),
+    ),
     status: matches.length ? (changed ? "partial" : match.status) : "no_match",
     warnings: changed
       ? [...match.warnings, "Część wyników jest już niedostępna."]
@@ -48,14 +59,33 @@ export async function matchNeed(need: Need): Promise<MatchResponse> {
   const query = [need.description, need.constraints, ...need.targetGroups]
     .filter(Boolean)
     .join(" ");
+  const knowledge = await listKnowledge();
+  let related = keywordKnowledge(query, knowledge);
   let candidates = keywordCandidates(query, records).map((x) => x.record);
   let retrieval: MatchResponse["mode"]["retrieval"] = "keyword";
   let explanation: MatchResponse["mode"]["explanation"] =
     c.AI_PROVIDER === "mock" ? "mock" : "template";
   const warnings: string[] = [];
-  if (ai && records.length) {
+  if (ai && (records.length || knowledge.length)) {
     try {
       const [vector] = await ai.embed([query]);
+      const knowledgeIndex = await listKnowledgeEmbeddings();
+      const relatedRanked = knowledge
+        .filter((r) => r.coverage !== "DIRECTORY")
+        .map((record) => {
+          const e = knowledgeIndex.find(
+            (e) =>
+              e.recordId === record.id &&
+              e.deployment === ai.embeddingDeployment &&
+              e.dimensions === vector.length &&
+              e.contentHash === knowledgeHash(record),
+          );
+          return { record, score: e ? (cosine(vector, e.vector) ?? -1) : -1 };
+        })
+        .filter((x) => x.score >= 0.45)
+        .sort((a, b) => b.score - a.score);
+      if (relatedRanked.length)
+        related = relatedRanked.slice(0, 3).map((x) => x.record);
       const index = await listEmbeddings();
       const ranked = records
         .map((record) => {
@@ -87,7 +117,7 @@ export async function matchNeed(need: Need): Promise<MatchResponse> {
       matches: candidates.slice(0, 3).map((r, i) => ({
         innovationId: r.id,
         rank: i + 1,
-        reasons: [`Opis porusza podobny temat: ${r.problem}`],
+        reasons: [`Opis porusza podobny temat: ${r.problem.slice(0, 500)}`],
         limitations: [
           "Zbieżność tematu nie potwierdza skuteczności ani dopasowania do wszystkich ograniczeń.",
           ...r.requirements.slice(0, 2).map((x) => `Do sprawdzenia: ${x}`),
@@ -128,7 +158,11 @@ export async function matchNeed(need: Need): Promise<MatchResponse> {
   const response: MatchResponse = {
     ...result,
     needId: need.id,
-    relatedResources: [],
+    relatedResources: related.map((r) => ({
+      resourceId: r.id,
+      reason:
+        "Materiał o zbliżonej tematyce — sprawdź zakres, datę i pełne źródło.",
+    })),
     mode: {
       retrieval,
       explanation,

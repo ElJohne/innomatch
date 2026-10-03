@@ -1,5 +1,16 @@
 # Стан — 2026-10-03
 
+## Джерела ROPS — імпорт підготовлено
+
+За наданими власником QR-посиланнями зібрано 114 інновацій із 115 унікальних карток / 9 категорій.
+69 матеріалів знань: 44 описи, 8 фрагментів карти викликів, 17 посилань на портали або документи без опису.
+Картка «Lekki wózek aktywny» пропущена: порожній опис рішення у джерелі.
+Додано PostgreSQL KnowledgeResource, /wiedza, /api/knowledge, пов’язані матеріали в matching,
+батчеву індексацію та idempotent sync у deployment Actions.
+Перевірено: lint, typecheck, schema validation 114/69, production CLI bundle.
+Тести пропущено за вказівкою власника. Production build/import/index/rollout ще очікують запуску.
+
+
 ## OpenAI API — DONE, live підтверджено
 
 Власник дозволив реалізацію прямого OpenAI API замість Azure та надав GitHub secret.

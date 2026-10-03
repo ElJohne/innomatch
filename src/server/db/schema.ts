@@ -11,6 +11,7 @@ import type {
   NeedInput,
   MatchResponse,
   Embedding,
+  KnowledgeResource,
 } from "@/lib/contracts";
 
 export const innovations = pgTable("innovations", {
@@ -19,6 +20,19 @@ export const innovations = pgTable("innovations", {
   updatedAt: timestamp("updated_at", { withTimezone: true })
     .defaultNow()
     .notNull(),
+});
+export const knowledge = pgTable("knowledge_resources", {
+  id: text().primaryKey(),
+  record: jsonb().$type<KnowledgeResource>().notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+});
+export const knowledgeEmbeddings = pgTable("knowledge_embeddings", {
+  recordId: text("record_id")
+    .primaryKey()
+    .references(() => knowledge.id),
+  record: jsonb().$type<Embedding>().notNull(),
 });
 export const needs = pgTable(
   "needs",

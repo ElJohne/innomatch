@@ -23,16 +23,17 @@ const pod = {
   },
 };
 let manifest;
-if (process.argv[2] === 'migration') {
+if (process.argv[2] === 'migration' || process.argv[2] === 'corpus') {
+  const corpus = process.argv[2] === 'corpus';
   const job = process.env.MIGRATION_JOB;
-  if (!/^migrate-[0-9]+-[0-9]+$/.test(job || '')) throw new Error('Invalid job');
+  if (!/^(migrate|corpus)-[0-9]+-[0-9]+$/.test(job || '')) throw new Error('Invalid job');
   pod.spec.restartPolicy = 'Never';
   pod.metadata.labels.app = 'innomatch-migration';
-  pod.spec.containers[0].command = ['node', 'scripts/migrate.mjs'];
-  pod.spec.containers[0].envFrom = [{ secretRef: { name: 'app-env' } }];
+  pod.spec.containers[0].command = corpus ? ['node', 'scripts/manage.cjs', 'sync-corpus'] : ['node', 'scripts/migrate.mjs'];
+  if (!corpus) pod.spec.containers[0].envFrom = [{ secretRef: { name: 'app-env' } }];
   delete pod.spec.containers[0].readinessProbe;
   delete pod.spec.containers[0].livenessProbe;
-  manifest = { apiVersion: 'batch/v1', kind: 'Job', metadata: { name: job, namespace }, spec: { backoffLimit: 0, activeDeadlineSeconds: 150, ttlSecondsAfterFinished: 86400, template: pod } };
+  manifest = { apiVersion: 'batch/v1', kind: 'Job', metadata: { name: job, namespace }, spec: { backoffLimit: 0, activeDeadlineSeconds: corpus ? 300 : 150, ttlSecondsAfterFinished: 86400, template: pod } };
 } else {
   manifest = { apiVersion: 'apps/v1', kind: 'Deployment', metadata: { name: 'innomatch', namespace }, spec: { replicas: 1, revisionHistoryLimit: 3, strategy: { type: 'Recreate' }, selector: { matchLabels: { app: 'innomatch' } }, template: pod } };
 }

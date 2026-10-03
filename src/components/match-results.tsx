@@ -1,15 +1,22 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import type { Innovation, MatchResponse } from "@/lib/contracts";
+import type {
+  Innovation,
+  KnowledgeResource,
+  MatchResponse,
+} from "@/lib/contracts";
+import { coverageLabels } from "@/lib/knowledge-labels";
 export function MatchResults({
   id,
   initial,
   records,
+  resources = [],
 }: {
   id: string;
   initial: MatchResponse | null;
   records: Innovation[];
+  resources?: KnowledgeResource[];
 }) {
   const [result, setResult] = useState(initial);
   const [error, setError] = useState("");
@@ -133,6 +140,24 @@ export function MatchResults({
           W obecnym katalogu nie ma wystarczająco zbliżonego rozwiązania. Możesz
           doprecyzować potrzebę w nowym zgłoszeniu.
         </p>
+      )}
+      {!!result.relatedResources.length && (
+        <aside className="note">
+          <h3>Powiązane materiały</h3>
+          {result.relatedResources.map((item) => {
+            const resource = resources.find((r) => r.id === item.resourceId);
+            if (!resource) return null;
+            return (
+              <div key={resource.id}>
+                <h4>
+                  <Link href={`/wiedza#${resource.id}`}>{resource.title}</Link>
+                </h4>
+                <p>{item.reason}</p>
+                <p className="help">{coverageLabels[resource.coverage]}</p>
+              </div>
+            );
+          })}
+        </aside>
       )}
       <aside className="note">
         <h3>Warto doprecyzować</h3>

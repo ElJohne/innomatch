@@ -135,3 +135,15 @@ Dockerfile готує standalone Node образ; Docker build у цій сес�
 0001 — лише створення нових таблиць; rollback застосунку — попередній образ, дані не видаляти.
 Немає автоматичної destructive down-міграції. Відновлення backup перевірити на окремій БД.
 Статус фактичного production rollout та зовнішньої доступності див. STATUS.md / QA.md.
+
+## Автоматичний імпорт ROPS
+
+Release включає перевірений `data/rops/corpus.json` та server-only `scripts/manage.cjs`.
+Actions: build → validation/package → migrations → sync OpenAI secret → corpus Job → rollout.
+Corpus Job імпортує дані та індексує зміни пакетами до 16 записів. Початково 166 векторів,
+11 embedding-запитів. Повторний запуск із незміненими даними не викликає OpenAI.
+Статуси вже прихованих записів зберігаються. Дані поза snapshot не видаляються.
+Помилка імпорту/індексації блокує rollout; повторний workflow продовжить незавершену індексацію.
+Міграція 0002 додає лише knowledge_resources і knowledge_embeddings; старий app сумісний.
+Для ручної синхронізації у production pod: `node scripts/manage.cjs sync-corpus`.
+Для локальної перевірки без DB/AI: `npm run data:validate`.

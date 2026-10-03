@@ -107,5 +107,8 @@ if (
       "Pass --live to explicitly authorize two small OpenAI requests.",
     );
     process.exitCode = 1;
-  } else if (!(await checkOpenAi())) process.exitCode = 1;
+  } else
+    checkOpenAi().then((ok) => {
+      if (!ok) process.exitCode = 1;
+    });
 }

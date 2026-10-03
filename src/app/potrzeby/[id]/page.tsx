@@ -1,6 +1,10 @@
 import { notFound } from "next/navigation";
 import { session } from "@/server/auth/session";
-import { getNeed, listInnovations } from "@/server/services/repository";
+import {
+  getNeed,
+  listInnovations,
+  listKnowledge,
+} from "@/server/services/repository";
 import { visibleMatch } from "@/server/services/matching";
 import { MatchResults } from "@/components/match-results";
 export default async function NeedPage({
@@ -29,6 +33,7 @@ export default async function NeedPage({
         id={need.id}
         initial={need.match ? await visibleMatch(need.match) : null}
         records={await listInnovations()}
+        resources={await listKnowledge()}
       />
     </section>
   );

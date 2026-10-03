@@ -49,6 +49,20 @@ export const innovationSchema = z
   })
   .strict();
 export type Innovation = z.infer<typeof innovationSchema>;
+export const knowledgeSchema = z
+  .object({
+    id: z.string().regex(/^[a-z0-9-]{1,80}$/),
+    title: z.string().min(3).max(300),
+    type: z.enum(["CHALLENGE", "REPORT", "CASE", "EDUCATION"]),
+    description: z.string().min(10).max(6000),
+    topics: z.array(shortText).max(20),
+    coverage: z.enum(["DESCRIPTION", "EXCERPT", "DIRECTORY"]),
+    origin: z.literal("PUBLIC_SOURCE"),
+    publicationStatus: z.enum(["DRAFT", "IN_REVIEW", "PUBLISHED", "ARCHIVED"]),
+    sources: z.array(sourceSchema).min(1).max(5),
+  })
+  .strict();
+export type KnowledgeResource = z.infer<typeof knowledgeSchema>;
 export const matchSchema = z
   .object({
     innovationId: z.string(),

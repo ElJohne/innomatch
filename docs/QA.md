@@ -1,5 +1,14 @@
 # Перевірки — 2026-10-03, Windows / Node 24.19.0
 
+## Імпорт ROPS — поточна ітерація
+
+- Collection: 9 категорій, 115 унікальних URL, 114 валідних записів, 1 пропуск.
+- data:validate: PASS, 114 інновацій + 69 ресурсів.
+- lint / typecheck: PASS. Production operator bundle + validate-corpus: PASS.
+- Unit/integration/E2E не запускались за дорученням власника.
+- Production build, migration, import, index і HTTPS перевірки: PENDING.
+
+
 ## OpenAI API — поточна ітерація
 
 - Публічний `https://innomatch.brandly-io.com/api/ready`: HTTP 200, ok перед змінами.
