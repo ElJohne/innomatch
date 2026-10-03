@@ -23,6 +23,7 @@ export async function GET(
       municipality: need.municipality,
       targetGroups: need.targetGroups,
       constraints: need.constraints,
+      clarifications: need.clarifications ?? [],
       createdAt: need.createdAt,
       match: need.match ? await visibleMatch(need.match) : null,
     });

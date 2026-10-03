@@ -1,0 +1,652 @@
+{
+  "synthetic": true,
+  "developmentSet": true,
+  "suite": "2026-10-03-v1",
+  "variant": "semantic6-plus-lexical2-strict-rerank",
+  "task": "Wybierz najwyżej 3 propozycje z przekazanych kandydatów i ich sourceIds. Oceń cel użytkownika, grupę docelową i jawne ograniczenia. Nie dobieraj propozycji tylko dlatego, że należą do podobnej tematyki. Pomiń rozwiązania dla innej grupy, jeśli źródło nie potwierdza przydatności dla odbiorców potrzeby. Pomiń rozwiązania sprzeczne z jawnymi ograniczeniami, np. zakup przy braku budżetu na zakupy. Nie zakładaj bezpłatności, lokalnej dostępności ani skuteczności. Przy szerokiej potrzebie społecznej uwzględnij proste narzędzie realizujące część celu (np. budowanie relacji), ale oznacz status partial i wyjaśnij zakres oraz nieznane warunki. matched tylko przy wyraźnym dopasowaniu; no_match, gdy brak uzasadnionej propozycji. Nie wypełniaj listy na siłę. Wskaż konkretne ograniczenia i pytania o nieznane warunki.",
+  "recordedAt": "2026-10-03T18:52:33.316Z",
+  "results": [
+    {
+      "id": "therapy-direct",
+      "kind": "positive",
+      "status": "matched",
+      "ids": ["rops-therapy-set-76f33283"],
+      "expectedHit": true,
+      "latencyMs": 4122,
+      "candidateIds": [
+        "rops-therapy-set-76f33283",
+        "rops-terapeuta-przestrzeni-99960f70",
+        "rops-mobilne-centrum-pomocy-dla-osob-starszych-b7760778",
+        "rops-organizator-kompleksowej-opieki-w-miejscu-zamieszkania-602380c0",
+        "rops-bawita-a7351986",
+        "rops-kody-qr-na-pomoc-seniorom-169ce452",
+        "rops-rodzinny-system-wzajemnej-pomocy-06abcd4e",
+        "rops-niepelnosprawnosc-szansa-na-pelnosprawnosc-w-pracy-i-zyciu-a84ed91d"
+      ],
+      "response": {
+        "status": "matched",
+        "matches": [
+          {
+            "innovationId": "rops-therapy-set-76f33283",
+            "rank": 1,
+            "reasons": [
+              "Rozwiązanie jest przeznaczone m.in. dla mieszkańców DPS i seniorów leżących lub niemobilnych.",
+              "Zestaw może być wykorzystywany do terapii i fizjoterapii przy łóżku seniora.",
+              "W ramach rozwiązania dostępne są instrukcje oraz scenariusze zajęć i ćwiczeń."
+            ],
+            "limitations": [
+              "Nie podano szczegółów scenariuszy ani tego, jakie zajęcia są odpowiednie dla poszczególnych potrzeb seniorów.",
+              "Nieznane są zasady dostępu do zestawu i materiałów, koszty, wymagane zasoby oraz warunki wdrożenia; należy je sprawdzić u źródła."
+            ],
+            "sourceIds": ["rops-therapy-set-76f33283-source"]
+          }
+        ],
+        "clarifyingQuestions": []
+      }
+    },
+    {
+      "id": "therapy-colloquial",
+      "kind": "positive",
+      "status": "matched",
+      "ids": ["rops-therapy-set-76f33283", "rops-bawita-a7351986"],
+      "expectedHit": true,
+      "latencyMs": 3950,
+      "candidateIds": [
+        "rops-bawita-a7351986",
+        "rops-therapy-set-76f33283",
+        "rops-organizator-kompleksowej-opieki-w-miejscu-zamieszkania-602380c0",
+        "rops-korytarz-wspomnien-62ca984d",
+        "rops-kody-qr-na-pomoc-seniorom-169ce452",
+        "rops-hop-hop-mobilny-plac-zabaw-200bb289",
+        "rops-rodzinny-system-wzajemnej-pomocy-06abcd4e",
+        "rops-telerehabilitacja-oddechowa-4dcab029"
+      ],
+      "response": {
+        "status": "matched",
+        "matches": [
+          {
+            "innovationId": "rops-therapy-set-76f33283",
+            "rank": 1,
+            "reasons": [
+              "Zestaw jest przeznaczony dla seniorów, w tym mieszkańców DPS, i został opisany jako możliwy do wykorzystywania w terapii przy łóżku.",
+              "Obejmuje siedem pomocy terapeutycznych oraz instrukcje i scenariusze ćwiczeń, co odpowiada potrzebie aktywności wykonywanej rękami."
+            ],
+            "limitations": [
+              "Źródło nie wyszczególnia, które elementy ćwiczą pamięć ani jak dostosować ćwiczenia do możliwości poszczególnych osób.",
+              "Nie są podane warunki dostępu, koszty ani wymagane zasoby; sprawdź dokumentację przed wdrożeniem."
+            ],
+            "sourceIds": ["rops-therapy-set-76f33283-source"]
+          },
+          {
+            "innovationId": "rops-bawita-a7351986",
+            "rank": 2,
+            "reasons": [
+              "Drewniana tablica z ruchomymi elementami służy stymulacji i usprawnianiu funkcji manualnych oraz pamięciowych.",
+              "Jest skierowana do seniorów, w tym osób we wczesnym stadium zespołu otępiennego; źródło wymienia też osoby rehabilitowane pamięciowo po udarach i wylewach."
+            ],
+            "limitations": [
+              "Źródło nie potwierdza, że tablica jest przeznaczona do stosowania przy łóżku.",
+              "Dopasowanie do konkretnych mieszkańców zależy od ich potrzeb i możliwości; grupa docelowa obejmuje określone sytuacje związane z pamięcią."
+            ],
+            "sourceIds": ["rops-bawita-a7351986-source"]
+          }
+        ],
+        "clarifyingQuestions": []
+      }
+    },
+    {
+      "id": "digital-direct",
+      "kind": "positive",
+      "status": "matched",
+      "ids": ["rops-merkury-4f7b04cf"],
+      "expectedHit": true,
+      "latencyMs": 3211,
+      "candidateIds": [
+        "rops-merkury-4f7b04cf",
+        "rops-zakupy-bez-barier-1b49e89a",
+        "rops-kody-qr-na-pomoc-seniorom-169ce452",
+        "rops-sciezka-motosensoryczna-1229283d",
+        "rops-stworzenie-narzedzia-ulatwiajacego-seniorom-prawidlowe-regul-d520dc9b",
+        "rops-straznik-d94d6fa0",
+        "rops-marina-pai-e1d17550",
+        "rops-dostepny-transport-publiczny-a4ea5d7a"
+      ],
+      "response": {
+        "status": "matched",
+        "matches": [
+          {
+            "innovationId": "rops-merkury-4f7b04cf",
+            "rank": 1,
+            "reasons": [
+              "Rozwiązanie jest przeznaczone dla seniorów, którzy odczuwają strach lub niepewność podczas korzystania z urządzeń samoobsługowych.",
+              "Udostępnia symulatory bankomatu, paczkomatu i kasy samoobsługowej do ćwiczenia obsługi w bezpiecznych, domowych warunkach — odpowiada więc bezpośrednio na wskazany cel."
+            ],
+            "limitations": [
+              "Opis potwierdza dostęp do platformy internetowej, ale nie podaje warunków dostępu, kosztów ani wymaganych zasobów. Przed wdrożeniem należy sprawdzić dokumentację u źródła.",
+              "Wymienione urządzenia to bankomat, parkomat, paczkomat i kasa samoobsługowa; nie ma informacji o innych typach urządzeń."
+            ],
+            "sourceIds": ["rops-merkury-4f7b04cf-source"]
+          }
+        ],
+        "clarifyingQuestions": []
+      }
+    },
+    {
+      "id": "digital-typos",
+      "kind": "positive",
+      "status": "matched",
+      "ids": ["rops-merkury-4f7b04cf"],
+      "expectedHit": true,
+      "latencyMs": 3496,
+      "candidateIds": [
+        "rops-merkury-4f7b04cf",
+        "rops-kody-qr-na-pomoc-seniorom-169ce452",
+        "rops-zakupy-bez-barier-1b49e89a",
+        "rops-oddawacze-662013d2",
+        "rops-e-rzecznik-konsumenta-seniora-6a1f0310",
+        "rops-centrum-antydepresyjne-dd621421",
+        "rops-obu-obuwie-po-domu-8bedaa46"
+      ],
+      "response": {
+        "status": "matched",
+        "matches": [
+          {
+            "innovationId": "rops-merkury-4f7b04cf",
+            "rank": 1,
+            "reasons": [
+              "Symulator obejmuje paczkomat i bankomat, czyli urządzenia, z których obsługą mają trudności sąsiedzi.",
+              "Jest przeznaczony dla seniorów obawiających się urządzeń samoobsługowych i pozwala ćwiczyć w bezpiecznych, domowych warunkach."
+            ],
+            "limitations": [
+              "Opis potwierdza symulację obsługi, ale nie gwarantuje, że obejmuje dokładne interfejsy używane lokalnie.",
+              "Nie wiadomo, jakie są warunki dostępu do platformy ani czy można z niej korzystać podczas wspólnych spotkań.",
+              "Symulator służy do nauki obsługi; nie stanowi gwarancji bezpieczeństwa transakcji ani ochrony przed utratą pieniędzy."
+            ],
+            "sourceIds": ["rops-merkury-4f7b04cf-source"]
+          }
+        ],
+        "clarifyingQuestions": [
+          "Czy sąsiedzi mają dostęp do internetu i urządzenia, na którym można uruchomić platformę?",
+          "Czy chcecie ćwiczyć na symulatorze, czy potrzebujecie również spokojnego instruktażu przy rzeczywistym paczkomacie lub bankomacie?"
+        ]
+      }
+    },
+    {
+      "id": "loneliness-broad",
+      "kind": "positive",
+      "status": "partial",
+      "ids": ["rops-senior-cuder-3e4f7869"],
+      "expectedHit": true,
+      "latencyMs": 3480,
+      "candidateIds": [
+        "rops-mobilne-centrum-pomocy-dla-osob-starszych-b7760778",
+        "rops-teleasystent-43e31467",
+        "rops-terapeuta-przestrzeni-99960f70",
+        "rops-czas-na-aktywnosc-b954fc08",
+        "rops-centrum-antydepresyjne-dd621421",
+        "rops-organizator-kompleksowej-opieki-w-miejscu-zamieszkania-602380c0",
+        "rops-senior-cuder-3e4f7869",
+        "rops-e-rzecznik-konsumenta-seniora-6a1f0310"
+      ],
+      "response": {
+        "status": "partial",
+        "matches": [
+          {
+            "innovationId": "rops-senior-cuder-3e4f7869",
+            "rank": 1,
+            "reasons": [
+              "Narzędzie jest przeznaczone dla seniorów i ma wspierać budowanie relacji z otoczeniem, w tym z sąsiadami, oraz nawiązywanie nowych znajomości.",
+              "Może posłużyć jako punkt wyjścia do spotkań w posiadanej świetlicy, prowadzonych przez wolontariuszy."
+            ],
+            "limitations": [
+              "To gra karciana, a nie gotowy program regularnych spotkań ani sąsiedzkiego kontaktu; realizuje więc tylko część celu.",
+              "Nie wiadomo, jakie są zasady udostępniania gry, wymagane zasoby ani czy pasuje do planowanego pilotażu."
+            ],
+            "sourceIds": ["rops-senior-cuder-3e4f7869-source"]
+          }
+        ],
+        "clarifyingQuestions": [
+          "Jak często i dla ilu seniorów planujecie spotkania?",
+          "Czy potrzebujecie gotowego scenariusza cyklu spotkań, czy wystarczy narzędzie do wykorzystania przez wolontariuszy?",
+          "Czy uczestnicy mogą dotrzeć do świetlicy samodzielnie, czy potrzebują wsparcia w transporcie?"
+        ]
+      }
+    },
+    {
+      "id": "autism-school",
+      "kind": "positive",
+      "status": "matched",
+      "ids": [
+        "rops-mobilny-pomocnik-dydaktyczno-sensoryczny-dla-uczniowstudento-0213ff6e"
+      ],
+      "expectedHit": true,
+      "latencyMs": 3111,
+      "candidateIds": [
+        "rops-mobilny-pomocnik-dydaktyczno-sensoryczny-dla-uczniowstudento-0213ff6e",
+        "rops-jezykolamacz-0990a709",
+        "rops-autyzm-i-ja-6630d785",
+        "rops-przewodnik-dla-osob-z-asd-moje-potrzeby-gdzie-i-jak-je-reali-21d938b9",
+        "rops-wibraap-c33c87b3",
+        "rops-ta-sciezka-terapeutyczna-sciezka-kulturowa-dla-dzieci-i-doro-6fca4030",
+        "rops-rodzinny-system-wzajemnej-pomocy-06abcd4e",
+        "rops-himalaje-autyzmu-2700f9ad"
+      ],
+      "response": {
+        "status": "matched",
+        "matches": [
+          {
+            "innovationId": "rops-mobilny-pomocnik-dydaktyczno-sensoryczny-dla-uczniowstudento-0213ff6e",
+            "rank": 1,
+            "reasons": [
+              "Jest przeznaczony dla uczniów ze spektrum autyzmu i opisuje przenośny zestaw do wspierania nauki w środowisku szkolnym.",
+              "Zawiera przesłonę oraz narzędzia sensoryczne, w tym zatyczki lub słuchawki, które mogą odpowiadać na rozpraszający hałas.",
+              "Ma wizualne komunikaty „nie rozumiem”, „pomóż mi” i „potrzebuję przerwy”, a także czasomierz wspierający orientację w przebiegu lekcji."
+            ],
+            "limitations": [
+              "Źródło nie podaje kosztu, dostępności ani szczegółowych zasad wdrożenia; wymagane zasoby należy sprawdzić u źródła.",
+              "Nie wiadomo, czy konkretny zestaw będzie odpowiedni dla danego ucznia ani jak można go dostosować."
+            ],
+            "sourceIds": [
+              "rops-mobilny-pomocnik-dydaktyczno-sensoryczny-dla-uczniowstudento-0213ff6e-source"
+            ]
+          }
+        ],
+        "clarifyingQuestions": []
+      }
+    },
+    {
+      "id": "blind-wayfinding",
+      "kind": "positive",
+      "status": "matched",
+      "ids": [
+        "rops-ngoz-nawigacja-glosowa-osob-zaleznych-f64abbf5",
+        "rops-my-way-to-culture-2f265f29"
+      ],
+      "expectedHit": true,
+      "latencyMs": 5272,
+      "candidateIds": [
+        "rops-my-way-to-culture-2f265f29",
+        "rops-ngoz-nawigacja-glosowa-osob-zaleznych-f64abbf5",
+        "rops-spotkania-kulturlove-6d48925c",
+        "rops-nakreceni-na-aktywnosc-1753b55a",
+        "rops-wsparcie-imprez-masowych-dla-osob-z-niepelnosprawnoscia-wzro-62548947",
+        "rops-zakupy-bez-barier-1b49e89a",
+        "rops-ta-sciezka-terapeutyczna-sciezka-kulturowa-dla-dzieci-i-doro-6fca4030",
+        "rops-blue-sea-eye-f79a8197"
+      ],
+      "response": {
+        "status": "matched",
+        "matches": [
+          {
+            "innovationId": "rops-ngoz-nawigacja-glosowa-osob-zaleznych-f64abbf5",
+            "rank": 1,
+            "reasons": [
+              "Rozwiązanie jest wprost przeznaczone dla osób niewidomych i słabowidzących.",
+              "Oferuje nawigację głosową wewnątrz budynków opartą na iBeaconach oraz mapę przestrzeni z informacjami terytorialnymi i funkcjonalnymi.",
+              "Opis potrzeby wskazuje urzędy i dom kultury — źródło wymienia urzędy i domy kultury jako przykłady obiektów użyteczności publicznej."
+            ],
+            "limitations": [
+              "Źródło nie potwierdza, że rozwiązanie jest już dostępne lub wdrożone w tych konkretnych budynkach.",
+              "Nie podano kosztów, wymaganej infrastruktury, warunków wdrożenia ani szczegółów nawigacji do konkretnych gabinetów i sal; należy je ustalić u źródła."
+            ],
+            "sourceIds": [
+              "rops-ngoz-nawigacja-glosowa-osob-zaleznych-f64abbf5-source"
+            ]
+          },
+          {
+            "innovationId": "rops-my-way-to-culture-2f265f29",
+            "rank": 2,
+            "reasons": [
+              "Aplikacja wykorzystuje nawigację wewnątrzbudynkową iBeacon i ma profil dla osób z dysfunkcją wzroku.",
+              "Może być częściowo przydatna w domu kultury, ponieważ prowadzi użytkownika po przestrzeni obiektu."
+            ],
+            "limitations": [
+              "Opis dotyczy ścieżek zwiedzania muzeum, a nie nawigacji do gabinetów lub sal w urzędzie i domu kultury.",
+              "Nie jest potwierdzone, że jej profil dla osób niewidomych zapewnia wskazówki głosowe do dowolnego celu w budynku ani że można go zastosować w tych obiektach."
+            ],
+            "sourceIds": ["rops-my-way-to-culture-2f265f29-source"]
+          }
+        ],
+        "clarifyingQuestions": []
+      }
+    },
+    {
+      "id": "work-rural-women",
+      "kind": "positive",
+      "status": "matched",
+      "ids": ["rops-mobilna-gielda-pracy-14598a01"],
+      "expectedHit": true,
+      "latencyMs": 3711,
+      "candidateIds": [
+        "rops-mobilna-gielda-pracy-14598a01",
+        "rops-agencja-pracy-incydentalnej-28c9cb26",
+        "rops-wiejski-program-pomocy-osobom-w-kryzysie-bezdomnosci-sciezka-23283701",
+        "rops-czas-na-aktywnosc-b954fc08",
+        "rops-mobilne-centrum-pomocy-dla-osob-starszych-b7760778",
+        "rops-mobilna-pomoc-terapeutyczna-a98981d4",
+        "rops-niepelnosprawnosc-szansa-na-pelnosprawnosc-w-pracy-i-zyciu-a84ed91d",
+        "rops-rodzinny-system-wzajemnej-pomocy-06abcd4e"
+      ],
+      "response": {
+        "status": "matched",
+        "matches": [
+          {
+            "innovationId": "rops-mobilna-gielda-pracy-14598a01",
+            "rank": 1,
+            "reasons": [
+              "Rozwiązanie jest wprost skierowane do nieaktywnych zawodowo kobiet z terenów wiejskich i małomiasteczkowych, które mają trudności z dostępem do rynku pracy.",
+              "Zakłada organizowanie blisko miejsca zamieszkania mobilnych giełd pracy, doradztwa i pośrednictwa pracy oraz spotkań z pracodawcami, co odpowiada zarówno aktywizacji zawodowej, jak i docieraniu z pomocą lokalnie."
+            ],
+            "limitations": [
+              "Wdrożenie opiera się na współpracy samorządu, lokalnych przedsiębiorców i instytucji rynku pracy; źródło nie określa dostępności tych partnerów ani wymaganych zasobów w konkretnej miejscowości.",
+              "Źródło opisuje model, ale nie potwierdza lokalnej dostępności, kosztów ani rezultatów w danym miejscu."
+            ],
+            "sourceIds": ["rops-mobilna-gielda-pracy-14598a01-source"]
+          }
+        ],
+        "clarifyingQuestions": []
+      }
+    },
+    {
+      "id": "migrant-health",
+      "kind": "positive",
+      "status": "matched",
+      "ids": ["rops-health-guide-pl-c7bfbd72"],
+      "expectedHit": true,
+      "latencyMs": 3576,
+      "candidateIds": [
+        "rops-health-guide-pl-c7bfbd72",
+        "rops-paszport-pacjenta-z-choroba-rzadka-da6cb941",
+        "rops-drogowskazy-ajkum-5bbb3e34",
+        "rops-dostepna-polska-f43f366d",
+        "rops-inteligentny-organizer-do-lekow-290617c5",
+        "rops-pelnia-zdrowia-0b922b42",
+        "rops-wortal-informacyjny-11810851",
+        "rops-autyzm-i-ja-6630d785"
+      ],
+      "response": {
+        "status": "matched",
+        "matches": [
+          {
+            "innovationId": "rops-health-guide-pl-c7bfbd72",
+            "rank": 1,
+            "reasons": [
+              "Przewodnik jest przeznaczony dla cudzoziemców posiadających prawo do korzystania z publicznej opieki zdrowotnej w Polsce.",
+              "Opisuje podstawową opiekę zdrowotną i przedstawia uporządkowane informacje o korzystaniu z systemu; odpowiada potrzebie przewodnika, a nie porad o leczeniu.",
+              "Jest dostępny po angielsku i ukraińsku, w PDF oraz jako aplikacja na Androida."
+            ],
+            "limitations": [
+              "Materiały są tylko po angielsku i ukraińsku — nie wiadomo, czy odpowiada to językom odbiorców.",
+              "Zakres opisano jako podstawową opiekę zdrowotną; nie potwierdzono, że obejmuje wszystkie usługi publicznego systemu.",
+              "Należy sprawdzić aktualność, zasady wykorzystania i wymagane zasoby u źródła."
+            ],
+            "sourceIds": ["rops-health-guide-pl-c7bfbd72-source"]
+          }
+        ],
+        "clarifyingQuestions": [
+          "W jakich językach powinna być dostępna informacja dla odbiorców?"
+        ]
+      }
+    },
+    {
+      "id": "homeless-rural",
+      "kind": "positive",
+      "status": "matched",
+      "ids": [
+        "rops-wiejski-program-pomocy-osobom-w-kryzysie-bezdomnosci-sciezka-23283701",
+        "rops-agencja-pracy-incydentalnej-28c9cb26"
+      ],
+      "expectedHit": true,
+      "latencyMs": 4990,
+      "candidateIds": [
+        "rops-wiejski-program-pomocy-osobom-w-kryzysie-bezdomnosci-sciezka-23283701",
+        "rops-mobilne-centrum-pomocy-dla-osob-starszych-b7760778",
+        "rops-mobilna-pomoc-terapeutyczna-a98981d4",
+        "rops-przenosne-modularne-lazienki-d62f12d1",
+        "rops-kompleksowa-pomoc-dla-osob-po-amputacji-konczyny-dolnej-f572532a",
+        "rops-sciezka-motosensoryczna-1229283d",
+        "rops-bez-presji-z-depresji-44ca029f",
+        "rops-agencja-pracy-incydentalnej-28c9cb26"
+      ],
+      "response": {
+        "status": "matched",
+        "matches": [
+          {
+            "innovationId": "rops-wiejski-program-pomocy-osobom-w-kryzysie-bezdomnosci-sciezka-23283701",
+            "rank": 1,
+            "reasons": [
+              "Model jest skierowany do osób w kryzysie bezdomności w małych, zwłaszcza wiejskich gminach.",
+              "Zakłada długofalowe, holistyczne wsparcie w lokalnym środowisku oraz działania na rzecz samodzielności, integracji i deinstytucjonalizacji, zgodnie z celem potrzeby."
+            ],
+            "limitations": [
+              "Opis nie podaje szczegółowej ścieżki działań, wymaganych zasobów, kosztów ani warunków wdrożenia; trzeba sprawdzić pełną dokumentację u źródła.",
+              "Model uwzględnia także działania ekologiczne i wykorzystanie lokalnych zasobów, których zakres może wymagać dostosowania do warunków gminy."
+            ],
+            "sourceIds": [
+              "rops-wiejski-program-pomocy-osobom-w-kryzysie-bezdomnosci-sciezka-23283701-source"
+            ]
+          },
+          {
+            "innovationId": "rops-agencja-pracy-incydentalnej-28c9cb26",
+            "rank": 2,
+            "reasons": [
+              "Rozwiązanie wskazuje wprost osoby w kryzysie bezdomności jako jedną z grup docelowych.",
+              "Może wspierać jeden z elementów powrotu do samodzielności: podjęcie pracy elastycznie dopasowanej do możliwości i sytuacji życiowej."
+            ],
+            "limitations": [
+              "To rozwiązanie dotyczy aktywizacji zawodowej, a nie całościowej ścieżki wychodzenia z bezdomności; samo nie zapewnia długofalowego, kompleksowego wsparcia.",
+              "Opis nie przesądza o dostępności wdrożenia ani szczegółowych warunkach organizacyjnych i prawnych."
+            ],
+            "sourceIds": ["rops-agencja-pracy-incydentalnej-28c9cb26-source"]
+          }
+        ],
+        "clarifyingQuestions": []
+      }
+    },
+    {
+      "id": "deaf-library",
+      "kind": "positive",
+      "status": "partial",
+      "ids": ["rops-gluchy-czytelnik-w-bibliotece-70106b9e"],
+      "expectedHit": true,
+      "latencyMs": 3816,
+      "candidateIds": [
+        "rops-gluchy-czytelnik-w-bibliotece-70106b9e",
+        "rops-glucha-ankieta-d3512afd",
+        "rops-straznik-d94d6fa0",
+        "rops-dostepny-wniosek-dla-ggluchych-7d576423",
+        "rops-my-way-to-culture-2f265f29",
+        "rops-spotkania-kulturlove-6d48925c",
+        "rops-rodzinny-system-wzajemnej-pomocy-06abcd4e",
+        "rops-autyzm-i-ja-6630d785"
+      ],
+      "response": {
+        "status": "partial",
+        "matches": [
+          {
+            "innovationId": "rops-gluchy-czytelnik-w-bibliotece-70106b9e",
+            "rank": 1,
+            "reasons": [
+              "Rozwiązanie odpowiada na cel włączania osób g/Głuchych do grona czytelników: publikacja w PJM i łatwym języku polskim przybliża bibliotekę i pokazuje, jak z niej korzystać.",
+              "Źródło wymienia osoby g/Głuche jako odbiorców, w szczególności rodziców dzieci w wieku szkolnym."
+            ],
+            "limitations": [
+              "To publikacja informacyjna z wskazówkami, a nie opis pełnego modelu dostępnej biblioteki ani szkolenia personelu; nie potwierdza przygotowania obsługi do kontaktu z dorosłymi czytelnikami.",
+              "Zakres wykorzystania, wymagane zasoby i praktyczne wdrożenie należy sprawdzić u źródła."
+            ],
+            "sourceIds": ["rops-gluchy-czytelnik-w-bibliotece-70106b9e-source"]
+          }
+        ],
+        "clarifyingQuestions": [
+          "Czy biblioteka szuka przede wszystkim materiału dla czytelników, czy także konkretnego programu szkolenia personelu lub standardu obsługi w PJM?",
+          "Czy wśród odbiorców są dzieci i ich rodziny, czy przede wszystkim dorośli czytelnicy g/Głusi?"
+        ]
+      }
+    },
+    {
+      "id": "care-after-hospital",
+      "kind": "positive",
+      "status": "matched",
+      "ids": [
+        "rops-organizator-kompleksowej-opieki-w-miejscu-zamieszkania-602380c0"
+      ],
+      "expectedHit": true,
+      "latencyMs": 3894,
+      "candidateIds": [
+        "rops-organizator-kompleksowej-opieki-w-miejscu-zamieszkania-602380c0",
+        "rops-rodzinny-system-wzajemnej-pomocy-06abcd4e",
+        "rops-kompleksowa-pomoc-dla-osob-po-amputacji-konczyny-dolnej-f572532a",
+        "rops-mobilna-pomoc-terapeutyczna-a98981d4",
+        "rops-telerehabilitacja-oddechowa-4dcab029",
+        "rops-terapeuta-przestrzeni-99960f70",
+        "rops-dialog-ponad-kulturami-4fd2730c",
+        "rops-jezykolamacz-0990a709"
+      ],
+      "response": {
+        "status": "matched",
+        "matches": [
+          {
+            "innovationId": "rops-organizator-kompleksowej-opieki-w-miejscu-zamieszkania-602380c0",
+            "rank": 1,
+            "reasons": [
+              "Model wprost dotyczy organizacji wielokierunkowej pomocy w domu po zakończeniu pobytu w szpitalu dla osoby wymagającej intensywnej, stałej opieki.",
+              "Uwzględnia potrzeby pacjenta oraz realne możliwości rodziny-opiekunów; opis problemu wskazuje też na organizację niezbędnego sprzętu."
+            ],
+            "limitations": [
+              "Rozwiązanie opisano dla osób starszych lub takich, których stan zdrowia i samodzielności znacząco pogorszył się podczas hospitalizacji; nie podano wieku ani szczegółów sytuacji taty.",
+              "Nieznane są zasady wdrożenia, dostępność w miejscu zamieszkania, wymagane zasoby i koszty. Budżet nie jest ustalony, więc warto je sprawdzić przed wyborem."
+            ],
+            "sourceIds": [
+              "rops-organizator-kompleksowej-opieki-w-miejscu-zamieszkania-602380c0-source"
+            ]
+          }
+        ],
+        "clarifyingQuestions": [
+          "Ile lat ma tata i czy jego samodzielność lub stan zdrowia wyraźnie pogorszyły się podczas hospitalizacji?",
+          "W jakiej miejscowości mieszka tata, aby sprawdzić dostępność modelu i związane z nim warunki oraz koszty?"
+        ]
+      }
+    },
+    {
+      "id": "school-after-treatment",
+      "kind": "positive",
+      "status": "matched",
+      "ids": ["rops-bez-presji-z-depresji-44ca029f"],
+      "expectedHit": true,
+      "latencyMs": 3174,
+      "candidateIds": [
+        "rops-bez-presji-z-depresji-44ca029f",
+        "rops-gra-o-zdrowie-16ca77c8",
+        "rops-oncotriada-878fa8fc",
+        "rops-bez-stresu-do-sukcesu-terapia-neurologiczna-przyjazna-dzieck-84ccc595",
+        "rops-dialog-ponad-kulturami-4fd2730c",
+        "rops-mobilny-pomocnik-dydaktyczno-sensoryczny-dla-uczniowstudento-0213ff6e"
+      ],
+      "response": {
+        "status": "matched",
+        "matches": [
+          {
+            "innovationId": "rops-bez-presji-z-depresji-44ca029f",
+            "rank": 1,
+            "reasons": [
+              "Materiały są przeznaczone dla dzieci i młodzieży wracających do szkoły po dłuższej nieobecności związanej m.in. z leczeniem psychiatrycznym.",
+              "Zakres obejmuje wsparcie uczennicy oraz jej rodziny, nauczycieli i klasy, zgodnie z potrzebą przygotowania materiałów dla całego otoczenia szkolnego."
+            ],
+            "limitations": [
+              "Opis źródłowy wskazuje grupę wiekową 10–13 lat (klasy 4–8); wiek uczennicy nie został podany.",
+              "Nie podano szczegółów wdrożenia, zasad wykorzystania materiałów ani wymaganych zasobów; należy je sprawdzić u źródła.",
+              "Materiały są wsparciem psychoedukacyjnym i nie są opisane jako zamiennik opieki specjalistycznej."
+            ],
+            "sourceIds": ["rops-bez-presji-z-depresji-44ca029f-source"]
+          }
+        ],
+        "clarifyingQuestions": [
+          "Ile lat ma uczennica i do której klasy chodzi?"
+        ]
+      }
+    },
+    {
+      "id": "fall-prevention-constraints",
+      "kind": "positive",
+      "status": "matched",
+      "ids": ["rops-terapeuta-przestrzeni-99960f70"],
+      "expectedHit": true,
+      "latencyMs": 3025,
+      "candidateIds": [
+        "rops-obu-obuwie-po-domu-8bedaa46",
+        "rops-przenosne-modularne-lazienki-d62f12d1",
+        "rops-terapeuta-przestrzeni-99960f70",
+        "rops-stworzenie-narzedzia-ulatwiajacego-seniorom-prawidlowe-regul-d520dc9b",
+        "rops-bawita-a7351986",
+        "rops-merkury-4f7b04cf",
+        "rops-mobilne-centrum-pomocy-dla-osob-starszych-b7760778",
+        "rops-organizator-kompleksowej-opieki-w-miejscu-zamieszkania-602380c0"
+      ],
+      "response": {
+        "status": "matched",
+        "matches": [
+          {
+            "innovationId": "rops-terapeuta-przestrzeni-99960f70",
+            "rank": 1,
+            "reasons": [
+              "Usługa jest skierowana do seniorów i polega na dostosowaniu przestrzeni domowej do ich potrzeb.",
+              "Opis wyraźnie uwzględnia wykorzystanie posiadanych zasobów, takich jak umeblowanie i układ mieszkania, co odpowiada chęci przestawienia obecnych mebli."
+            ],
+            "limitations": [
+              "Nie potwierdzono, czy usługa jest dostępna w Państwa okolicy ani czy jest bezpłatna.",
+              "Zakres dopasowania zależy od indywidualnych potrzeb seniora; opis nie gwarantuje usunięcia wszystkich zagrożeń upadkiem."
+            ],
+            "sourceIds": ["rops-terapeuta-przestrzeni-99960f70-source"]
+          }
+        ],
+        "clarifyingQuestions": []
+      }
+    },
+    {
+      "id": "out-of-domain",
+      "kind": "negative",
+      "status": "no_match",
+      "ids": [],
+      "expectedHit": null,
+      "latencyMs": 1328,
+      "candidateIds": [
+        "rops-niepelnosprawnosc-szansa-na-pelnosprawnosc-w-pracy-i-zyciu-a84ed91d",
+        "rops-glucha-ankieta-d3512afd",
+        "rops-autyzm-i-ja-6630d785",
+        "rops-health-guide-pl-c7bfbd72",
+        "rops-bez-presji-z-depresji-44ca029f",
+        "rops-himalaje-autyzmu-2700f9ad",
+        "rops-hop-hop-mobilny-plac-zabaw-200bb289",
+        "rops-marina-pai-e1d17550"
+      ],
+      "response": {
+        "status": "no_match",
+        "matches": [],
+        "clarifyingQuestions": []
+      }
+    },
+    {
+      "id": "unsupported-guarantee",
+      "kind": "negative",
+      "status": "no_match",
+      "ids": [],
+      "expectedHit": null,
+      "latencyMs": 967,
+      "candidateIds": [
+        "rops-dostepny-wniosek-dla-ggluchych-7d576423",
+        "rops-sciezka-motosensoryczna-1229283d",
+        "rops-autyzm-i-ja-6630d785",
+        "rops-cold-box-5fed2b56",
+        "rops-kompleksowa-pomoc-dla-osob-po-amputacji-konczyny-dolnej-f572532a",
+        "rops-oddawacze-662013d2",
+        "rops-organizator-kompleksowej-opieki-w-miejscu-zamieszkania-602380c0",
+        "rops-pelna-wokanda-5bb5563d"
+      ],
+      "response": {
+        "status": "no_match",
+        "matches": [],
+        "clarifyingQuestions": []
+      }
+    }
+  ]
+}

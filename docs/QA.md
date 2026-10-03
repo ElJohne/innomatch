@@ -1,5 +1,92 @@
 # Перевірки — 2026-10-03, поточна ітерація та історія
 
+## Виправлення M1 — 21:43 Europe/Warsaw
+
+- Мінімум 3 після trim: unit перевіряє 2 reject/3 accept, короткий emergency accept.
+  Unit 40/40: 8 попередніх термінових, контраст історія/навчання/заперечення,
+  звичайні ліки, телефон без відповіді; persisted contacts без AI конфігурації,
+  сигнал небезпеки у clarification; fail-closed при відмові reranker.
+- Lint/typecheck/build PASS. PostgreSQL integration 8/8 на одноразовій
+  postgres:17.11-alpine, TCP readiness перед тестами, контейнер прибрано.
+- Chromium E2E 16/16 PASS: початковий текст + уточнення збережені після
+  навігації/reload; чужий GET 404; контакти до submit; server guidance не показує
+  інновацій/координатора; /pilna-pomoc працює з javaScriptEnabled:false.
+  Додатково той самий emergency тест після вичерпання 20 пошуків PASS.
+  Desktop screenshot термінової картки переглянуто, читабельна; існуючі
+  axe/mobile/keyboard/200% перевірки пройшли в повному suite.
+- Перший E2E нового уточнення знайшов відсутнє поле clarifications у GET DTO:
+  дані зберігалися, але API їх не повертав. DTO доповнено, повний повтор PASS.
+- Shadow runner виконує поточний matchNeed bundle на синтетичних records у
+  production PostgreSQL зі штатним live provider/usage/quota. Це **не** HTTP
+  тест нового deployment. UI/API нового коду перевірені локально; production
+  застосунок не замінений. CommonJS bundle потрібний для Next runtime;
+  дві ESM спроби впали при імпорті до створення needs/AI-викликів.
+- Перший повний shadow run: 43 кейси; 17/20 positive Hit@3, 1 уточнення про
+  поштомат, 2 fallback (deaf-library, one-hand-bra). Точна причина початкових
+  AI-відмов не зафіксована. Додано лог тільки allowlisted категорії помилки,
+  компактніша схема відповіді. Повтор 2/2 PASS, далі по 3 повтори — 6/6 PASS.
+- 9/9 emergency (8 довгих + короткий) → контакти 112/999, без AI/матеріалів;
+  6/6 ambiguous → уточнення/support без рекомендацій; 4/4 negative → no_match
+  без матеріалів; 2 короткі неясні фрази → уточнення. Питання переглянуто:
+  домислу про суд немає. Поштомат після підтвердження → Merkury.
+- 7 додаткових сценаріїв: уточнений поштомат, навчання першої допомоги,
+  телефон, поточна небезпека після історичного контексту, небезпека у відповіді,
+  повернення до пошуку після support — очікувана поведінка. Звичайні ліки
+  спершу хибно класифіковані AI як emergency; інструкцію уточнено, 3/3
+  повтори дали Cold Box без emergency. Це вузький регресійний тест, не гарантія
+  точності розпізнавання всіх небезпечних або безпечних ситуацій.
+- Докази: revision-first-2026-10-03.json, revision-followups-2026-10-03.json
+  у tests/search-quality. Усі дані синтетичні. П'ять /tmp доказів і всі needs
+  поточних запусків прибрані; AI usage/global quota збережені, readiness 200.
+  Push/deploy, нові міграції й зміни спільного каталогу не виконувалися.
+
+## Нечіткі та незвичні звернення — 21:06 Europe/Warsaw
+
+- Новий синтетичний набір: 20 matching POST + 3 короткі потреби. Той самий
+  hash production каталогу з 114 інновацій, gpt-6-luna. Позитивні 4/6 Hit@3,
+  технічні поза каталогом 2/2 no_match, контакти при небезпеці 0/4.
+- Неясні 6/6 no_match, але лише 4/6 з питаннями: 3 однакові шаблонні,
+  1 із необґрунтованим припущенням про суд. Змішані 2/2 partial з уточненнями,
+  без автоматичного зарахування їх рекомендацій як релевантних.
+- «Pomocy», «Nie daję rady», «Mąż nie oddycha» — HTTP 400 VALIDATION.
+  Це підтвердження бар'єра поточного контракту, не успіх UX/безпеки.
+- Діагностика одним embedding batch: Merkury rank 1 / score 0,4114 для
+  «bank o mat», rank 6 / score 0,3702 для «металевої шафи», обидва нижче 0,45.
+- Повні відповіді й очікування: tests/search-quality/unusual-*.json;
+  змістовний огляд і методика: SEARCH-UNUSUAL.md. Розмітка до запуску,
+  огляд агентом; реальні описи користувачів не використовувались.
+- Cleanup PASS: власні needs/counters, два /tmp JSON прибрані; фактичні
+  AI usage/global quota залишені. Readiness 200. Lint/typecheck PASS.
+  Application code не змінювався, build/unit/integration/E2E з попередньої
+  ітерації повторно не запускалися. Push/deploy не виконувались.
+
+## Пошукова якість — 20:47–20:57 Europe/Warsaw
+
+- 20 синтетичних кейсів через публічний production API a2f5c64; 114 інновацій,
+  справжній OpenAI gpt-6-luna. Hit@3 13/14, negative no_match 2/2,
+  emergency contact mention 0/4. Медіана повного matches POST 4,012 с.
+- Очікувані ID розмічені агентом до запуску. Це не незалежний benchmark,
+  метрика попадання не підтверджує релевантність усіх додаткових рекомендацій.
+- Діагностика embedding/keyword: Senior CUDER rank 38/1, не потрапляє у top-8.
+  Окремий shadow-варіант 6 semantic + 2 нових lexical і строгіший prompt:
+  14/14 позитивних, 2/2 негативних. Термінові кейси не включались у варіант;
+  він не має emergency routing. Holdout і повтори не виконувались.
+- Повні синтетичні докази в tests/search-quality/*.json; методика,
+  кейси, проблеми й перевірені офіційні контакти — SEARCH-QUALITY.md.
+- Production cleanup PASS: лише створені цим benchmark needs/counters;
+  жодних публікацій, staff accounts чи редагування чужих записів. AI usage
+  і глобальні квоти збережені. Три /tmp JSON докази прибрано після копіювання;
+  readiness HTTP 200. Application code не змінювався, deployment не виконувався.
+- Lint, typecheck, build — PASS; unit 22/22, integration 8/8 (локальний
+  одноразовий postgres:17.11-alpine), E2E Chromium fixtures/mock 14/14 — PASS.
+- Перший integration запуск почався до готовності PostgreSQL: 2 failed,
+  6 skipped через `database system is starting up`. Після очікування TCP
+  pg_isready повтор повністю PASS, обидва одноразові контейнери прибрано.
+- Перший standalone diagnostic bundle не містив server-only: import failed
+  до AI-виклику. Повний bundle з react-server condition запущено успішно.
+  Typecheck знайшов union JSON масивів у скрипті експерименту; виправлено
+  типізацію через Set<string>, повтор typecheck/build PASS.
+
 ## Production a2f5c64: rollout і живі сценарії — 2026-10-03
 
 - Власник явно дозволив push/deploy та production QA. Локальний коміт виправлення

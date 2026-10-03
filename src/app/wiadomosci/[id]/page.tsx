@@ -44,6 +44,11 @@ export default async function ThreadPage({
         <details className="card need-summary">
           <summary>Potrzeba udostępniona koordynatorowi</summary>
           <p>{thread.need.description}</p>
+          {thread.need.clarifications.map((x, i) => (
+            <p key={i}>
+              <strong>{x.question}</strong> {x.answer}
+            </p>
+          ))}
           {thread.need.constraints && (
             <p>Ograniczenia: {thread.need.constraints}</p>
           )}

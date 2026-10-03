@@ -5,7 +5,10 @@ import type {
   Innovation,
   KnowledgeResource,
   MatchResponse,
+  NeedInput,
 } from "@/lib/contracts";
+import { UrgentHelp } from "./urgent-help";
+import { ClarifyNeed } from "./clarify-need";
 import { coverageLabels } from "@/lib/knowledge-labels";
 import { organizationOptions, type Organization } from "@/lib/organizations";
 export function MatchResults({
@@ -14,12 +17,14 @@ export function MatchResults({
   records,
   organizations,
   resources = [],
+  input,
 }: {
   id: string;
   initial: MatchResponse | null;
   records: Innovation[];
   organizations: Organization[];
   resources?: KnowledgeResource[];
+  input?: NeedInput;
 }) {
   const [result, setResult] = useState(initial);
   const [error, setError] = useState("");
@@ -75,6 +80,28 @@ export function MatchResults({
       </div>
     );
   if (!result) return null;
+  if (result.guidance === "emergency")
+    return (
+      <>
+        <h1>Najpierw zadbaj o bezpieczeństwo</h1>
+        <UrgentHelp prominent />
+      </>
+    );
+  if (result.guidance === "support")
+    return (
+      <section>
+        <h1>Nie musisz być z tym samodzielnie</h1>
+        <p>
+          To brzmi jak trudna sytuacja. Jeśli możesz, skontaktuj się teraz z
+          kimś zaufanym lub specjalistą ochrony zdrowia. Nie potrafimy ocenić
+          Twojego bezpieczeństwa przez tę aplikację.
+        </p>
+        <UrgentHelp />
+        {input && (
+          <ClarifyNeed input={input} questions={result.clarifyingQuestions} />
+        )}
+      </section>
+    );
   const options = organizationOptions(result, records, organizations);
   return (
     <section aria-label="Wyniki dopasowania">
@@ -82,7 +109,9 @@ export function MatchResults({
         <p className="eyebrow">Krok 3 · Ty wybierasz</p>
         <h1>
           {result.status === "no_match"
-            ? "Nie znaleźliśmy wystarczającego dopasowania"
+            ? result.guidance === "clarify"
+              ? "Pomóż nam lepiej zrozumieć"
+              : "Nie znaleźliśmy wystarczającego dopasowania"
             : options.length
               ? "Wybierz organizację"
               : "Propozycje do sprawdzenia"}
@@ -198,7 +227,7 @@ export function MatchResults({
               ) : null;
             })}
           </ul>
-          {result.clarifyingQuestions.length > 0 && (
+          {!input && result.clarifyingQuestions.length > 0 && (
             <details>
               <summary>Warto doprecyzować</summary>
               {result.clarifyingQuestions.map((question) => (
@@ -211,12 +240,16 @@ export function MatchResults({
       {result.status === "no_match" && (
         <div className="card">
           <p>
-            W obecnym katalogu nie ma wystarczająco zbliżonego rozwiązania. Nie
-            chcemy proponować przypadkowej organizacji.
+            {result.guidance === "clarify" ? (
+              "Potrzebujemy krótkiego doprecyzowania, żeby nie zgadywać Twojej sytuacji."
+            ) : (
+              <>
+                W obecnym katalogu nie ma wystarczająco zbliżonego rozwiązania.
+                Nie chcemy proponować przypadkowej organizacji.
+              </>
+            )}
           </p>
-          {result.clarifyingQuestions.map((q) => (
-            <p key={q}>{q}</p>
-          ))}
+          {!input && result.clarifyingQuestions.map((q) => <p key={q}>{q}</p>)}
           <Link className="button" href="/potrzeby/nowa">
             Opisz potrzebę ponownie →
           </Link>
@@ -225,6 +258,19 @@ export function MatchResults({
           </p>
         </div>
       )}
+      {input && (
+        <ClarifyNeed input={input} questions={result.clarifyingQuestions} />
+      )}
+      <aside className="note">
+        <h2>Potrzebujesz wsparcia?</h2>
+        <p>
+          Zapytaj o dobór rozwiązania lub współpracę. Koordynator otrzyma opis
+          tej potrzeby i Twoją wiadomość. To nie jest pomoc alarmowa.
+        </p>
+        <Link className="button" href={`/wiadomosci/nowa?needId=${id}`}>
+          Zapytaj koordynatora
+        </Link>
+      </aside>
       {!!result.relatedResources.length && (
         <details className="note">
           <summary>Powiązane materiały</summary>

@@ -230,6 +230,7 @@ export async function createPlan(ownerId: string, value: unknown) {
                 description: need.description,
                 constraints: need.constraints,
                 targetGroups: need.targetGroups,
+                clarifications: need.clarifications ?? [],
               },
               institution: input.constraints,
               innovation,

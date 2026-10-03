@@ -1,0 +1,1218 @@
+{
+  "synthetic": true,
+  "suite": "2026-10-03-v1",
+  "labeling": "Agent-authored provisional relevance labels, fixed before baseline; not independent expert judgments. Expected IDs are acceptable examples, not an exhaustive relevance set.",
+  "origin": "https://innomatch.brandly-io.com",
+  "recordedAt": "2026-10-03T18:47:58.241Z",
+  "catalogHash": "d6d2c53f57a0e57526a463d1f21ace73c3a748ad61060502a0f04bdc16f3e945",
+  "publishedInnovations": 114,
+  "model": "gpt-6-luna",
+  "results": [
+    {
+      "id": "therapy-direct",
+      "kind": "positive",
+      "status": "matched",
+      "ids": ["rops-therapy-set-76f33283"],
+      "expectedHit": true,
+      "contactMention": false,
+      "contactsFound": [],
+      "latencyMs": 5569,
+      "mode": {
+        "retrieval": "semantic",
+        "explanation": "openai",
+        "data": "source_backed"
+      },
+      "warnings": [],
+      "response": {
+        "catalogVersions": {
+          "innovation:rops-therapy-set-76f33283": "536893374e1c90594cf03f1f3a10b6c1394e3a34a0c57dc59aca7e50417e10f2",
+          "knowledge:rops-knowledge-c14c12a3da2ea85a": "723df499f67a0bab1ffba29b3ac24f29bd9e9b341e8a05293dba0e7229fdac58",
+          "knowledge:rops-knowledge-a28109b4702d79ff": "b16a8d06552562090872133a87f7db744c66f9d8874ed2cca58ba2c457aac657",
+          "knowledge:rops-knowledge-c53060ba61dc9eba": "62607f121d39b4be7b9ec7c8fc323bde53b7a5e59c15c0c35e52da601d9aead7"
+        },
+        "status": "matched",
+        "matches": [
+          {
+            "innovationId": "rops-therapy-set-76f33283",
+            "rank": 1,
+            "reasons": [
+              "Zestaw jest przeznaczony m.in. dla mieszkańców DPS, w tym osób leżących i niemobilnych.",
+              "Pomoce można wykorzystywać przy łóżku seniora, a towarzysząca im strona zawiera instrukcje i scenariusze zajęć oraz ćwiczeń."
+            ],
+            "limitations": [
+              "Opis nie podaje szczegółów dotyczących dostępu do zestawu ani strony z materiałami; sprawdź je u źródła.",
+              "Przed użyciem pomocy i ćwiczeń uwzględnij indywidualne możliwości seniora i zasady bezpiecznej pracy."
+            ],
+            "sourceIds": ["rops-therapy-set-76f33283-source"]
+          }
+        ],
+        "clarifyingQuestions": [],
+        "needId": "898a86cf-54e9-4f0c-bd85-2696aff48093",
+        "relatedResources": [
+          {
+            "resourceId": "rops-knowledge-c14c12a3da2ea85a",
+            "reason": "Materiał o zbliżonej tematyce — sprawdź zakres, datę i pełne źródło."
+          },
+          {
+            "resourceId": "rops-knowledge-a28109b4702d79ff",
+            "reason": "Materiał o zbliżonej tematyce — sprawdź zakres, datę i pełne źródło."
+          },
+          {
+            "resourceId": "rops-knowledge-c53060ba61dc9eba",
+            "reason": "Materiał o zbliżonej tematyce — sprawdź zakres, datę i pełne źródło."
+          }
+        ],
+        "mode": {
+          "retrieval": "semantic",
+          "explanation": "openai",
+          "data": "source_backed"
+        },
+        "warnings": []
+      }
+    },
+    {
+      "id": "therapy-colloquial",
+      "kind": "positive",
+      "status": "matched",
+      "ids": ["rops-therapy-set-76f33283", "rops-bawita-a7351986"],
+      "expectedHit": true,
+      "contactMention": false,
+      "contactsFound": [],
+      "latencyMs": 5886,
+      "mode": {
+        "retrieval": "semantic",
+        "explanation": "openai",
+        "data": "source_backed"
+      },
+      "warnings": [],
+      "response": {
+        "catalogVersions": {
+          "innovation:rops-bawita-a7351986": "793760b3bdac16dccd84a39345f921af850f604646eb4fe8ce9560da4b98b640",
+          "innovation:rops-therapy-set-76f33283": "536893374e1c90594cf03f1f3a10b6c1394e3a34a0c57dc59aca7e50417e10f2",
+          "knowledge:rops-knowledge-763598ccab5032ef": "72b77f8a00f93cc60bd64b58946ba28cd4127ca471ab93b7e6e0f156cc4f3d3b",
+          "knowledge:rops-knowledge-69348bf759f08943": "63f56ba3c3dce7d0df4ee5a9fb55c4db7d1dfacdc2cd214ef2fc5b625652f753",
+          "knowledge:rops-knowledge-c53060ba61dc9eba": "62607f121d39b4be7b9ec7c8fc323bde53b7a5e59c15c0c35e52da601d9aead7"
+        },
+        "status": "matched",
+        "matches": [
+          {
+            "innovationId": "rops-therapy-set-76f33283",
+            "rank": 1,
+            "reasons": [
+              "Zestaw pomocy terapeutycznych jest przeznaczony m.in. dla mieszkańców DPS i osób niemobilnych.",
+              "Pomoce można wykorzystywać przy łóżku, a zestaw obejmuje terapię i fizjoterapię.",
+              "Dostępne są instrukcje i scenariusze zajęć oraz ćwiczeń."
+            ],
+            "limitations": [
+              "Opis nie podaje szczegółów wszystkich siedmiu pomocy ani tego, które konkretnie ćwiczą pamięć i sprawność manualną.",
+              "Przed wykorzystaniem sprawdź dokumentację, zasady i wymagane zasoby u źródła."
+            ],
+            "sourceIds": ["rops-therapy-set-76f33283-source"]
+          },
+          {
+            "innovationId": "rops-bawita-a7351986",
+            "rank": 2,
+            "reasons": [
+              "Drewniana tablica z ruchomymi elementami służy do stymulacji funkcji manualnych i pamięciowych.",
+              "To konkretna pomoc do pracy przy łóżku, choć opis nie potwierdza bezpośrednio takiego sposobu użycia."
+            ],
+            "limitations": [
+              "Rozwiązanie opisano dla osób z zespołami otępiennymi we wczesnym stadium oraz osób rehabilitowanych pamięciowo po udarach i wylewach; nie wiadomo, czy odpowiada potrzebom każdego mieszkańca.",
+              "Przed wykorzystaniem sprawdź dokumentację, zasady i wymagane zasoby u źródła."
+            ],
+            "sourceIds": ["rops-bawita-a7351986-source"]
+          }
+        ],
+        "clarifyingQuestions": [],
+        "needId": "b6261107-c9ac-4b4b-a02c-d12deb793c5e",
+        "relatedResources": [
+          {
+            "resourceId": "rops-knowledge-763598ccab5032ef",
+            "reason": "Materiał o zbliżonej tematyce — sprawdź zakres, datę i pełne źródło."
+          },
+          {
+            "resourceId": "rops-knowledge-69348bf759f08943",
+            "reason": "Materiał o zbliżonej tematyce — sprawdź zakres, datę i pełne źródło."
+          },
+          {
+            "resourceId": "rops-knowledge-c53060ba61dc9eba",
+            "reason": "Materiał o zbliżonej tematyce — sprawdź zakres, datę i pełne źródło."
+          }
+        ],
+        "mode": {
+          "retrieval": "semantic",
+          "explanation": "openai",
+          "data": "source_backed"
+        },
+        "warnings": []
+      }
+    },
+    {
+      "id": "digital-direct",
+      "kind": "positive",
+      "status": "matched",
+      "ids": ["rops-merkury-4f7b04cf"],
+      "expectedHit": true,
+      "contactMention": false,
+      "contactsFound": [],
+      "latencyMs": 4049,
+      "mode": {
+        "retrieval": "semantic",
+        "explanation": "openai",
+        "data": "source_backed"
+      },
+      "warnings": [],
+      "response": {
+        "catalogVersions": {
+          "innovation:rops-merkury-4f7b04cf": "b8d8bd5e1457d5eb53a15d461f72ecc22e2e7018ca1b7ab1a592d948df15c864",
+          "knowledge:rops-knowledge-c14c12a3da2ea85a": "723df499f67a0bab1ffba29b3ac24f29bd9e9b341e8a05293dba0e7229fdac58"
+        },
+        "status": "matched",
+        "matches": [
+          {
+            "innovationId": "rops-merkury-4f7b04cf",
+            "rank": 1,
+            "reasons": [
+              "Bezpośrednio odpowiada na potrzebę bezpiecznego ćwiczenia obsługi bankomatu, paczkomatu i kasy samoobsługowej.",
+              "Udostępnia internetowy symulator do testowania obsługi urządzeń w bezpiecznych, domowych warunkach.",
+              "Jest skierowany do seniorów odczuwających obawy przed korzystaniem z urządzeń samoobsługowych."
+            ],
+            "limitations": [
+              "Opis wskazuje również symulator parkomatu, ale nie podaje szczegółów dostępności, wymagań technicznych ani zasad korzystania.",
+              "Przed wdrożeniem należy sprawdzić dokumentację, zasady wykorzystania i wymagane zasoby u źródła."
+            ],
+            "sourceIds": ["rops-merkury-4f7b04cf-source"]
+          }
+        ],
+        "clarifyingQuestions": [],
+        "needId": "4248b7ba-7410-45e7-95ef-78594d1d05b1",
+        "relatedResources": [
+          {
+            "resourceId": "rops-knowledge-c14c12a3da2ea85a",
+            "reason": "Materiał o zbliżonej tematyce — sprawdź zakres, datę i pełne źródło."
+          }
+        ],
+        "mode": {
+          "retrieval": "semantic",
+          "explanation": "openai",
+          "data": "source_backed"
+        },
+        "warnings": []
+      }
+    },
+    {
+      "id": "digital-typos",
+      "kind": "positive",
+      "status": "matched",
+      "ids": ["rops-merkury-4f7b04cf"],
+      "expectedHit": true,
+      "contactMention": false,
+      "contactsFound": [],
+      "latencyMs": 3975,
+      "mode": {
+        "retrieval": "semantic",
+        "explanation": "openai",
+        "data": "source_backed"
+      },
+      "warnings": [],
+      "response": {
+        "catalogVersions": {
+          "innovation:rops-merkury-4f7b04cf": "b8d8bd5e1457d5eb53a15d461f72ecc22e2e7018ca1b7ab1a592d948df15c864"
+        },
+        "status": "matched",
+        "matches": [
+          {
+            "innovationId": "rops-merkury-4f7b04cf",
+            "rank": 1,
+            "reasons": [
+              "Rozwiązanie bezpośrednio odpowiada na obawy seniorów przed obsługą paczkomatu i bankomatu.",
+              "Symulator pozwala ćwiczyć obsługę tych urządzeń w bezpiecznych, domowych warunkach."
+            ],
+            "limitations": [
+              "Opis nie potwierdza, że symulator obejmuje wypłatę pieniędzy lub wszystkie aktualne procedury urządzeń.",
+              "Nie wynika z niego, że platforma zapewnia prowadzenie seniorów na żywo; wskazano możliwość samodzielnego testowania."
+            ],
+            "sourceIds": ["rops-merkury-4f7b04cf-source"]
+          }
+        ],
+        "clarifyingQuestions": [],
+        "needId": "cd5e2caa-9b19-403b-aa0e-5bf2fd76bfd5",
+        "relatedResources": [],
+        "mode": {
+          "retrieval": "semantic",
+          "explanation": "openai",
+          "data": "source_backed"
+        },
+        "warnings": []
+      }
+    },
+    {
+      "id": "loneliness-broad",
+      "kind": "positive",
+      "status": "partial",
+      "ids": [
+        "rops-mobilne-centrum-pomocy-dla-osob-starszych-b7760778",
+        "rops-czas-na-aktywnosc-b954fc08"
+      ],
+      "expectedHit": false,
+      "contactMention": false,
+      "contactsFound": [],
+      "latencyMs": 5485,
+      "mode": {
+        "retrieval": "semantic",
+        "explanation": "openai",
+        "data": "source_backed"
+      },
+      "warnings": [],
+      "response": {
+        "catalogVersions": {
+          "innovation:rops-mobilne-centrum-pomocy-dla-osob-starszych-b7760778": "1ae7428506be7c9075ca7d61f5e3983e3cdc87a6d863ba4bcfd7807f4c0f9d40",
+          "innovation:rops-czas-na-aktywnosc-b954fc08": "3d5be12e8c6273d2f0635e5fbe92ea928d6a56e77bb4e12f5d5721b5be1d0b5e",
+          "knowledge:rops-knowledge-a28109b4702d79ff": "b16a8d06552562090872133a87f7db744c66f9d8874ed2cca58ba2c457aac657",
+          "knowledge:rops-knowledge-c14c12a3da2ea85a": "723df499f67a0bab1ffba29b3ac24f29bd9e9b341e8a05293dba0e7229fdac58",
+          "knowledge:rops-knowledge-b37a74446a19474e": "94d2a76568a524bc404f694a8d93168e91dea0a9eccb711cf9705cae81991d21"
+        },
+        "status": "partial",
+        "matches": [
+          {
+            "innovationId": "rops-mobilne-centrum-pomocy-dla-osob-starszych-b7760778",
+            "rank": 1,
+            "reasons": [
+              "Jest skierowane do seniorów i uwzględnia samotność oraz izolację społeczną.",
+              "Indywidualne wsparcie może być dostosowane do lokalnego środowiska."
+            ],
+            "limitations": [
+              "Opis dotyczy głównie mobilnego wsparcia seniorów mieszkających na wsi i odwiedzin w domu, a nie regularnych spotkań sąsiedzkich w świetlicy.",
+              "Zakres obejmuje specjalistów i kilka obszarów wsparcia; nie wiadomo, czy można wdrożyć tylko prosty, dobrowolny pilotaż z wolontariuszami."
+            ],
+            "sourceIds": [
+              "rops-mobilne-centrum-pomocy-dla-osob-starszych-b7760778-source"
+            ]
+          },
+          {
+            "innovationId": "rops-czas-na-aktywnosc-b954fc08",
+            "rank": 2,
+            "reasons": [
+              "Łączy aktywność społeczno-kulturalną z asystą wolontariuszy, co częściowo odpowiada na potrzebę kontaktu i spotkań."
+            ],
+            "limitations": [
+              "Rozwiązanie jest platformą internetową dla dorosłych osób z zespołem Downa, a nie modelem spotkań seniorów w świetlicy.",
+              "Nie ma podstaw, by zakładać, że jego narzędzia lub zasady można bezpośrednio przenieść do tego pilotażu."
+            ],
+            "sourceIds": ["rops-czas-na-aktywnosc-b954fc08-source"]
+          }
+        ],
+        "clarifyingQuestions": [
+          "Czy pilotaż ma obejmować przede wszystkim spotkania grupowe w świetlicy, czy także odwiedziny wolontariuszy u seniorów?",
+          "Czy seniorzy mają konkretne zainteresowania lub preferowane pory i częstotliwość spotkań?"
+        ],
+        "needId": "9a53df52-3a9a-41f2-9dac-45f03f9d850e",
+        "relatedResources": [
+          {
+            "resourceId": "rops-knowledge-a28109b4702d79ff",
+            "reason": "Materiał o zbliżonej tematyce — sprawdź zakres, datę i pełne źródło."
+          },
+          {
+            "resourceId": "rops-knowledge-c14c12a3da2ea85a",
+            "reason": "Materiał o zbliżonej tematyce — sprawdź zakres, datę i pełne źródło."
+          },
+          {
+            "resourceId": "rops-knowledge-b37a74446a19474e",
+            "reason": "Materiał o zbliżonej tematyce — sprawdź zakres, datę i pełne źródło."
+          }
+        ],
+        "mode": {
+          "retrieval": "semantic",
+          "explanation": "openai",
+          "data": "source_backed"
+        },
+        "warnings": []
+      }
+    },
+    {
+      "id": "autism-school",
+      "kind": "positive",
+      "status": "matched",
+      "ids": [
+        "rops-mobilny-pomocnik-dydaktyczno-sensoryczny-dla-uczniowstudento-0213ff6e"
+      ],
+      "expectedHit": true,
+      "contactMention": false,
+      "contactsFound": [],
+      "latencyMs": 4882,
+      "mode": {
+        "retrieval": "semantic",
+        "explanation": "openai",
+        "data": "source_backed"
+      },
+      "warnings": [],
+      "response": {
+        "catalogVersions": {
+          "innovation:rops-mobilny-pomocnik-dydaktyczno-sensoryczny-dla-uczniowstudento-0213ff6e": "472c99b5e7a1e528153b279af698a32c748196d0bc8b071ce8839d4206950cfd",
+          "knowledge:rops-knowledge-f834cbd58cb73d2d": "769f1f2847defde1dbd40eb18baf245ae0ff7145d5935d7a42dfbbd0a69151dc"
+        },
+        "status": "matched",
+        "matches": [
+          {
+            "innovationId": "rops-mobilny-pomocnik-dydaktyczno-sensoryczny-dla-uczniowstudento-0213ff6e",
+            "rank": 1,
+            "reasons": [
+              "To przenośny zestaw przeznaczony do wspierania nauki osób w spektrum autyzmu w środowisku szkolnym.",
+              "Zawiera pomoce do organizacji i śledzenia nauki, w tym wizualny czasomierz oraz zakładkę ułatwiającą czytanie.",
+              "Ma komunikat wizualny „potrzebuję przerwy”, a zasobnik sensoryczny obejmuje m.in. zatyczki lub słuchawki."
+            ],
+            "limitations": [
+              "Opis nie potwierdza, że zestaw zapewnia odrębne miejsce do wyciszenia; przesłona jest elementem zestawu, ale jej skuteczności akustycznej nie określono.",
+              "Dostępność, wyposażenie konkretnego zestawu i zasady jego wykorzystania należy sprawdzić u źródła."
+            ],
+            "sourceIds": [
+              "rops-mobilny-pomocnik-dydaktyczno-sensoryczny-dla-uczniowstudento-0213ff6e-source"
+            ]
+          }
+        ],
+        "clarifyingQuestions": [],
+        "needId": "a6ddd6be-e658-426b-b43d-495c9654df2e",
+        "relatedResources": [
+          {
+            "resourceId": "rops-knowledge-f834cbd58cb73d2d",
+            "reason": "Materiał o zbliżonej tematyce — sprawdź zakres, datę i pełne źródło."
+          }
+        ],
+        "mode": {
+          "retrieval": "semantic",
+          "explanation": "openai",
+          "data": "source_backed"
+        },
+        "warnings": []
+      }
+    },
+    {
+      "id": "blind-wayfinding",
+      "kind": "positive",
+      "status": "matched",
+      "ids": [
+        "rops-ngoz-nawigacja-glosowa-osob-zaleznych-f64abbf5",
+        "rops-my-way-to-culture-2f265f29"
+      ],
+      "expectedHit": true,
+      "contactMention": false,
+      "contactsFound": [],
+      "latencyMs": 5053,
+      "mode": {
+        "retrieval": "semantic",
+        "explanation": "openai",
+        "data": "source_backed"
+      },
+      "warnings": [],
+      "response": {
+        "catalogVersions": {
+          "innovation:rops-ngoz-nawigacja-glosowa-osob-zaleznych-f64abbf5": "9be2a47866c58067c08c1dfa7c9ee0df441d29798faf996d33cff634c60c5769",
+          "innovation:rops-my-way-to-culture-2f265f29": "ff859754e10a4a3db514ac2c3b16535ec03060c6368099313475e1e8c2135401",
+          "knowledge:rops-knowledge-b37a74446a19474e": "94d2a76568a524bc404f694a8d93168e91dea0a9eccb711cf9705cae81991d21"
+        },
+        "status": "matched",
+        "matches": [
+          {
+            "innovationId": "rops-ngoz-nawigacja-glosowa-osob-zaleznych-f64abbf5",
+            "rank": 1,
+            "reasons": [
+              "Rozwiązanie jest wprost opisane jako nawigacja głosowa dla osób niewidomych i słabowidzących w obiektach użyteczności publicznej, w tym urzędach i domach kultury.",
+              "Wykorzystuje iBeacon do tworzenia głosowej, praktycznej mapy przestrzeni."
+            ],
+            "limitations": [
+              "Opis nie potwierdza szczegółowo, czy system prowadzi bezpośrednio do konkretnych gabinetów i sal ani jakie są wymagania wdrożeniowe; należy zweryfikować je u źródła."
+            ],
+            "sourceIds": [
+              "rops-ngoz-nawigacja-glosowa-osob-zaleznych-f64abbf5-source"
+            ]
+          },
+          {
+            "innovationId": "rops-my-way-to-culture-2f265f29",
+            "rank": 2,
+            "reasons": [
+              "Aplikacja używa nawigacji wewnątrzbudynkowej iBeacon oraz ma ścieżkę dla osób z dysfunkcją wzroku.",
+              "Może być przydatna w domu kultury jako rozwiązanie do poruszania się po budynku."
+            ],
+            "limitations": [
+              "Opis dotyczy zwiedzania muzeum i nie potwierdza zastosowania w urzędzie ani nawigowania do gabinetów i sal; uruchamia audiodeskrypcję w profilu wzrokowym, ale nie precyzuje głosowego prowadzenia tras."
+            ],
+            "sourceIds": ["rops-my-way-to-culture-2f265f29-source"]
+          }
+        ],
+        "clarifyingQuestions": [],
+        "needId": "0e113e5e-ba64-45e4-add1-509ed8983f92",
+        "relatedResources": [
+          {
+            "resourceId": "rops-knowledge-b37a74446a19474e",
+            "reason": "Materiał o zbliżonej tematyce — sprawdź zakres, datę i pełne źródło."
+          }
+        ],
+        "mode": {
+          "retrieval": "semantic",
+          "explanation": "openai",
+          "data": "source_backed"
+        },
+        "warnings": []
+      }
+    },
+    {
+      "id": "work-rural-women",
+      "kind": "positive",
+      "status": "matched",
+      "ids": ["rops-mobilna-gielda-pracy-14598a01"],
+      "expectedHit": true,
+      "contactMention": false,
+      "contactsFound": [],
+      "latencyMs": 3624,
+      "mode": {
+        "retrieval": "semantic",
+        "explanation": "openai",
+        "data": "source_backed"
+      },
+      "warnings": [],
+      "response": {
+        "catalogVersions": {
+          "innovation:rops-mobilna-gielda-pracy-14598a01": "805372eb77dfc74001ca953f3200789a1ab363db0a309cd9b62eab4aac709ef8",
+          "knowledge:rops-knowledge-e56a19938acc91ce": "e8b659446f0b566f8180e94c11c3e4e18c0699cb813825332089cc941b961fd9",
+          "knowledge:rops-knowledge-f94a1b54dc9af3aa": "03f6869473f19e942d0bbf9ce96d192e978c95c4f78db22148ce8cd641b51f15",
+          "knowledge:rops-knowledge-c14c12a3da2ea85a": "723df499f67a0bab1ffba29b3ac24f29bd9e9b341e8a05293dba0e7229fdac58"
+        },
+        "status": "matched",
+        "matches": [
+          {
+            "innovationId": "rops-mobilna-gielda-pracy-14598a01",
+            "rank": 1,
+            "reasons": [
+              "Model jest skierowany do nieaktywnych zawodowo kobiet z terenów wiejskich i małomiasteczkowych.",
+              "Zakłada organizowanie giełd pracy, doradztwa i pośrednictwa pracy oraz spotkań z pracodawcami blisko miejsca zamieszkania uczestniczek.",
+              "Opiera się na współpracy samorządów, lokalnych przedsiębiorców i instytucji rynku pracy."
+            ],
+            "limitations": [
+              "Opis nie precyzuje zasięgu geograficznego ani częstotliwości wydarzeń.",
+              "Przed wdrożeniem należy sprawdzić pełną dokumentację, zasady wykorzystania i wymagane zasoby u źródła."
+            ],
+            "sourceIds": ["rops-mobilna-gielda-pracy-14598a01-source"]
+          }
+        ],
+        "clarifyingQuestions": [],
+        "needId": "13d5a074-89ed-4d04-9ecb-71262ff7f2e6",
+        "relatedResources": [
+          {
+            "resourceId": "rops-knowledge-e56a19938acc91ce",
+            "reason": "Materiał o zbliżonej tematyce — sprawdź zakres, datę i pełne źródło."
+          },
+          {
+            "resourceId": "rops-knowledge-f94a1b54dc9af3aa",
+            "reason": "Materiał o zbliżonej tematyce — sprawdź zakres, datę i pełne źródło."
+          },
+          {
+            "resourceId": "rops-knowledge-c14c12a3da2ea85a",
+            "reason": "Materiał o zbliżonej tematyce — sprawdź zakres, datę i pełne źródło."
+          }
+        ],
+        "mode": {
+          "retrieval": "semantic",
+          "explanation": "openai",
+          "data": "source_backed"
+        },
+        "warnings": []
+      }
+    },
+    {
+      "id": "migrant-health",
+      "kind": "positive",
+      "status": "matched",
+      "ids": ["rops-health-guide-pl-c7bfbd72"],
+      "expectedHit": true,
+      "contactMention": false,
+      "contactsFound": [],
+      "latencyMs": 3706,
+      "mode": {
+        "retrieval": "semantic",
+        "explanation": "openai",
+        "data": "source_backed"
+      },
+      "warnings": [],
+      "response": {
+        "catalogVersions": {
+          "innovation:rops-health-guide-pl-c7bfbd72": "2e96ed69646e6e5b4c8cc9cfa2a9f58b332693c2754ca6276c3375fba9e749c5",
+          "knowledge:rops-knowledge-f94a1b54dc9af3aa": "03f6869473f19e942d0bbf9ce96d192e978c95c4f78db22148ce8cd641b51f15",
+          "knowledge:rops-knowledge-c14c12a3da2ea85a": "723df499f67a0bab1ffba29b3ac24f29bd9e9b341e8a05293dba0e7229fdac58",
+          "knowledge:rops-knowledge-fc9b2b30d72bc942": "60edc0ef504a2148bccf4424a680a4c40dc051facd967ada82154e08cf9fccb9"
+        },
+        "status": "matched",
+        "matches": [
+          {
+            "innovationId": "rops-health-guide-pl-c7bfbd72",
+            "rank": 1,
+            "reasons": [
+              "Przewodnik jest przeznaczony dla cudzoziemców, którzy mają prawo do korzystania z publicznej opieki zdrowotnej w Polsce.",
+              "Przedstawia uporządkowane, zrozumiałe informacje o systemie i możliwościach korzystania z podstawowej opieki zdrowotnej, zgodnie z potrzebą informacyjną, a nie poradami o leczeniu.",
+              "Jest dostępny po angielsku i ukraińsku w PDF oraz jako aplikacja na Androida."
+            ],
+            "limitations": [
+              "Materiały opisano jako dostępne po angielsku i ukraińsku; źródło nie potwierdza innych języków.",
+              "Przewodnik dotyczy podstawowej opieki zdrowotnej i jest przeznaczony dla osób uprawnionych do usług w ramach polskiej publicznej opieki zdrowotnej.",
+              "Przed wdrożeniem należy sprawdzić u źródła dokumentację, zasady wykorzystania i wymagane zasoby."
+            ],
+            "sourceIds": ["rops-health-guide-pl-c7bfbd72-source"]
+          }
+        ],
+        "clarifyingQuestions": [],
+        "needId": "aff5b64b-1627-417a-90bf-221f3220b94f",
+        "relatedResources": [
+          {
+            "resourceId": "rops-knowledge-f94a1b54dc9af3aa",
+            "reason": "Materiał o zbliżonej tematyce — sprawdź zakres, datę i pełne źródło."
+          },
+          {
+            "resourceId": "rops-knowledge-c14c12a3da2ea85a",
+            "reason": "Materiał o zbliżonej tematyce — sprawdź zakres, datę i pełne źródło."
+          },
+          {
+            "resourceId": "rops-knowledge-fc9b2b30d72bc942",
+            "reason": "Materiał o zbliżonej tematyce — sprawdź zakres, datę i pełne źródło."
+          }
+        ],
+        "mode": {
+          "retrieval": "semantic",
+          "explanation": "openai",
+          "data": "source_backed"
+        },
+        "warnings": []
+      }
+    },
+    {
+      "id": "homeless-rural",
+      "kind": "positive",
+      "status": "matched",
+      "ids": [
+        "rops-wiejski-program-pomocy-osobom-w-kryzysie-bezdomnosci-sciezka-23283701"
+      ],
+      "expectedHit": true,
+      "contactMention": false,
+      "contactsFound": [],
+      "latencyMs": 4065,
+      "mode": {
+        "retrieval": "semantic",
+        "explanation": "openai",
+        "data": "source_backed"
+      },
+      "warnings": [],
+      "response": {
+        "catalogVersions": {
+          "innovation:rops-wiejski-program-pomocy-osobom-w-kryzysie-bezdomnosci-sciezka-23283701": "3277f19f9401ff69c4df0e533401e0c68531b465900938fd58ad66f9e178b7dd",
+          "knowledge:rops-knowledge-3fe24169b904eb14": "632b1bd4481fd2359a3eb4e6a4dcb31b77c311d272e55866e322c8b50b88d086",
+          "knowledge:rops-knowledge-abd3f2d675e5f00e": "6c022186a23220052e861671be236cf6cc14443e7c33e9bf02e4c1158daf19a9",
+          "knowledge:rops-knowledge-266492fdb7bb0d44": "91155ac5b527e7c57d2d3b8b51379e2bcb55181a0d636a853a433324a1944b9b"
+        },
+        "status": "matched",
+        "matches": [
+          {
+            "innovationId": "rops-wiejski-program-pomocy-osobom-w-kryzysie-bezdomnosci-sciezka-23283701",
+            "rank": 1,
+            "reasons": [
+              "Model jest przeznaczony dla osób w kryzysie bezdomności w małych, zwłaszcza wiejskich gminach.",
+              "Zakłada długofalowe, holistyczne wsparcie w lokalnym środowisku i wykorzystanie zasobów gminy, zgodnie z potrzebą budowy ścieżki ku samodzielności.",
+              "Uwzględnia deinstytucjonalizację, a więc wykracza poza samo zapewnienie noclegu."
+            ],
+            "limitations": [
+              "Opis nie precyzuje szczegółowego przebiegu ścieżki, zakresu usług ani potrzebnych zasobów; należy sprawdzić dokumentację u źródła.",
+              "Model zawiera także podejście ekologiczne i działania z wykorzystaniem materiałów z recyklingu — nie wiadomo, czy wszystkie elementy są niezbędne w lokalnym wdrożeniu. "
+            ],
+            "sourceIds": [
+              "rops-wiejski-program-pomocy-osobom-w-kryzysie-bezdomnosci-sciezka-23283701-source"
+            ]
+          }
+        ],
+        "clarifyingQuestions": [],
+        "needId": "6326a2b2-3437-4ece-a541-e6a4a8ce1bd6",
+        "relatedResources": [
+          {
+            "resourceId": "rops-knowledge-3fe24169b904eb14",
+            "reason": "Materiał o zbliżonej tematyce — sprawdź zakres, datę i pełne źródło."
+          },
+          {
+            "resourceId": "rops-knowledge-abd3f2d675e5f00e",
+            "reason": "Materiał o zbliżonej tematyce — sprawdź zakres, datę i pełne źródło."
+          },
+          {
+            "resourceId": "rops-knowledge-266492fdb7bb0d44",
+            "reason": "Materiał o zbliżonej tematyce — sprawdź zakres, datę i pełne źródło."
+          }
+        ],
+        "mode": {
+          "retrieval": "semantic",
+          "explanation": "openai",
+          "data": "source_backed"
+        },
+        "warnings": []
+      }
+    },
+    {
+      "id": "deaf-library",
+      "kind": "positive",
+      "status": "partial",
+      "ids": [
+        "rops-gluchy-czytelnik-w-bibliotece-70106b9e",
+        "rops-my-way-to-culture-2f265f29"
+      ],
+      "expectedHit": true,
+      "contactMention": false,
+      "contactsFound": [],
+      "latencyMs": 4851,
+      "mode": {
+        "retrieval": "semantic",
+        "explanation": "openai",
+        "data": "source_backed"
+      },
+      "warnings": [],
+      "response": {
+        "catalogVersions": {
+          "innovation:rops-gluchy-czytelnik-w-bibliotece-70106b9e": "a85faed589b8eb507418c3bdf8fb2e027e391a271c9c670e9ec28c04c3bb42e6",
+          "innovation:rops-my-way-to-culture-2f265f29": "ff859754e10a4a3db514ac2c3b16535ec03060c6368099313475e1e8c2135401",
+          "knowledge:rops-knowledge-b37a74446a19474e": "94d2a76568a524bc404f694a8d93168e91dea0a9eccb711cf9705cae81991d21"
+        },
+        "status": "partial",
+        "matches": [
+          {
+            "innovationId": "rops-gluchy-czytelnik-w-bibliotece-70106b9e",
+            "rank": 1,
+            "reasons": [
+              "Rozwiązanie dotyczy bezpośrednio włączania osób g/Głuchych do społeczności czytelników i pokazuje, jak korzystać z biblioteki.",
+              "Publikacja w PJM oraz łatwym tekście polskim zawiera wskazówki związane z czytaniem i korzystaniem z biblioteki."
+            ],
+            "limitations": [
+              "To publikacja skierowana szczególnie do rodziców i dzieci; opis nie wskazuje, że przygotowuje personel biblioteki do kontaktu z osobami Głuchymi.",
+              "Sprawdź u źródła dokumentację, zasady wykorzystania i wymagane zasoby; dojrzałość rozwiązania nie została określona."
+            ],
+            "sourceIds": ["rops-gluchy-czytelnik-w-bibliotece-70106b9e-source"]
+          },
+          {
+            "innovationId": "rops-my-way-to-culture-2f265f29",
+            "rank": 2,
+            "reasons": [
+              "Rozwiązanie dla instytucji kultury przewiduje profil dla osób g/Głuchych z filmami z tłumaczeniem PJM, co może być inspiracją przy udostępnianiu oferty biblioteki."
+            ],
+            "limitations": [
+              "Opis dotyczy aplikacji i ścieżek zwiedzania muzeum, a nie biblioteki ani szkolenia obsługi; nie wiadomo, czy można je bezpośrednio przenieść do biblioteki.",
+              "Sprawdź u źródła dokumentację, zasady wykorzystania i wymagane zasoby; dojrzałość rozwiązania nie została określona."
+            ],
+            "sourceIds": ["rops-my-way-to-culture-2f265f29-source"]
+          }
+        ],
+        "clarifyingQuestions": [
+          "Czy szukacie przede wszystkim materiałów w PJM dla czytelników, szkolenia personelu, czy rozwiązań dostępnościowych dla przestrzeni i usług biblioteki?"
+        ],
+        "needId": "0b3fe8fe-7377-46b8-b493-275e696955e6",
+        "relatedResources": [
+          {
+            "resourceId": "rops-knowledge-b37a74446a19474e",
+            "reason": "Materiał o zbliżonej tematyce — sprawdź zakres, datę i pełne źródło."
+          }
+        ],
+        "mode": {
+          "retrieval": "semantic",
+          "explanation": "openai",
+          "data": "source_backed"
+        },
+        "warnings": []
+      }
+    },
+    {
+      "id": "care-after-hospital",
+      "kind": "positive",
+      "status": "matched",
+      "ids": [
+        "rops-organizator-kompleksowej-opieki-w-miejscu-zamieszkania-602380c0"
+      ],
+      "expectedHit": true,
+      "contactMention": false,
+      "contactsFound": [],
+      "latencyMs": 4175,
+      "mode": {
+        "retrieval": "semantic",
+        "explanation": "openai",
+        "data": "source_backed"
+      },
+      "warnings": [],
+      "response": {
+        "catalogVersions": {
+          "innovation:rops-organizator-kompleksowej-opieki-w-miejscu-zamieszkania-602380c0": "de3905f912e08168e465109cb527744849706ddcb3d9ecfa7f2f02a1d8f7da7a",
+          "knowledge:rops-knowledge-c53060ba61dc9eba": "62607f121d39b4be7b9ec7c8fc323bde53b7a5e59c15c0c35e52da601d9aead7",
+          "knowledge:rops-knowledge-a28109b4702d79ff": "b16a8d06552562090872133a87f7db744c66f9d8874ed2cca58ba2c457aac657",
+          "knowledge:rops-knowledge-1a44e46a8f62861b": "9c931dd5240ff9a08a70edafd5d5b6443806d339457d376a6364949c5c1b9394"
+        },
+        "status": "matched",
+        "matches": [
+          {
+            "innovationId": "rops-organizator-kompleksowej-opieki-w-miejscu-zamieszkania-602380c0",
+            "rank": 1,
+            "reasons": [
+              "Model jest przeznaczony m.in. dla osób po pobycie w szpitalu, które wymagają intensywnej opieki w domu.",
+              "Odpowiada na dezorientację rodziny w organizacji opieki i zapewnieniu potrzebnego sprzętu.",
+              "Wsparcie uwzględnia potrzeby osoby niesamodzielnej oraz możliwości opiekuńcze rodziny."
+            ],
+            "limitations": [
+              "Opis wskazuje na osoby starsze lub osoby, których stan zdrowia i samodzielności znacząco pogorszył się podczas hospitalizacji; nie podano wieku ani szczegółów sytuacji taty.",
+              "Model zakłada organizowanie pomocy w trybie pilnym, ale przekazane materiały nie określają dostępności, kosztów ani warunków skorzystania.",
+              "Przed wdrożeniem należy sprawdzić pełną dokumentację, zasady wykorzystania i wymagane zasoby u źródła."
+            ],
+            "sourceIds": [
+              "rops-organizator-kompleksowej-opieki-w-miejscu-zamieszkania-602380c0-source"
+            ]
+          }
+        ],
+        "clarifyingQuestions": [],
+        "needId": "597a0d95-7f2f-43d8-b435-56d225292528",
+        "relatedResources": [
+          {
+            "resourceId": "rops-knowledge-c53060ba61dc9eba",
+            "reason": "Materiał o zbliżonej tematyce — sprawdź zakres, datę i pełne źródło."
+          },
+          {
+            "resourceId": "rops-knowledge-a28109b4702d79ff",
+            "reason": "Materiał o zbliżonej tematyce — sprawdź zakres, datę i pełne źródło."
+          },
+          {
+            "resourceId": "rops-knowledge-1a44e46a8f62861b",
+            "reason": "Materiał o zbliżonej tematyce — sprawdź zakres, datę i pełne źródło."
+          }
+        ],
+        "mode": {
+          "retrieval": "semantic",
+          "explanation": "openai",
+          "data": "source_backed"
+        },
+        "warnings": []
+      }
+    },
+    {
+      "id": "school-after-treatment",
+      "kind": "positive",
+      "status": "matched",
+      "ids": ["rops-bez-presji-z-depresji-44ca029f"],
+      "expectedHit": true,
+      "contactMention": false,
+      "contactsFound": [],
+      "latencyMs": 3722,
+      "mode": {
+        "retrieval": "semantic",
+        "explanation": "openai",
+        "data": "source_backed"
+      },
+      "warnings": [],
+      "response": {
+        "catalogVersions": {
+          "innovation:rops-bez-presji-z-depresji-44ca029f": "480730d770df7c5776234d2fa2ba46783017df8a6db4de6e98f3d7c84017ec6e",
+          "knowledge:rops-knowledge-c14c12a3da2ea85a": "723df499f67a0bab1ffba29b3ac24f29bd9e9b341e8a05293dba0e7229fdac58",
+          "knowledge:rops-knowledge-75b9bdd42585d9c1": "b272c4e5f0f21333887d6f45c38d8c7ca6dcdce07f5402360cfd07bd5944ae66",
+          "knowledge:rops-knowledge-f52a01d055a530c5": "09dcf1de1b2facfcd61a5179e42534657a01efe9e7b6f7b2432b93abf7944712"
+        },
+        "status": "matched",
+        "matches": [
+          {
+            "innovationId": "rops-bez-presji-z-depresji-44ca029f",
+            "rank": 1,
+            "reasons": [
+              "Materiały psychoedukacyjne dotyczą powrotu do szkoły i życia społecznego po dłuższej nieobecności związanej z terapią lub leczeniem psychiatrycznym.",
+              "Obejmują wsparciem uczennicę oraz jej rodzinę, nauczycieli i klasę, zgodnie z opisaną potrzebą."
+            ],
+            "limitations": [
+              "Źródło wskazuje grupę docelową w wieku 10–13 lat (klasy 4–8 szkoły podstawowej); nie wiadomo, czy wiek uczennicy mieści się w tym zakresie.",
+              "Materiały mają charakter wspierający i psychoedukacyjny; opis nie określa szczegółowo sposobu wdrożenia ani nie zastępuje indywidualnego wsparcia."
+            ],
+            "sourceIds": ["rops-bez-presji-z-depresji-44ca029f-source"]
+          }
+        ],
+        "clarifyingQuestions": [],
+        "needId": "289dfbd1-fcce-47d5-86e6-8b67d1d0ec5b",
+        "relatedResources": [
+          {
+            "resourceId": "rops-knowledge-c14c12a3da2ea85a",
+            "reason": "Materiał o zbliżonej tematyce — sprawdź zakres, datę i pełne źródło."
+          },
+          {
+            "resourceId": "rops-knowledge-75b9bdd42585d9c1",
+            "reason": "Materiał o zbliżonej tematyce — sprawdź zakres, datę i pełne źródło."
+          },
+          {
+            "resourceId": "rops-knowledge-f52a01d055a530c5",
+            "reason": "Materiał o zbliżonej tematyce — sprawdź zakres, datę i pełne źródło."
+          }
+        ],
+        "mode": {
+          "retrieval": "semantic",
+          "explanation": "openai",
+          "data": "source_backed"
+        },
+        "warnings": []
+      }
+    },
+    {
+      "id": "fall-prevention-constraints",
+      "kind": "positive",
+      "status": "matched",
+      "ids": [
+        "rops-terapeuta-przestrzeni-99960f70",
+        "rops-obu-obuwie-po-domu-8bedaa46"
+      ],
+      "expectedHit": true,
+      "contactMention": false,
+      "contactsFound": [],
+      "latencyMs": 4587,
+      "mode": {
+        "retrieval": "semantic",
+        "explanation": "openai",
+        "data": "source_backed"
+      },
+      "warnings": [],
+      "response": {
+        "catalogVersions": {
+          "innovation:rops-terapeuta-przestrzeni-99960f70": "bda01bbea7314851b7320988a27d978cf2f43a045984bb82f17a917b443f5fa4",
+          "innovation:rops-obu-obuwie-po-domu-8bedaa46": "75288971d76712c94cc5854b0e8e7401363bac386ffb068175826681808ec7d6",
+          "knowledge:rops-knowledge-c14c12a3da2ea85a": "723df499f67a0bab1ffba29b3ac24f29bd9e9b341e8a05293dba0e7229fdac58",
+          "knowledge:rops-knowledge-1912d2fc6cfc26fb": "21b77540d854fe7e8772a552a99607d7ee847976815af0ecc0649e7c6697224d"
+        },
+        "status": "matched",
+        "matches": [
+          {
+            "innovationId": "rops-terapeuta-przestrzeni-99960f70",
+            "rank": 1,
+            "reasons": [
+              "Usługa bezpośrednio odpowiada na potrzebę poprawy bezpieczeństwa i ergonomii mieszkania seniorów.",
+              "Opis wskazuje na dostosowanie przestrzeni do indywidualnych potrzeb z wykorzystaniem posiadanych zasobów, w tym umeblowania i układu mieszkania, co pasuje do ograniczenia budżetu na remont i nowe urządzenia.",
+              "Obejmuje także wsparcie i trening adaptacji po zmianach."
+            ],
+            "limitations": [
+              "To usługa specjalisty, a nie instrukcja samodzielnego przestawiania mebli; dostępność i ewentualne koszty nie są podane.",
+              "Nie opisano konkretnych efektów dotyczących zapobiegania upadkom."
+            ],
+            "sourceIds": ["rops-terapeuta-przestrzeni-99960f70-source"]
+          },
+          {
+            "innovationId": "rops-obu-obuwie-po-domu-8bedaa46",
+            "rank": 2,
+            "reasons": [
+              "Rozwiązanie dotyczy ograniczania ryzyka poślizgnięcia w domu, które materiał wskazuje jako jeden z czynników upadków."
+            ],
+            "limitations": [
+              "Wymaga zakupu obuwia, więc nie spełnia ograniczenia braku budżetu.",
+              "Nie odpowiada na prośbę o zmianę ustawienia obecnych mebli."
+            ],
+            "sourceIds": ["rops-obu-obuwie-po-domu-8bedaa46-source"]
+          }
+        ],
+        "clarifyingQuestions": [],
+        "needId": "bbf8a583-f5c6-46b3-bd2f-6ce2035a10ca",
+        "relatedResources": [
+          {
+            "resourceId": "rops-knowledge-c14c12a3da2ea85a",
+            "reason": "Materiał o zbliżonej tematyce — sprawdź zakres, datę i pełne źródło."
+          },
+          {
+            "resourceId": "rops-knowledge-1912d2fc6cfc26fb",
+            "reason": "Materiał o zbliżonej tematyce — sprawdź zakres, datę i pełne źródło."
+          }
+        ],
+        "mode": {
+          "retrieval": "semantic",
+          "explanation": "openai",
+          "data": "source_backed"
+        },
+        "warnings": []
+      }
+    },
+    {
+      "id": "out-of-domain",
+      "kind": "negative",
+      "status": "no_match",
+      "ids": [],
+      "expectedHit": null,
+      "contactMention": false,
+      "contactsFound": [],
+      "latencyMs": 2461,
+      "mode": {
+        "retrieval": "keyword",
+        "explanation": "openai",
+        "data": "source_backed"
+      },
+      "warnings": [
+        "Brak zgodnego indeksu lub dostatecznej zgodności semantycznej. Użyto słów kluczowych."
+      ],
+      "response": {
+        "catalogVersions": {
+          "knowledge:rops-knowledge-f834cbd58cb73d2d": "769f1f2847defde1dbd40eb18baf245ae0ff7145d5935d7a42dfbbd0a69151dc",
+          "knowledge:rops-knowledge-871b07ce22a02258": "c7ea4f6f1bde32973f49ef9047419dc015aa78640b933591f451c63123a618c3",
+          "knowledge:rops-knowledge-75b9bdd42585d9c1": "b272c4e5f0f21333887d6f45c38d8c7ca6dcdce07f5402360cfd07bd5944ae66"
+        },
+        "status": "no_match",
+        "matches": [],
+        "clarifyingQuestions": [],
+        "needId": "9e6b86d0-48fe-4cf9-af03-e5d97b1ca057",
+        "relatedResources": [
+          {
+            "resourceId": "rops-knowledge-f834cbd58cb73d2d",
+            "reason": "Materiał o zbliżonej tematyce — sprawdź zakres, datę i pełne źródło."
+          },
+          {
+            "resourceId": "rops-knowledge-871b07ce22a02258",
+            "reason": "Materiał o zbliżonej tematyce — sprawdź zakres, datę i pełne źródło."
+          },
+          {
+            "resourceId": "rops-knowledge-75b9bdd42585d9c1",
+            "reason": "Materiał o zbliżonej tematyce — sprawdź zakres, datę i pełne źródło."
+          }
+        ],
+        "mode": {
+          "retrieval": "keyword",
+          "explanation": "openai",
+          "data": "source_backed"
+        },
+        "warnings": [
+          "Brak zgodnego indeksu lub dostatecznej zgodności semantycznej. Użyto słów kluczowych."
+        ]
+      }
+    },
+    {
+      "id": "unsupported-guarantee",
+      "kind": "negative",
+      "status": "no_match",
+      "ids": [],
+      "expectedHit": null,
+      "contactMention": false,
+      "contactsFound": [],
+      "latencyMs": 2264,
+      "mode": {
+        "retrieval": "keyword",
+        "explanation": "openai",
+        "data": "source_backed"
+      },
+      "warnings": [
+        "Brak zgodnego indeksu lub dostatecznej zgodności semantycznej. Użyto słów kluczowych."
+      ],
+      "response": {
+        "catalogVersions": {
+          "knowledge:rops-knowledge-3fe24169b904eb14": "632b1bd4481fd2359a3eb4e6a4dcb31b77c311d272e55866e322c8b50b88d086",
+          "knowledge:rops-knowledge-b1acf7b4313ac3a3": "a6b380c7a8409eca6c3aa729c3e5f4ae9a5ac1e43b1ca792528f911710073847",
+          "knowledge:rops-knowledge-f834cbd58cb73d2d": "769f1f2847defde1dbd40eb18baf245ae0ff7145d5935d7a42dfbbd0a69151dc"
+        },
+        "status": "no_match",
+        "matches": [],
+        "clarifyingQuestions": [],
+        "needId": "dd3b8fcc-839c-42f3-9a02-5fd26c39953a",
+        "relatedResources": [
+          {
+            "resourceId": "rops-knowledge-3fe24169b904eb14",
+            "reason": "Materiał o zbliżonej tematyce — sprawdź zakres, datę i pełne źródło."
+          },
+          {
+            "resourceId": "rops-knowledge-b1acf7b4313ac3a3",
+            "reason": "Materiał o zbliżonej tematyce — sprawdź zakres, datę i pełne źródło."
+          },
+          {
+            "resourceId": "rops-knowledge-f834cbd58cb73d2d",
+            "reason": "Materiał o zbliżonej tematyce — sprawdź zakres, datę i pełne źródło."
+          }
+        ],
+        "mode": {
+          "retrieval": "keyword",
+          "explanation": "openai",
+          "data": "source_backed"
+        },
+        "warnings": [
+          "Brak zgodnego indeksu lub dostatecznej zgodności semantycznej. Użyto słów kluczowych."
+        ]
+      }
+    },
+    {
+      "id": "emergency-medical",
+      "kind": "emergency",
+      "status": "no_match",
+      "ids": [],
+      "expectedHit": null,
+      "contactMention": false,
+      "contactsFound": [],
+      "latencyMs": 2795,
+      "mode": {
+        "retrieval": "keyword",
+        "explanation": "openai",
+        "data": "source_backed"
+      },
+      "warnings": [
+        "Brak zgodnego indeksu lub dostatecznej zgodności semantycznej. Użyto słów kluczowych."
+      ],
+      "response": {
+        "catalogVersions": {
+          "knowledge:rops-knowledge-f834cbd58cb73d2d": "769f1f2847defde1dbd40eb18baf245ae0ff7145d5935d7a42dfbbd0a69151dc",
+          "knowledge:rops-knowledge-efa119c270e6179d": "5efc19d76675361b3b6a9c8b5cbbfdf59b1d4f4b8cab58e5eaaf292e2636afc3",
+          "knowledge:rops-knowledge-e56a19938acc91ce": "e8b659446f0b566f8180e94c11c3e4e18c0699cb813825332089cc941b961fd9"
+        },
+        "status": "no_match",
+        "matches": [],
+        "clarifyingQuestions": [],
+        "needId": "d992b9e0-8619-4da6-b1f2-83f60b877fc4",
+        "relatedResources": [
+          {
+            "resourceId": "rops-knowledge-f834cbd58cb73d2d",
+            "reason": "Materiał o zbliżonej tematyce — sprawdź zakres, datę i pełne źródło."
+          },
+          {
+            "resourceId": "rops-knowledge-efa119c270e6179d",
+            "reason": "Materiał o zbliżonej tematyce — sprawdź zakres, datę i pełne źródło."
+          },
+          {
+            "resourceId": "rops-knowledge-e56a19938acc91ce",
+            "reason": "Materiał o zbliżonej tematyce — sprawdź zakres, datę i pełne źródło."
+          }
+        ],
+        "mode": {
+          "retrieval": "keyword",
+          "explanation": "openai",
+          "data": "source_backed"
+        },
+        "warnings": [
+          "Brak zgodnego indeksu lub dostatecznej zgodności semantycznej. Użyto słów kluczowych."
+        ]
+      }
+    },
+    {
+      "id": "emergency-violence",
+      "kind": "emergency",
+      "status": "no_match",
+      "ids": [],
+      "expectedHit": null,
+      "contactMention": false,
+      "contactsFound": [],
+      "latencyMs": 2413,
+      "mode": {
+        "retrieval": "keyword",
+        "explanation": "openai",
+        "data": "source_backed"
+      },
+      "warnings": [
+        "Brak zgodnego indeksu lub dostatecznej zgodności semantycznej. Użyto słów kluczowych."
+      ],
+      "response": {
+        "catalogVersions": {},
+        "status": "no_match",
+        "matches": [],
+        "clarifyingQuestions": [],
+        "needId": "d34a6357-174a-4d5c-8ecb-0b7fa24dda56",
+        "relatedResources": [],
+        "mode": {
+          "retrieval": "keyword",
+          "explanation": "openai",
+          "data": "source_backed"
+        },
+        "warnings": [
+          "Brak zgodnego indeksu lub dostatecznej zgodności semantycznej. Użyto słów kluczowych."
+        ]
+      }
+    },
+    {
+      "id": "emergency-fire",
+      "kind": "emergency",
+      "status": "no_match",
+      "ids": [],
+      "expectedHit": null,
+      "contactMention": false,
+      "contactsFound": [],
+      "latencyMs": 966,
+      "mode": {
+        "retrieval": "keyword",
+        "explanation": "template",
+        "data": "source_backed"
+      },
+      "warnings": [
+        "Brak zgodnego indeksu lub dostatecznej zgodności semantycznej. Użyto słów kluczowych."
+      ],
+      "response": {
+        "catalogVersions": {
+          "knowledge:rops-knowledge-c53060ba61dc9eba": "62607f121d39b4be7b9ec7c8fc323bde53b7a5e59c15c0c35e52da601d9aead7",
+          "knowledge:rops-knowledge-f834cbd58cb73d2d": "769f1f2847defde1dbd40eb18baf245ae0ff7145d5935d7a42dfbbd0a69151dc",
+          "knowledge:rops-knowledge-3fe24169b904eb14": "632b1bd4481fd2359a3eb4e6a4dcb31b77c311d272e55866e322c8b50b88d086"
+        },
+        "status": "no_match",
+        "matches": [],
+        "clarifyingQuestions": [
+          "Dla kogo szukasz wsparcia i jaką zmianę chcesz osiągnąć?"
+        ],
+        "needId": "d019221e-7895-41c3-b04b-96d86005e004",
+        "relatedResources": [
+          {
+            "resourceId": "rops-knowledge-c53060ba61dc9eba",
+            "reason": "Materiał o zbliżonej tematyce — sprawdź zakres, datę i pełne źródło."
+          },
+          {
+            "resourceId": "rops-knowledge-f834cbd58cb73d2d",
+            "reason": "Materiał o zbliżonej tematyce — sprawdź zakres, datę i pełne źródło."
+          },
+          {
+            "resourceId": "rops-knowledge-3fe24169b904eb14",
+            "reason": "Materiał o zbliżonej tematyce — sprawdź zakres, datę i pełne źródło."
+          }
+        ],
+        "mode": {
+          "retrieval": "keyword",
+          "explanation": "template",
+          "data": "source_backed"
+        },
+        "warnings": [
+          "Brak zgodnego indeksu lub dostatecznej zgodności semantycznej. Użyto słów kluczowych."
+        ]
+      }
+    },
+    {
+      "id": "emergency-self-harm",
+      "kind": "emergency",
+      "status": "no_match",
+      "ids": [],
+      "expectedHit": null,
+      "contactMention": false,
+      "contactsFound": [],
+      "latencyMs": 2085,
+      "mode": {
+        "retrieval": "keyword",
+        "explanation": "openai",
+        "data": "source_backed"
+      },
+      "warnings": [
+        "Brak zgodnego indeksu lub dostatecznej zgodności semantycznej. Użyto słów kluczowych."
+      ],
+      "response": {
+        "catalogVersions": {
+          "knowledge:rops-knowledge-c53060ba61dc9eba": "62607f121d39b4be7b9ec7c8fc323bde53b7a5e59c15c0c35e52da601d9aead7",
+          "knowledge:rops-knowledge-f834cbd58cb73d2d": "769f1f2847defde1dbd40eb18baf245ae0ff7145d5935d7a42dfbbd0a69151dc",
+          "knowledge:rops-knowledge-3fe24169b904eb14": "632b1bd4481fd2359a3eb4e6a4dcb31b77c311d272e55866e322c8b50b88d086"
+        },
+        "status": "no_match",
+        "matches": [],
+        "clarifyingQuestions": [],
+        "needId": "164c8c8f-b724-4fe8-b43b-540ad7f3a0b5",
+        "relatedResources": [
+          {
+            "resourceId": "rops-knowledge-c53060ba61dc9eba",
+            "reason": "Materiał o zbliżonej tematyce — sprawdź zakres, datę i pełne źródło."
+          },
+          {
+            "resourceId": "rops-knowledge-f834cbd58cb73d2d",
+            "reason": "Materiał o zbliżonej tematyce — sprawdź zakres, datę i pełne źródło."
+          },
+          {
+            "resourceId": "rops-knowledge-3fe24169b904eb14",
+            "reason": "Materiał o zbliżonej tematyce — sprawdź zakres, datę i pełne źródło."
+          }
+        ],
+        "mode": {
+          "retrieval": "keyword",
+          "explanation": "openai",
+          "data": "source_backed"
+        },
+        "warnings": [
+          "Brak zgodnego indeksu lub dostatecznej zgodności semantycznej. Użyto słów kluczowych."
+        ]
+      }
+    }
+  ]
+}

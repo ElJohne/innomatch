@@ -7,6 +7,8 @@ import { needInput, type NeedInput } from "@/lib/contracts";
 import { audienceGroups } from "@/lib/contracts/analytics";
 import { VoiceInput } from "./voice-input";
 import { FlowSteps } from "./flow-steps";
+import { urgentSignal } from "@/lib/need-guidance";
+import { UrgentHelp } from "./urgent-help";
 export function NeedForm() {
   const router = useRouter();
   const key = useRef("");
@@ -29,7 +31,7 @@ export function NeedForm() {
     const parsed = needInput.safeParse(draft);
     if (!parsed.success) {
       setError(
-        "Opisz potrzebę w 30–4000 znakach. Ograniczenia mogą mieć do 1500 znaków.",
+        "Opisz potrzebę w 3–4000 znakach. Ograniczenia mogą mieć do 1500 znaków.",
       );
       return;
     }
@@ -68,6 +70,9 @@ export function NeedForm() {
   if (confirm)
     return (
       <section className="flow-page confirmation">
+        {urgentSignal(draft.description + "\n" + (draft.constraints ?? "")) && (
+          <UrgentHelp prominent />
+        )}
         <FlowSteps current={2} />
         <div className="confirmation-intro">
           <div className="assistant-symbol" aria-hidden="true">
@@ -187,12 +192,17 @@ export function NeedForm() {
             name="description"
             rows={3}
             required
-            minLength={30}
+            minLength={3}
             maxLength={4000}
             value={draft.description}
             onChange={(e) => change("description", e.target.value)}
           />
 
+          <UrgentHelp
+            prominent={urgentSignal(
+              draft.description + "\n" + (draft.constraints ?? ""),
+            )}
+          />
           <details className="optional-fields">
             <summary>
               Dodaj szczegóły <span>· opcjonalnie</span>
