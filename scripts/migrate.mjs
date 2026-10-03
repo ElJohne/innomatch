@@ -9,6 +9,16 @@ const sql = postgres(process.env.DATABASE_DIRECT_URL || process.env.DATABASE_URL
   max: 1, connect_timeout: 10, onnotice: () => {},
 });
 try {
+  // k3s networking can take a few seconds to admit a newly created Job pod.
+  for (let attempt = 0; ; attempt++) {
+    try {
+      await sql`select 1`;
+      break;
+    } catch {
+      if (attempt >= 29) throw new Error('DATABASE_UNAVAILABLE');
+      await new Promise(resolve => setTimeout(resolve, 2000));
+    }
+  }
   const directory = new URL('../migrations/', import.meta.url);
   const files = (await readdir(directory)).filter(name => /^\d+_[a-z0-9_]+\.sql$/.test(name)).sort();
   if (!files.length) throw new Error('MIGRATIONS_MISSING');

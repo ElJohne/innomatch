@@ -27,6 +27,7 @@ if (process.argv[2] === 'migration') {
   const job = process.env.MIGRATION_JOB;
   if (!/^migrate-[0-9]+-[0-9]+$/.test(job || '')) throw new Error('Invalid job');
   pod.spec.restartPolicy = 'Never';
+  pod.metadata.labels.app = 'innomatch-migration';
   pod.spec.containers[0].command = ['node', 'scripts/migrate.mjs'];
   delete pod.spec.containers[0].readinessProbe;
   delete pod.spec.containers[0].livenessProbe;

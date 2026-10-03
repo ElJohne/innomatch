@@ -119,7 +119,7 @@ apply(dict(apiVersion='batch/v1', kind='CronJob', metadata=dict(name='postgres-b
         'restartPolicy': 'Never', 'automountServiceAccountToken': False,
         'containers': [{'name': 'backup', 'image': 'postgres:17.11-bookworm',
             'env': [{'name': 'PGPASSWORD', 'valueFrom': {'secretKeyRef': {'name': 'postgres-env', 'key': 'POSTGRES_PASSWORD'}}}],
-            'command': ['/bin/sh', '-ec', 'umask 077; file=/backups/innomatch-$(date -u +%Y%m%dT%H%M%SZ).dump; pg_dump -h postgres -U postgres -d innomatch -Fc -f "$file.tmp"; mv "$file.tmp" "$file"; find /backups -name "innomatch-*.dump" -mtime +7 -delete'],
+            'command': ['/bin/sh', '-ec', 'umask 077; attempt=0; until pg_isready -h postgres -U postgres -d innomatch -t 3 >/dev/null 2>&1; do attempt=$((attempt+1)); [ "$attempt" -lt 30 ] || exit 1; sleep 2; done; file=/backups/innomatch-$(date -u +%Y%m%dT%H%M%SZ).dump; pg_dump -h postgres -U postgres -d innomatch -Fc -f "$file.tmp"; mv "$file.tmp" "$file"; find /backups -name "innomatch-*.dump" -mtime +7 -delete'],
             'resources': {'requests': {'cpu': '50m', 'memory': '64Mi'}, 'limits': {'cpu': '500m', 'memory': '256Mi'}},
             'volumeMounts': [{'name': 'backups', 'mountPath': '/backups'}],
         }], 'volumes': [{'name': 'backups', 'persistentVolumeClaim': {'claimName': 'backups'}}],
