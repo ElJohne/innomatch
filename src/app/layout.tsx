@@ -66,6 +66,7 @@ export default function RootLayout({
             <Link href="/#jak-to-dziala">Jak to działa</Link>
             <Link href="/innowacje">Katalog innowacji</Link>
             <Link href="/wiedza">Wiedza</Link>
+            <Link href="/pomysly/nowy">Mam pomysł</Link>
             <Link href="/moje-sprawy">Moje sprawy</Link>
             <a
               href="https://www.malopolska.pl"
@@ -83,6 +84,7 @@ export default function RootLayout({
             Pomocny Punkt
           </Link>
           <p>Od lokalnej potrzeby do wspólnego działania.</p>
+          <Link href="/admin">Strefa personelu</Link>
           <a href="https://www.malopolska.pl" target="_blank" rel="noreferrer">
             Małopolska — portal województwa ↗
           </a>

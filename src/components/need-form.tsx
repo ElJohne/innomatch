@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { needInput, type NeedInput } from "@/lib/contracts";
+import { audienceGroups } from "@/lib/contracts/analytics";
 import { VoiceInput } from "./voice-input";
 import { FlowSteps } from "./flow-steps";
 export function NeedForm() {
@@ -209,9 +210,8 @@ export function NeedForm() {
               </div>
               <div>
                 <label htmlFor="group">Dla kogo?</label>
-                <input
+                <select
                   id="group"
-                  maxLength={200}
                   value={draft.targetGroups[0] || ""}
                   onChange={(e) =>
                     change(
@@ -219,8 +219,12 @@ export function NeedForm() {
                       e.target.value ? [e.target.value] : [],
                     )
                   }
-                  placeholder="Np. seniorzy, mieszkańcy"
-                />
+                >
+                  <option value="">Wybierz grupę</option>
+                  {audienceGroups.map((group) => (
+                    <option key={group}>{group}</option>
+                  ))}
+                </select>
               </div>
             </div>
             <label htmlFor="constraints">Zasoby i ograniczenia</label>

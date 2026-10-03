@@ -14,7 +14,7 @@ import {
   type MatchResponse,
   type Embedding,
 } from "@/lib/contracts";
-import fixtures from "../../../data/demo/innovations.json";
+import { fixtureCatalog } from "./fixture-catalog";
 
 type Memory = { needs: Map<string, Need>; counters: Map<string, number> };
 const root = globalThis as unknown as { miMemory?: Memory };
@@ -27,9 +27,19 @@ function isFixture() {
     throw new Error("FIXTURES_DISABLED");
   return c.DATA_PROVIDER === "fixtures";
 }
+// Only the aggregate service consumes this projection; never expose private need text.
+export function fixtureNeedMetrics() {
+  if (!isFixture()) throw new Error("FIXTURES_ONLY");
+  return [...memory().needs.values()].map((n) => ({
+    createdAt: n.createdAt,
+    targetGroups: [...n.targetGroups],
+    hasMunicipality: Boolean(n.municipality?.trim()),
+    status: n.match?.status ?? null,
+  }));
+}
 export async function listInnovations(): Promise<Innovation[]> {
   const records = isFixture()
-    ? fixtures
+    ? [...fixtureCatalog().innovations.values()]
     : (await db().select().from(tables.innovations)).map((x) => x.record);
   return records
     .map((x) => innovationSchema.parse(x))
@@ -151,10 +161,16 @@ export async function listEmbeddings(): Promise<Embedding[]> {
     : (await db().select().from(tables.embeddings)).map((x) => x.record);
 }
 export async function listKnowledge(): Promise<KnowledgeResource[]> {
-  if (isFixture()) return [];
-  return (await db().select().from(tables.knowledge))
-    .map((x) => knowledgeSchema.parse(x.record))
-    .filter((x) => x.publicationStatus === "PUBLISHED");
+  const records = isFixture()
+    ? [...fixtureCatalog().knowledge.values()]
+    : (await db().select().from(tables.knowledge)).map((x) => x.record);
+  return records
+    .map((x) => knowledgeSchema.parse(x))
+    .filter(
+      (x) =>
+        x.publicationStatus === "PUBLISHED" &&
+        (config().DEMO_DATA_ENABLED === "true" || x.origin !== "SYNTHETIC"),
+    );
 }
 export async function listKnowledgeEmbeddings(): Promise<Embedding[]> {
   return isFixture()

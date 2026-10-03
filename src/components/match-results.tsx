@@ -83,7 +83,9 @@ export function MatchResults({
         <h1>
           {result.status === "no_match"
             ? "Nie znaleźliśmy wystarczającego dopasowania"
-            : "Wybierz organizację"}
+            : options.length
+              ? "Wybierz organizację"
+              : "Propozycje do sprawdzenia"}
         </h1>
         <p className="lead">
           {options.length
@@ -138,6 +140,14 @@ export function MatchResults({
                   Wybierz organizację <span className="sr-only">{o.name}</span>
                   <span aria-hidden="true">→</span>
                 </Link>
+                <p>
+                  <Link
+                    className="text-link"
+                    href={`/adaptacje/nowa?innovationId=${r.id}&needId=${id}`}
+                  >
+                    Dostosuj do mojej instytucji →
+                  </Link>
+                </p>
               </article>
             ))}
           </div>
@@ -161,10 +171,41 @@ export function MatchResults({
                 <li key={record.id}>
                   <Link href={`/innowacje/${record.id}`}>{record.title}</Link>
                   <p>{m.reasons.join(" ")}</p>
+                  <details>
+                    <summary>Ograniczenia i źródła</summary>
+                    <ul>
+                      {m.limitations.map((text) => (
+                        <li key={text}>{text}</li>
+                      ))}
+                    </ul>
+                    {record.sources
+                      .filter((source) => m.sourceIds.includes(source.id))
+                      .map((source) => (
+                        <p className="help" key={source.id}>
+                          {source.sourceTitle}
+                        </p>
+                      ))}
+                  </details>
+                  <p>
+                    <Link
+                      className="text-link"
+                      href={`/adaptacje/nowa?innovationId=${record.id}&needId=${id}`}
+                    >
+                      Dostosuj do mojej instytucji →
+                    </Link>
+                  </p>
                 </li>
               ) : null;
             })}
           </ul>
+          {result.clarifyingQuestions.length > 0 && (
+            <details>
+              <summary>Warto doprecyzować</summary>
+              {result.clarifyingQuestions.map((question) => (
+                <p key={question}>{question}</p>
+              ))}
+            </details>
+          )}
         </div>
       )}
       {result.status === "no_match" && (
@@ -179,6 +220,9 @@ export function MatchResults({
           <Link className="button" href="/potrzeby/nowa">
             Opisz potrzebę ponownie →
           </Link>
+          <p>
+            Możesz też <Link href="/pomysly/nowy">zapisać własny pomysł</Link>.
+          </p>
         </div>
       )}
       {!!result.relatedResources.length && (

@@ -105,6 +105,20 @@ export default async function PlanPage({
         </aside>
       </div>
       <MessageDraft initial={message} />
+      <div className="actions">
+        <Link
+          className="button"
+          href={`/adaptacje/nowa?innovationId=${innovation.id}&needId=${need.id}`}
+        >
+          Dostosuj do mojej instytucji
+        </Link>
+        <Link
+          className="button secondary"
+          href={`/wiadomosci/nowa?needId=${need.id}`}
+        >
+          Zapytaj koordynatora
+        </Link>
+      </div>
       <details className="card plan-evidence">
         <summary>
           Dlaczego ta propozycja? Zobacz rozwiązanie, źródła i ograniczenia

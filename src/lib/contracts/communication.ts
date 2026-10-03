@@ -1,0 +1,57 @@
+import { z } from "zod";
+
+export const loginInput = z
+  .object({
+    login: z.string().trim().toLowerCase().email().max(200),
+    password: z.string().min(1).max(200),
+  })
+  .strict();
+export const messageInput = z
+  .object({
+    body: z.string().trim().min(1).max(4000),
+    requestKey: z.string().uuid(),
+  })
+  .strict();
+export const threadInput = messageInput
+  .extend({
+    needId: z.string().uuid().optional(),
+    adaptationId: z.string().uuid().optional(),
+    innovationId: z
+      .string()
+      .regex(/^[a-z0-9-]{1,80}$/)
+      .optional(),
+  })
+  .refine(
+    (v) =>
+      [v.needId, v.innovationId, v.adaptationId].filter(Boolean).length === 1,
+    {
+      message: "Wybierz jeden kontekst rozmowy.",
+    },
+  );
+export const readInput = z
+  .object({ through: z.number().int().positive() })
+  .strict();
+export type ThreadInput = z.infer<typeof threadInput>;
+export type MessageInput = z.infer<typeof messageInput>;
+export type Staff = {
+  id: string;
+  role: "ADMIN" | "EXPERT";
+  authVersion: number;
+};
+export type Actor = { ownerId: string; staff?: Staff };
+export type ThreadSummary = {
+  ideaId?: string | null;
+  adaptationId?: string | null;
+  id: string;
+  needId: string | null;
+  innovationId: string | null;
+  updatedAt: string;
+  unread: number;
+};
+export type ThreadMessage = {
+  id: string;
+  sequence: number;
+  authorRole: "USER" | "STAFF";
+  body: string;
+  createdAt: string;
+};

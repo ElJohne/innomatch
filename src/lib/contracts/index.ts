@@ -57,7 +57,7 @@ export const knowledgeSchema = z
     description: z.string().min(10).max(6000),
     topics: z.array(shortText).max(20),
     coverage: z.enum(["DESCRIPTION", "EXCERPT", "DIRECTORY"]),
-    origin: z.literal("PUBLIC_SOURCE"),
+    origin: z.enum(["PUBLIC_SOURCE", "SYNTHETIC"]),
     publicationStatus: z.enum(["DRAFT", "IN_REVIEW", "PUBLISHED", "ARCHIVED"]),
     sources: z.array(sourceSchema).min(1).max(5),
   })
@@ -80,6 +80,7 @@ export const explanationSchema = z
   })
   .strict();
 export const matchResponseSchema = explanationSchema.extend({
+  catalogVersions: z.record(z.string(), z.string()).optional(),
   needId: z.string(),
   relatedResources: z.array(
     z.object({ resourceId: z.string(), reason: z.string() }),

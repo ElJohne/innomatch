@@ -10,7 +10,7 @@ export async function GET() {
     if (config().AI_PROVIDER !== "mock") createLiveAiProvider();
     if (config().DATA_PROVIDER === "postgres") {
       const rows =
-        await sqlClient()`select id from mi_migrations where id = '0002_knowledge'`;
+        await sqlClient()`select id from mi_migrations where id = '0007_pilots_feedback'`;
       if (!rows.length) return json({ status: "unavailable" }, 503);
     }
     return json({ status: "ok" });

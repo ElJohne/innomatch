@@ -1,29 +1,37 @@
 # Покриття вимог
 
+Оновлено 2026-10-03: production корпус/AI підтверджені попередньою ітерацією.
+Staff auth, діалоги й редактор каталогу перевірені локально на fixtures, ще не deployed.
+Першоджерела повторно звірено: CRITERIA с. 1–8, RULES с. 1–7.
+Це оцінка відповідності документованому завданню, не підтверджене партнерами приймання продукту.
+
 | Вимога | Реалізація | Перевірка | Стан |
 |---|---|---|---|
-| M1 потреба → результати → джерела | app/potrzeby, server/services/matching, contracts | unit + browser flow | PARTIAL: локальний сценарій, live заблокований |
+| M1 потреба → результати → джерела | app/potrzeby, server/services/matching, contracts | unit + browser flow + попередній live smoke | Реалізовано; незалежна retrieval evaluation ще відсутня |
 | M1 no-match, власник, повторне відкриття | ranking, auth/session, API | unit / E2E | Реалізовано, див. QA |
-| M1 семантика й пояснення Azure | ai/provider, embeddings, data:index | unit сумісності; live очікується | PARTIAL |
-| M1 схожі випадки / матеріали | relatedResources контракт | Немає корпусу | NOT IMPLEMENTED |
-| M2 каталог, фільтри, деталі | app/innowacje | E2E | PARTIAL: лише synthetic |
-| M2 карта, звіти, освіта, адмін-аналітика | /wiedza повідомляє про відсутність | Не реалізовано | NOT IMPLEMENTED |
-| M3 картка, AI, Canwy, гранти | Немає активних кнопок | Не реалізовано | NOT IMPLEMENTED |
-| M4 тестування/відгуки | Повідомлення на деталях | Не реалізовано | NOT IMPLEMENTED |
-| M5 приватний діалог/відповідь/партнерство | Не реалізовано | Немає | NOT IMPLEMENTED |
-| M6 модерація/оновлення/аналітика | admin API fail-closed | E2E 403 | NOT IMPLEMENTED |
-| M7 адаптація | Не реалізовано | Немає | NOT IMPLEMENTED |
+| M1 семантика й пояснення | ai/provider, embeddings, data:index | попередній production smoke | OpenAI працює; Azure адаптер збережено |
+| M1 схожі випадки / матеріали | search/knowledge, relatedResources | попередній source-backed smoke | Реалізовано, незалежної оцінки якості ще немає |
+| M2 каталог, фільтри, деталі | app/innowacje | E2E + production import | 114 source-backed інновацій у попередньому rollout |
+| M2 карта, звіти, освіта, адмін-аналітика | /wiedza, KnowledgeResource, /admin/statystyki | import validation, production smoke; локальний aggregate flow | PARTIAL: 69 ресурсів і локальні агрегати потреб; повні звіти/інтерактивна карта відсутні |
+| M3 картка, AI, Canwy, гранти | /pomysly, services/ideas, 0006, GrantCall schema, опублікований Canvas resource | lint/typecheck/build, ручний mock create/assist/apply/save/submit/staff read | PARTIAL: картка й консультація реалізовані локально; посилання на Canvas, без інтерактивного відтворення; грантовий генератор відсутній |
+| M4 тестування/відгуки | Секції /innowacje/:id, services/pilots, /admin/opinie, 0007 | lint/typecheck/build; ручні fixtures interest/review/publish/edit | Реалізовано локально за SPEC §5.3; PostgreSQL, concurrency й cross-owner runtime не перевірені; ще не deployed |
+| M5 приватний діалог/відповідь/партнерство | app/wiadomosci, api/threads, services/communication | попередні E2E; поточні ручні сценарії M3/M7 | PARTIAL: контексти потреби/інновації/плану/ідеї, відповіді, unread; нові контексти лише локально |
+| M6 staff auth / inbox | auth/staff, /admin, /api/admin/threads | unit + login/logout E2E | Реалізовано локально; production provisioning очікує |
+| M6 модерація/оновлення | /admin/katalog, services/catalog, 0004 | static/build і ручний browser flow на fixtures | Реалізовано локально; PostgreSQL/import/reindex ще не перевірені |
+| M6 агрегована аналітика | /admin/statystyki, /api/admin/analytics, services/analytics | lint/typecheck/build; fixtures 0 → 2 потреби, точні підсумки; anonymous API 403 | Реалізовано локально; SQL aggregation ще не перевірена на PostgreSQL; без вільних текстів і регіональних статистичних тверджень |
+| Повторний доступ автора | 90-денна сесія, приватний код | Статичні перевірки; cross-browser не виконано | Реалізовано локально; гостьовий доступ, не акаунт |
+| M7 адаптація | /adaptacje, services/adaptations, contracts/adaptation, 0005 | lint/typecheck/build, ручний mock flow create/edit/reload/share/staff reply | Реалізовано локально; live AI, PostgreSQL і незалежна оцінка планів ще не перевірені |
 | Польський UI | Усі реалізовані екрани | E2E / огляд | Реалізовано |
 | WCAG 2.1 AA | labels, focus, skip, responsive | axe + частковий keyboard | PARTIAL, не сертифікація |
-| Постійна БД | Drizzle repository, SQL migration | PostgreSQL integration | BLOCKED: відсутня БД |
+| Постійна БД | PostgreSQL repository, міграції 0001–0007 | 0001/0002 production; 0003–0007 не виконані | Ядро підтверджено раніше, нові таблиці ще не перевірені на БД |
 | PDF ≤10 слайдів + MP4 ≤3 хв | Не створено на етапі A/B | Немає | NOT IMPLEMENTED |
-| Demo URL / команда / кошторис | COSTS з припущеннями, без вигаданих значень | Немає | PARTIAL |
+| Demo URL / команда / кошторис | URL у DEPLOYMENT, COSTS з припущеннями | попередній HTTPS smoke | PARTIAL: остаточні матеріали/team ID/кошторис відсутні |
 
 ## Доповнення: локальний дизайн 2026-10-03
 
 - 4-кроковий сценарій за зразком власника: реалізовано та перевірено E2E.
 - M1: джерела / пояснення перенесено на екран наступних кроків, доступні також у каталозі.
 - Синтетичний вибір організації не є реалізацією M5; текст повідомлення лише копіюється.
-- Загальні наступні кроки не є повним M7: немає AI-адаптації, збережених редакцій або погодження.
-- Попередні непокриті модулі M2–M7 залишаються непокритими; дизайн не змінює їх статус.
+- Загальні наступні кроки самі по собі не є M7; окремий модуль `/adaptacje` містить збережений план та AI-консультацію, його стан наведено в таблиці вище.
+- Дизайн об'єднано з модулями M3–M7; їх фактичне покриття та межі наведено в таблиці вище.
 - Доступність: додано розмір тексту/контраст/читання; фактичні перевірки й межі у QA.md.
