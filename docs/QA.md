@@ -1,5 +1,25 @@
 # Перевірки — 2026-10-03, поточна ітерація та історія
 
+## Production rollout — 2026-10-04
+
+- Власник явно дозволив push з автоматичним deployment. Коміт виправлення
+  a2b2bc5, об'єднаний із навігацією origin/master 74bcd42 у реліз 09e0f95.
+  Повтор після merge: lint/build (із TypeScript) PASS, 22/22 Chrome fixtures/mock E2E PASS.
+- Backup job `backup-clarify-20261004` Complete; Actions build/deploy SUCCESS:
+  https://github.com/ElJohne/innomatch/actions/runs/37157218895.
+  Поточний mount /app підтверджує точний реліз
+  `09e0f956e741eaa9fdf339baf02c9169ffa4cd09-37157218895-1`.
+- Публічні `/` → 200, `/api/ready` → 200/ok. Production API: skip-vague → 0 питань;
+  urgent → emergency; vague-dialogue → 1 питання, після «не знаю» → 0 питань.
+  Усі 4 відповіді мають matchingVersion=3, expectationMet=true.
+  Доказ: `tests/search-quality/clarification-deployed-2026-10-04.json`.
+- AI-квота: configured=300, used=375, без змін. Тому звичайний smoke пройшов
+  keyword/template fallback, не live AI. Квота оновлюється за UTC-добою; readiness
+  не свідчить про наявність AI-квоти. Live-поведінка нового коду перевірена раніше
+  окремим shadow runner, як задокументовано нижче.
+- Runner cleanup PASS: лише його синтетичні needs; AI usage/квоти збережені.
+  Тимчасові smoke-файли SSH host/pod прибрано після збереження доказів.
+
 ## Цикл уточнень — 23:56 Europe/Warsaw
 
 - **Production baseline:** публічний HTTPS `pomocnypunkt.pl`, 18 синтетичних кейсів,
