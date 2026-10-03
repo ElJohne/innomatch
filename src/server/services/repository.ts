@@ -6,6 +6,8 @@ import { db } from "@/server/db/client";
 import * as tables from "@/server/db/schema";
 import {
   innovationSchema,
+  knowledgeSchema,
+  type KnowledgeResource,
   type Innovation,
   type Need,
   type NeedInput,
@@ -147,4 +149,17 @@ export async function listEmbeddings(): Promise<Embedding[]> {
   return isFixture()
     ? []
     : (await db().select().from(tables.embeddings)).map((x) => x.record);
+}
+export async function listKnowledge(): Promise<KnowledgeResource[]> {
+  if (isFixture()) return [];
+  return (await db().select().from(tables.knowledge))
+    .map((x) => knowledgeSchema.parse(x.record))
+    .filter((x) => x.publicationStatus === "PUBLISHED");
+}
+export async function listKnowledgeEmbeddings(): Promise<Embedding[]> {
+  return isFixture()
+    ? []
+    : (await db().select().from(tables.knowledgeEmbeddings)).map(
+        (x) => x.record,
+      );
 }

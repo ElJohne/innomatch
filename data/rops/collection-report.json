@@ -1,0 +1,66 @@
+{
+  "retrievedAt": "2026-10-03T12:28:52.980Z",
+  "categories": [
+    {
+      "url": "https://rops.krakow.pl/innowacje-spoleczne/biblioteka-innowacji-spolecznych/dla-seniorow",
+      "category": "Dla seniorów",
+      "entries": 20
+    },
+    {
+      "url": "https://rops.krakow.pl/innowacje-spoleczne/biblioteka-innowacji-spolecznych/dla-dzieci-mlodziezy-i-rodziny",
+      "category": "Dla dzieci, młodzieży i rodziny",
+      "entries": 21
+    },
+    {
+      "url": "https://rops.krakow.pl/innowacje-spoleczne/biblioteka-innowacji-spolecznych/dla-rynku-pracy",
+      "category": "Dla rynku pracy",
+      "entries": 5
+    },
+    {
+      "url": "https://rops.krakow.pl/innowacje-spoleczne/biblioteka-innowacji-spolecznych/dla-osob-o-ograniczonej-mobilnosci",
+      "category": "Dla osób o ograniczonej mobilności",
+      "entries": 18
+    },
+    {
+      "url": "https://rops.krakow.pl/innowacje-spoleczne/biblioteka-innowacji-spolecznych/dla-osob-z-niepelnosprawnoscia-sensoryczna",
+      "category": "Dla osób z niepełnosprawnością sensoryczną",
+      "entries": 20
+    },
+    {
+      "url": "https://rops.krakow.pl/innowacje-spoleczne/biblioteka-innowacji-spolecznych/dla-cudzoziemcow",
+      "category": "Dla cudzoziemców",
+      "entries": 6
+    },
+    {
+      "url": "https://rops.krakow.pl/innowacje-spoleczne/biblioteka-innowacji-spolecznych/dla-osob-z-niepelnosprawnoscia-intelektualna",
+      "category": "Dla osób z niepełnosprawnością intelektualną",
+      "entries": 14
+    },
+    {
+      "url": "https://rops.krakow.pl/innowacje-spoleczne/biblioteka-innowacji-spolecznych/dla-osob-w-kryzysie-bezdomnosci",
+      "category": "Dla osób w kryzysie bezdomności",
+      "entries": 2
+    },
+    {
+      "url": "https://rops.krakow.pl/innowacje-spoleczne/biblioteka-innowacji-spolecznych/dla-zdrowia-i-medycyny",
+      "category": "Dla zdrowia i medycyny",
+      "entries": 9
+    }
+  ],
+  "failures": [
+    {
+      "url": "https://rops.krakow.pl/innowacje-spoleczne/biblioteka-innowacji-spolecznych/dla-osob-o-ograniczonej-mobilnosci,lekki-wozek-aktywny",
+      "reason": "UNSTRUCTURED_DETAIL",
+      "headings": [
+        "1. Na czym polega rozwiązanie?",
+        "2. Jakich problemów dotyczy innowacja?",
+        "3. Grupa docelowa",
+        "4. Kto może skorzystać z innowacji?",
+        "5. Czy to działa?",
+        "6. Autorzy"
+      ]
+    }
+  ],
+  "records": 114,
+  "discovered": 115
+}

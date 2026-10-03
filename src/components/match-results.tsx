@@ -1,18 +1,25 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import type { Innovation, MatchResponse } from "@/lib/contracts";
+import type {
+  Innovation,
+  KnowledgeResource,
+  MatchResponse,
+} from "@/lib/contracts";
+import { coverageLabels } from "@/lib/knowledge-labels";
 import { organizationOptions, type Organization } from "@/lib/organizations";
 export function MatchResults({
   id,
   initial,
   records,
   organizations,
+  resources = [],
 }: {
   id: string;
   initial: MatchResponse | null;
   records: Innovation[];
   organizations: Organization[];
+  resources?: KnowledgeResource[];
 }) {
   const [result, setResult] = useState(initial);
   const [error, setError] = useState("");
@@ -84,6 +91,14 @@ export function MatchResults({
             : "Sprawdź dostępne rozwiązania i doprecyzuj swoją potrzebę."}
         </p>
       </div>
+      <p className="muted">
+        {result.mode.explanation === "mock"
+          ? "Wynik demonstracyjny — bez wywołania AI."
+          : result.mode.explanation === "azure" ||
+              result.mode.explanation === "openai"
+            ? "Wyjaśnienia wygenerowane przez AI — wymagają oceny."
+            : "Wyjaśnienia szablonowe. Wyniki nie są rekomendacją wdrożenia."}
+      </p>
       {result.warnings.map((w) => (
         <p className="notice" key={w}>
           {w}
@@ -165,6 +180,24 @@ export function MatchResults({
             Opisz potrzebę ponownie →
           </Link>
         </div>
+      )}
+      {!!result.relatedResources.length && (
+        <details className="note">
+          <summary>Powiązane materiały</summary>
+          {result.relatedResources.map((item) => {
+            const resource = resources.find((r) => r.id === item.resourceId);
+            if (!resource) return null;
+            return (
+              <div key={resource.id}>
+                <h4>
+                  <Link href={`/wiedza#${resource.id}`}>{resource.title}</Link>
+                </h4>
+                <p>{item.reason}</p>
+                <p className="help">{coverageLabels[resource.coverage]}</p>
+              </div>
+            );
+          })}
+        </details>
       )}
     </section>
   );

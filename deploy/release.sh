@@ -21,6 +21,22 @@ for attempt in $(seq 1 90); do
 done
 [[ "$state" == *Complete* ]] || exit 1
 kubectl -n innomatch logs "job/$job"
+node deploy/sync-openai.mjs
+unset OPENAI_API_KEY
+job="corpus-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+export MIGRATION_JOB="$job"
+node deploy/render.mjs corpus | kubectl -n innomatch apply -f -
+for attempt in $(seq 1 155); do
+  state=$(kubectl -n innomatch get "job/$job" -o jsonpath='{.status.conditions[*].type}')
+  if [[ "$state" == *Complete* ]]; then break; fi
+  if [[ "$state" == *Failed* || "$state" == *FailureTarget* ]]; then
+    kubectl -n innomatch logs "job/$job" || true
+    exit 1
+  fi
+  sleep 2
+done
+kubectl -n innomatch logs "job/$job"
+[[ "$state" == *Complete* ]] || exit 1
 previous=$(kubectl -n innomatch get deployment innomatch -o jsonpath='{.metadata.annotations.deployment\.kubernetes\.io/revision}' --ignore-not-found)
 node deploy/render.mjs app | kubectl -n innomatch apply -f -
 if ! kubectl -n innomatch rollout status deployment/innomatch --timeout=180s; then

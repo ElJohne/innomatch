@@ -112,7 +112,8 @@ export default async function PlanPage({
         <h2>{innovation.title}</h2>
         <p>{innovation.solution}</p>
         <p className="help">
-          {result.mode.explanation === "azure"
+          {result.mode.explanation === "azure" ||
+          result.mode.explanation === "openai"
             ? "Wyjaśnienia AI — wymagają oceny."
             : "Wyjaśnienia szablonowe — bez analizy AI."}{" "}
           Powiązanie z organizacją jest fikcyjne. To ogólne wskazówki, nie plan

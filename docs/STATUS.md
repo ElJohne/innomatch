@@ -1,6 +1,39 @@
 # Стан — 2026-10-03
 
-## Production deployment — DONE на сервері, public DNS PENDING
+## Джерела ROPS — DONE, production підтверджено
+
+За наданими власником QR-посиланнями зібрано 114 інновацій із 115 унікальних карток / 9 категорій.
+69 матеріалів знань: 44 описи, 8 фрагментів карти викликів, 17 посилань на портали або документи без опису.
+Картка «Lekki wózek aktywny» пропущена: порожній опис рішення у джерелі.
+Додано PostgreSQL KnowledgeResource, /wiedza, /api/knowledge, пов’язані матеріали в matching,
+батчеву індексацію та idempotent sync у deployment Actions.
+Перевірено: lint, typecheck, schema validation 114/69, production CLI bundle.
+Тести пропущено за вказівкою власника. Build/migration/import/index/rollout — PASS.
+Actions: https://github.com/ElJohne/innomatch/actions/runs/37123389180 (6b9b702).
+Production API: 114 інновацій, 69 ресурсів; 166 векторів (114 + 52), 11 embedding-запитів.
+HTTPS readiness, каталог і /wiedza — HTTP 200. Один синтетичний запит: matched, semantic/openai/source_backed, BaWita + Therapy Set, 3 пов’язані ресурси, без warnings.
+Перевірочне звернення видалено. Повторний sync: upserted 0, indexed 0, unchanged 166.
+Backup перед імпортом — Complete. Це операційна перевірка, не незалежна оцінка retrieval quality.
+Повні тексти звітів, числові дані обсерватора й інтерактивний Canvas не імпортовані.
+Наступна функціональна робота за SPEC: staff auth, модерація й приватні діалоги M6/M5.
+
+
+## OpenAI API — DONE, live підтверджено
+
+Власник дозволив реалізацію прямого OpenAI API замість Azure та надав GitHub secret.
+Додано Responses strict JSON Schema, embeddings, server-only credential wiring, doctor/index
+для обох live провайдерів. Моделі: gpt-6-luna / text-embedding-3-small.
+Production тепер `AI_PROVIDER=openai`; ключ доставлено через Actions → openai-env.
+Два явні синтетичні запити з production pod успішні: Responses із strict JSON Schema
+та embeddings. HTTPS readiness — 200 / ok, головна — 200, mock-banner відсутній.
+Локальні lint/typecheck пройшли; фінальний Linux build і rollout — SUCCESS:
+https://github.com/ElJohne/innomatch/actions/runs/37121047658 (коміт 032506d).
+Збережені mock-результати залишаються явно позначеними навіть після перемикання провайдера.
+Unit/integration/E2E не запускались за дорученням власника.
+Каталог досі порожній: live AI-підключення підтверджено, якість пошуку на реальному корпусі — ні.
+Наступний крок: імпортувати дозволені джерельні записи та виконати `npm run data:index`.
+
+## Production deployment — попередня успішна версія
 
 Власник дозволив production на `dev-k3s`, GitHub Actions і пропуск тестів.
 Створено окремий namespace `innomatch`, PostgreSQL 17.11 з PVC 5 GiB,
@@ -86,3 +119,13 @@ Powiedz głosem: браузерне польське диктування, Stop,
 обробка відмови мікрофона / непідтримуваного браузера, припинення при виході з форми.
 Перевірки: build, lint, typecheck, 16 unit, 10 E2E PASS; integration skipped без БД.
 Реальний запис мікрофона не перевірявся; мовний сервіс залежить від браузера.
+
+## Об'єднання дизайну з master — 2026-10-03
+
+За запитом власника зміни підготовлено до push у master. Об'єднано актуальний
+origin/master a22f390 (OpenAI та ROPS) із дизайном Pomocny Punkt.
+Збережено knowledge resources і коректні позначення OpenAI/mock у результатах;
+матеріали третього кроку доступні в розкривному блоці. Фото включено до CI release.
+Build, lint, typecheck, 16 unit і 10 E2E PASS. Corpus validation PASS: 114 innovations,
+69 knowledge resources. Integration: 1 skipped без TEST_DATABASE_URL.
+Push master запускає існуючий production workflow; результат деплою перевіряється окремо.

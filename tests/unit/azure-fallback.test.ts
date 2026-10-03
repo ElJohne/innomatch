@@ -4,6 +4,7 @@ import { innovationSchema, type Need } from "@/lib/contracts";
 const records = fixtures.map((x) => innovationSchema.parse(x));
 vi.mock("@/server/services/repository", () => ({
   listInnovations: async () => fixtures,
+  listKnowledge: async () => [],
   listEmbeddings: async () => [],
   saveMatch: vi.fn(),
 }));

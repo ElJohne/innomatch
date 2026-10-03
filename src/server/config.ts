@@ -5,7 +5,12 @@ export function config() {
   return z
     .object({
       DATA_PROVIDER: z.enum(["fixtures", "postgres"]).default("fixtures"),
-      AI_PROVIDER: z.enum(["mock", "azure"]).default("mock"),
+      AI_PROVIDER: z.enum(["mock", "azure", "openai"]).default("mock"),
+      OPENAI_CHAT_MODEL: z.string().min(1).default("gpt-6-luna"),
+      OPENAI_EMBEDDING_MODEL: z
+        .string()
+        .min(1)
+        .default("text-embedding-3-small"),
       DEMO_DATA_ENABLED: z.enum(["true", "false"]).default("true"),
       APP_URL: z.url().default("http://localhost:3000"),
       AI_TIMEOUT_MS: z.coerce

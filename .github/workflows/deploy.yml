@@ -26,11 +26,16 @@ jobs:
       - run: npm run build
         env:
           NEXT_TELEMETRY_DISABLED: '1'
+      - run: npm run data:validate && node scripts/build-operator.mjs
       - name: Package standalone release
         run: |
           cp -r .next/static .next/standalone/.next/static
+          cp -r public .next/standalone/public
           mkdir -p .next/standalone/scripts .next/standalone/migrations
           cp scripts/migrate.mjs .next/standalone/scripts/
+          cp scripts/check-openai.mjs .next/standalone/scripts/
+          mkdir -p .next/standalone/data/rops
+          cp data/rops/corpus.json .next/standalone/data/rops/
           cp src/server/db/migrations/*.sql .next/standalone/migrations/
           # Next bundles postgres into route chunks; the operator script imports it directly.
           cp -r node_modules/postgres .next/standalone/node_modules/postgres
@@ -58,3 +63,6 @@ jobs:
         run: bash deploy/release.sh
         env:
           RELEASE_ID: ${{ github.sha }}-${{ github.run_id }}-${{ github.run_attempt }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          OPENAI_CHAT_MODEL: ${{ vars.OPENAI_CHAT_MODEL || 'gpt-6-luna' }}
+          OPENAI_EMBEDDING_MODEL: ${{ vars.OPENAI_EMBEDDING_MODEL || 'text-embedding-3-small' }}

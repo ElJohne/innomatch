@@ -1,5 +1,42 @@
 # Перевірки — 2026-10-03, Windows / Node 24.19.0
 
+## Імпорт ROPS — поточна ітерація
+
+- Collection: 9 категорій, 115 унікальних URL, 114 валідних записів, 1 пропуск.
+- data:validate: PASS, 114 інновацій + 69 ресурсів.
+- lint / typecheck: PASS. Production operator bundle + validate-corpus: PASS.
+- Unit/integration/E2E не запускались за дорученням власника.
+- Production build, migration 0002, import, index, rollout: PASS.
+- Actions: https://github.com/ElJohne/innomatch/actions/runs/37123389180 (6b9b702).
+- Import Job: 114 innovations upserted; 69 knowledge validated; 166 indexed у 11 пакетах.
+- Повторний sync: innovations upserted 0, indexed 0, unchanged 166; без повторних embedding calls.
+- /api/ready: 200 ok; /api/innovations: total 114; /api/knowledge: total 69.
+- /innowacje, /wiedza, /wiedza?type=CHALLENGE: 200.
+- Одна явно синтетична production-потреба: matched; semantic/openai/source_backed; BaWita і Therapy Set, 3 related resources, warnings []. Дві AI-операції для підбору.
+- Перевірочне звернення видалено за його точним ID; видалено 1 запис.
+- backup-before-rops: Complete.
+- Повна незалежна оцінка якості пошуку, no-match та browser E2E у цій ітерації не виконувалися.
+
+
+## OpenAI API — поточна ітерація
+
+- Публічний `https://innomatch.brandly-io.com/api/ready`: HTTP 200, ok перед змінами.
+- Наявність repository secret OPENAI_API_KEY підтверджено без читання значення.
+- npm ci: PASS (409 пакетів), системний npm-cli.js викликано напряму через Node 22.16.0.
+- npm run lint: PASS; npm run typecheck: PASS.
+- node --check для нових deployment/diagnostic scripts і git diff --check: PASS.
+- Unit/integration/E2E не запускались, як наказав власник.
+- Linux production build та rollout: PASS, Actions run 37120987952 (коміт 4a5a333).
+- Фінальний build + deploy після позначення старих mock-результатів: PASS,
+  https://github.com/ElJohne/innomatch/actions/runs/37121047658 (коміт 032506d).
+- `node scripts/check-openai.mjs --live` у production pod: PASS для Responses strict JSON Schema
+  та embeddings; рівно дві короткі синтетичні API-операції, без retries.
+- Runtime: AI_PROVIDER=openai, gpt-6-luna / text-embedding-3-small; значення ключа не виводилось.
+- Після перемикання HTTPS readiness — 200 / ok, головна — 200, global mock-banner відсутній.
+- Перший OpenAI deploy зупинився через Node socket stdin → kubectl /dev/stdin (ENXIO).
+  Передачу виправлено через POSIX pipe, перевірено без секрету, повторний workflow успішний.
+- Каталог порожній; фактичне зіставлення з source-backed corpus і якість retrieval ще не перевірено.
+
 ## Поточна production-ітерація
 
 - `node --check` для `deploy/render.mjs`, `scripts/migrate.mjs`: PASS.
@@ -100,3 +137,10 @@ Retrieval евристики перевірені тільки на synthetic, �
 - Реальне аудіо мікрофона / зовнішній сервіс транскрипції не тестувалися.
 - За прямою вказівкою власника видалено глобальний demo-banner і AI-підпис фото;
   походження фото зафіксоване у DEPENDENCIES.md, backend залишився fixtures/mock.
+
+## Перевірка merge з origin/master a22f390
+
+Build, lint, typecheck: PASS. Unit: 16 PASS; E2E: 10 PASS; corpus: 114/69 valid.
+Оновлено mock repository у тесті Azure fallback для нового listKnowledge.
+Integration: 1 skipped (TEST_DATABASE_URL відсутній). Реальні AI-виклики не виконувалися.
+Пакет GitHub Actions доповнено public, щоб зберегти hero image у standalone release.

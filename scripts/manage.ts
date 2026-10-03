@@ -1,18 +1,34 @@
 import { config as loadEnv } from "dotenv";
 loadEnv({ path: ".env.local", quiet: true });
-import { readFile } from "node:fs/promises";
+import { readFile, readdir } from "node:fs/promises";
+import { z } from "zod";
+import {
+  innovationSchema,
+  knowledgeSchema,
+  type Embedding,
+} from "../src/lib/contracts";
 import postgres from "postgres";
 import OpenAI from "openai";
 import { config, required } from "../src/server/config";
 import { sqlClient, db } from "../src/server/db/client";
-import { embeddings } from "../src/server/db/schema";
-import { importRecords } from "../src/server/services/importer";
+import { embeddings, knowledgeEmbeddings } from "../src/server/db/schema";
+import {
+  importRecords,
+  importKnowledge,
+} from "../src/server/services/importer";
 import {
   listInnovations,
   listEmbeddings,
+  listKnowledge,
+  listKnowledgeEmbeddings,
 } from "../src/server/services/repository";
 import { content, contentHash } from "../src/server/search/ranking";
-import { AzureAiProvider } from "../src/server/ai/provider";
+import { createLiveAiProvider } from "../src/server/ai/provider";
+import { checkOpenAi } from "./check-openai.mjs";
+import {
+  knowledgeContent,
+  knowledgeHash,
+} from "../src/server/search/knowledge";
 
 const command = process.argv[2];
 const args = process.argv.slice(3);
@@ -20,10 +36,14 @@ async function doctor() {
   const names = [
     "DATABASE_URL",
     "AUTH_SECRET",
-    "AZURE_OPENAI_BASE_URL",
-    "AZURE_OPENAI_API_KEY",
-    "AZURE_OPENAI_CHAT_DEPLOYMENT",
-    "AZURE_OPENAI_EMBEDDING_DEPLOYMENT",
+    ...(config().AI_PROVIDER === "openai"
+      ? ["OPENAI_API_KEY"]
+      : [
+          "AZURE_OPENAI_BASE_URL",
+          "AZURE_OPENAI_API_KEY",
+          "AZURE_OPENAI_CHAT_DEPLOYMENT",
+          "AZURE_OPENAI_EMBEDDING_DEPLOYMENT",
+        ]),
   ];
   for (const name of names)
     console.log(`${name}: ${process.env[name] ? "configured" : "missing"}`);
@@ -40,6 +60,10 @@ async function doctor() {
     }
   }
   if (!args.includes("--live")) return;
+  if (config().AI_PROVIDER === "openai") {
+    if (!(await checkOpenAi())) process.exitCode = 1;
+    return;
+  }
   if (
     names.filter((n) => n.startsWith("AZURE_")).some((n) => !process.env[n])
   ) {
@@ -94,6 +118,58 @@ function writeDatabaseGuard() {
 }
 async function main() {
   if (command === "doctor") return doctor();
+  if (command === "validate-corpus" || command === "sync-corpus") {
+    const corpus = z
+      .object({
+        version: z.literal(1),
+        retrievedAt: z.string(),
+        innovations: z.array(innovationSchema).min(1),
+        knowledge: z.array(knowledgeSchema).min(1),
+      })
+      .strict()
+      .parse(JSON.parse(await readFile("data/rops/corpus.json", "utf8")));
+    const all = [...corpus.innovations, ...corpus.knowledge];
+    if (
+      new Set(all.map((r) => r.id)).size !== all.length ||
+      all.some(
+        (r) =>
+          r.origin !== "PUBLIC_SOURCE" ||
+          r.sources.some(
+            (s) =>
+              !s.evidenceExcerpt ||
+              !s.sourceUrl ||
+              !["rops.krakow.pl", "obserwator.rops.krakow.pl"].includes(
+                new URL(s.sourceUrl).hostname,
+              ),
+          ),
+      )
+    )
+      throw new Error("INVALID_PUBLIC_CORPUS");
+    if (command === "validate-corpus") {
+      console.log({
+        innovations: corpus.innovations.length,
+        knowledge: corpus.knowledge.length,
+        status: "valid",
+      });
+      return;
+    }
+    writeDatabaseGuard();
+    for (let attempt = 0; ; attempt++) {
+      try {
+        await sqlClient()`select 1`;
+        break;
+      } catch {
+        if (attempt >= 29) throw new Error("DATABASE_UNAVAILABLE");
+        await new Promise((resolve) => setTimeout(resolve, 2000));
+      }
+    }
+    console.log({
+      innovations: await importRecords(corpus.innovations, false, true),
+      knowledge: await importKnowledge(corpus.knowledge),
+    });
+    await indexCorpus();
+    return;
+  }
   writeDatabaseGuard();
   if (command === "migrate") {
     const client = postgres(
@@ -104,13 +180,16 @@ async function main() {
       await client.begin(async (tx) => {
         await tx`select pg_advisory_xact_lock(87162026)`;
         await tx`create table if not exists mi_migrations (id text primary key, applied_at timestamptz not null default now())`;
-        const previous =
-          await tx`select id from mi_migrations where id = '0001_core'`;
-        if (!previous.length) {
+        for (const file of (await readdir("src/server/db/migrations"))
+          .filter((f) => /^\d+_[a-z0-9_]+\.sql$/.test(f))
+          .sort()) {
+          const id = file.slice(0, -4);
+          if ((await tx`select id from mi_migrations where id = ${id}`).length)
+            continue;
           await tx.unsafe(
-            await readFile("src/server/db/migrations/0001_core.sql", "utf8"),
+            await readFile(`src/server/db/migrations/${file}`, "utf8"),
           );
-          await tx`insert into mi_migrations (id) values ('0001_core')`;
+          await tx`insert into mi_migrations (id) values (${id})`;
         }
       });
       console.log("Migration: complete");
@@ -140,45 +219,81 @@ async function main() {
     return;
   }
   if (command === "index") {
-    if (
-      config().DATA_PROVIDER !== "postgres" ||
-      config().AI_PROVIDER !== "azure"
-    )
-      throw new Error("LIVE_CONFIGURATION_REQUIRED");
-    const ai = new AzureAiProvider();
-    const records = await listInnovations();
-    const previous = await listEmbeddings();
-    let indexed = 0;
-    for (const r of records) {
-      const hash = contentHash(r);
-      if (
-        previous.some(
-          (e) =>
-            e.recordId === r.id &&
-            e.deployment === ai.embeddingDeployment &&
-            e.contentHash === hash,
-        )
-      )
-        continue;
-      const [vector] = await ai.embed([content(r)]);
-      const record = {
-        recordId: r.id,
-        vector,
-        deployment: ai.embeddingDeployment,
-        dimensions: vector.length,
-        contentHash: hash,
-        indexedAt: new Date().toISOString(),
-      };
-      await db()
-        .insert(embeddings)
-        .values({ recordId: r.id, record })
-        .onConflictDoUpdate({ target: embeddings.recordId, set: { record } });
-      indexed++;
-    }
-    console.log({ indexed, total: records.length });
+    await indexCorpus();
     return;
   }
   throw new Error("UNKNOWN_COMMAND");
+}
+async function indexCorpus() {
+  if (config().DATA_PROVIDER !== "postgres" || config().AI_PROVIDER === "mock")
+    throw new Error("LIVE_CONFIGURATION_REQUIRED");
+  const ai = createLiveAiProvider();
+  const innovations = await listInnovations();
+  const resources = (await listKnowledge()).filter(
+    (r) => r.coverage !== "DIRECTORY",
+  );
+  const work = [
+    ...innovations.map((r) => ({
+      id: r.id,
+      kind: "innovation",
+      text: content(r),
+      hash: contentHash(r),
+    })),
+    ...resources.map((r) => ({
+      id: r.id,
+      kind: "knowledge",
+      text: knowledgeContent(r),
+      hash: knowledgeHash(r),
+    })),
+  ];
+  const previous = [
+    ...(await listEmbeddings()),
+    ...(await listKnowledgeEmbeddings()),
+  ];
+  const pending = work.filter(
+    (r) =>
+      !previous.some(
+        (e) =>
+          e.recordId === r.id &&
+          e.deployment === ai.embeddingDeployment &&
+          e.contentHash === r.hash &&
+          e.dimensions === e.vector.length &&
+          e.dimensions > 0,
+      ),
+  );
+  let indexed = 0;
+  for (let i = 0; i < pending.length; i += 16) {
+    const batch = pending.slice(i, i + 16);
+    const vectors = await ai.embed(batch.map((r) => r.text));
+    await db().transaction(async (tx) => {
+      for (let j = 0; j < batch.length; j++) {
+        const item = batch[j],
+          vector = vectors[j];
+        const record: Embedding = {
+          recordId: item.id,
+          vector,
+          deployment: ai.embeddingDeployment,
+          dimensions: vector.length,
+          contentHash: item.hash,
+          indexedAt: new Date().toISOString(),
+        };
+        const table =
+          item.kind === "innovation" ? embeddings : knowledgeEmbeddings;
+        await tx
+          .insert(table)
+          .values({ recordId: item.id, record })
+          .onConflictDoUpdate({ target: table.recordId, set: { record } });
+        indexed++;
+      }
+    });
+    console.log({ indexed, total: pending.length });
+  }
+  console.log({
+    indexed,
+    unchanged: work.length - pending.length,
+    innovations: innovations.length,
+    knowledge: resources.length,
+  });
 }
 main()
   .catch(() => {

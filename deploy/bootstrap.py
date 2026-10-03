@@ -39,6 +39,7 @@ secret('app-env', {
     'AI_PROVIDER': 'mock', 'DEMO_DATA_ENABLED': 'false',
 })
 secret('runner-registration', {'token': token})
+secret('openai-env', {})
 for name, size in [('postgres-data', '5Gi'), ('releases', '5Gi'), ('runner-data', '3Gi'), ('backups', '3Gi')]:
     apply(obj('PersistentVolumeClaim', name, spec={'accessModes': ['ReadWriteOnce'], 'storageClassName': 'local-path', 'resources': {'requests': {'storage': size}}}))
 
@@ -81,6 +82,7 @@ apply(dict(apiVersion='rbac.authorization.k8s.io/v1', kind='Role', metadata=dict
     {'apiGroups': ['apps'], 'resources': ['deployments', 'replicasets'], 'verbs': ['get', 'list', 'watch', 'create', 'patch', 'update']},
     {'apiGroups': ['batch'], 'resources': ['jobs'], 'verbs': ['get', 'list', 'watch', 'create', 'patch']},
     {'apiGroups': [''], 'resources': ['pods', 'pods/log'], 'verbs': ['get', 'list', 'watch']},
+    {'apiGroups': [''], 'resources': ['secrets'], 'resourceNames': ['openai-env'], 'verbs': ['get', 'patch']},
 ]))
 apply(dict(apiVersion='rbac.authorization.k8s.io/v1', kind='RoleBinding', metadata=dict(name='deployer', namespace=NS), roleRef={'apiGroup': 'rbac.authorization.k8s.io', 'kind': 'Role', 'name': 'deployer'}, subjects=[{'kind': 'ServiceAccount', 'name': 'deployer', 'namespace': NS}]))
 install = """const fs=require('fs'), c=require('crypto'); (async()=>{

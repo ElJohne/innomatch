@@ -15,9 +15,12 @@ Production audit перевіряється окремо; перед публі�
 ## Візуальний матеріал — 2026-10-03
 
 `public/images/community-hero.png` — створено вбудованим ImageGen для цього проєкту.
-Це синтетична ілюстрація, не фотографія отримувача послуг; позначено в UI.
+Це синтетична ілюстрація, не фотографія отримувача послуг. UI-підпис прибрано за запитом власника.
 Референс власника використано для напряму дизайну, сам файл не включено у сайт.
 Логотип-гори — простий SVG для прототипу; не офіційний знак ROPS.
 
 Фінальний prompt ImageGen:
 > Create a photorealistic-natural editorial website hero photograph. A warm, dignified smiling elderly Polish woman with short silver hair in a cream knit cardigan, waist-up, in a sunny leafy Krakow garden with softly blurred historic brick towers in the distance. Gentle natural daylight, restrained pale blue and sage green palette, hopeful and authentic community support atmosphere. Subject in right half of a horizontal composition, soft pale blue sky and foliage negative space on left. No lettering, logos, UI, watermark, or text. Image for a Polish social innovation help website. Save project-ready image.
+
+Імпорт ROPS додав operator-only devDependencies: cheerio 1.2.0 (MIT), esbuild 0.28.2 (MIT).
+cheerio не включено у сервер застосунку; esbuild пакує operator CLI для deployment Job.
