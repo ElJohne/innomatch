@@ -493,3 +493,5 @@ Bright catalog — 2026-10-03: blue/mint heading, yellow eyebrow, clearer filter
 Header navigation — 2026-10-03: added Strona główna; Mam pomysł now shares standard catalog-link styling. Built-in browser home-link verified. Build, lint, typecheck, 40 unit and 20 E2E PASS; 8 integration skipped without TEST_DATABASE_URL. Local only.
 
 Yellow accent cleanup — 2026-10-03: unified home heading colour, removed underline and yellow backgrounds behind Małopolska / Biblioteka inspiracji; removed confirmation decorative symbol. Build, lint, typecheck, 40 unit and 20 E2E PASS; 8 integration skipped without TEST_DATABASE_URL. Local browser reviewed. Local only.
+
+Active header navigation — 2026-10-03: pathname-aware client navigation with persistent underline and aria-current (page/location), including nested catalog/idea pages. Build, lint, typecheck, 40 unit and 21 E2E PASS; 8 integration skipped without TEST_DATABASE_URL. Added navigation regression covering client transitions, filtered catalog, details and four contrast palettes. Local only.
