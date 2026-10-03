@@ -1,0 +1,57 @@
+name: Deploy production
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: innomatch-production
+  cancel-in-progress: false
+jobs:
+  build:
+    if: github.repository == 'ElJohne/innomatch' && github.ref == 'refs/heads/master'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 24.19.0
+          cache: npm
+      - run: npm ci
+      # Tests intentionally omitted at the owner's request. Build includes TypeScript.
+      - run: npm run build
+        env:
+          NEXT_TELEMETRY_DISABLED: '1'
+      - name: Package standalone release
+        run: |
+          cp -r .next/static .next/standalone/.next/static
+          mkdir -p .next/standalone/scripts .next/standalone/migrations
+          cp scripts/migrate.mjs .next/standalone/scripts/
+          cp src/server/db/migrations/*.sql .next/standalone/migrations/
+          tar -C .next/standalone -czf release.tar.gz .
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: release-${{ github.sha }}
+          path: release.tar.gz
+          retention-days: 7
+  deploy:
+    needs: build
+    if: github.repository == 'ElJohne/innomatch' && github.ref == 'refs/heads/master'
+    runs-on: [self-hosted, Linux, X64, innomatch-prod]
+    environment: production
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: release-${{ github.sha }}
+      - name: Migrate and deploy
+        run: bash deploy/release.sh
+        env:
+          RELEASE_ID: ${{ github.sha }}-${{ github.run_id }}-${{ github.run_attempt }}

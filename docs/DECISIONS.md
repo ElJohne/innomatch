@@ -1,5 +1,20 @@
 # Рішення
 
+2026-10-03, production за дорученням власника:
+- Ціль: наявний `dev-k3s` / `localserver`, окремий namespace `innomatch`;
+  це уточнення попереднього обмеження SPEC щодо Kubernetes.
+- Власник дозволив деплой через Actions, нову проєктну БД, пропуск тестів
+  та домен `innomatch.brandly-io.com`. Push workflow необхідний для цього деплою.
+- GitHub-hosted Linux build → standalone artifact → namespaced runner → міграція → rollout.
+  Registry і нові платні сервіси не потрібні. Workflow лише для master, без pull_request.
+- PostgreSQL 17.11, окремий несуперкористувацький login, PVC, ClusterIP і NetworkPolicy.
+  Backup щодня на окремий локальний PVC; off-host backup і restore drill ще не налаштовано.
+- AI залишається явно mock, demo seed автоматично не запускається; нова БД має порожній каталог.
+
+Deployment references:
+- https://docs.github.com/en/actions/how-tos/manage-runners/self-hosted-runners/add-runners
+- https://hub.docker.com/_/postgres
+
 2026-10-03:
 - Зберегти вкладений Git-репозиторій `innomatch`, наявну LICENSE та PDF без змін.
 - Передбачений SPEC стек, npm і один package-lock. Next 16.3.8 / React 19.3.0 перевірено через npm registry; Node 24.19.0 у середовищі.

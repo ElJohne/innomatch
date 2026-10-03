@@ -1,5 +1,17 @@
 # Перевірки — 2026-10-03, Windows / Node 24.19.0
 
+## Поточна production-ітерація
+
+- `node --check` для `deploy/render.mjs`, `scripts/migrate.mjs`: PASS.
+- `git diff --check`: PASS.
+- Unit, integration та E2E не запускались на пряму вимогу власника.
+- k3s bootstrap: PASS; ресурси БД, storage, runner, ingress і backup створені.
+- Actions build, migration, rollout та зовнішній HTTPS: перевірка триває.
+- Локальний `npm run lint`: BLOCKED — системний npm посилається на відсутній npm-cli.js,
+  а node_modules і попередній `.tools` у цьому checkout відсутні. Linux build виконує Actions.
+
+## Попередня локальна ітерація
+
 Команди виконано в `innomatch/`. Через відсутність npm у PATH використано
 `node .tools/package/bin/npm-cli.js` замість `npm`.
 

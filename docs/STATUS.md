@@ -1,5 +1,14 @@
 # Стан — 2026-10-03
 
+## Production deployment — поточна сесія
+
+Власник дозволив production на `dev-k3s`, GitHub Actions і пропуск тестів.
+Створено окремий namespace `innomatch`, PostgreSQL 17.11 з PVC 5 GiB,
+секрети БД/сесій, ingress `innomatch.brandly-io.com`, Actions runner та щоденний локальний backup.
+Перший workflow і публічна доступність ще перевіряються. Azure і source-backed corpus відсутні:
+production конфігурація — `postgres`, явно позначений `mock`, без автоматичного demo seed.
+Історичні результати нижче стосуються попередньої локальної ітерації.
+
 Початок: 11:48 Europe/Warsaw; дедлайн за наданим регламентом — 2026-10-04 11:00.
 Етап A: DONE. Етап B: PARTIAL — локальний M1 працює, live ще не перевірений.
 Стек: Next.js / React / TypeScript / Tailwind / Drizzle / PostgreSQL / Azure OpenAI SDK.
