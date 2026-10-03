@@ -1,32 +1,49 @@
 "use client";
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { needInput } from "@/lib/contracts";
+import Image from "next/image";
+import Link from "next/link";
+import { needInput, type NeedInput } from "@/lib/contracts";
+import { VoiceInput } from "./voice-input";
+import { FlowSteps } from "./flow-steps";
 export function NeedForm() {
   const router = useRouter();
-  const key = useRef<string>("");
+  const key = useRef("");
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
-  const [description, setDescription] = useState("");
-  async function submit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    if (busy) return;
-    setError("");
-    const data = new FormData(event.currentTarget);
-    const parsed = needInput.safeParse({
-      description,
-      municipality: data.get("municipality"),
-      targetGroups: data.get("group") ? [String(data.get("group"))] : [],
-      constraints: data.get("constraints"),
-    });
+  const [confirm, setConfirm] = useState(false);
+  const [draft, setDraft] = useState<NeedInput>({
+    description: "",
+    municipality: "",
+    targetGroups: [],
+    constraints: "",
+  });
+  const title = useRef<HTMLHeadingElement>(null);
+  function change(field: keyof NeedInput, value: string | string[]) {
+    setDraft((d) => ({ ...d, [field]: value }));
+    key.current = "";
+  }
+  function review(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const parsed = needInput.safeParse(draft);
     if (!parsed.success) {
       setError(
         "Opisz potrzebę w 30–4000 znakach. Ograniczenia mogą mieć do 1500 znaków.",
       );
       return;
     }
-    key.current ||= crypto.randomUUID();
+    setError("");
+    setConfirm(true);
+    requestAnimationFrame(() => {
+      title.current?.focus();
+      window.scrollTo({ top: 0 });
+    });
+  }
+  async function submit() {
+    if (busy) return;
+    setError("");
     setBusy(true);
+    key.current ||= crypto.randomUUID();
     try {
       const response = await fetch("/api/needs", {
         method: "POST",
@@ -34,7 +51,7 @@ export function NeedForm() {
           "Content-Type": "application/json",
           "Idempotency-Key": key.current,
         },
-        body: JSON.stringify(parsed.data),
+        body: JSON.stringify(needInput.parse(draft)),
       });
       const body = await response.json();
       if (!response.ok)
@@ -47,92 +64,236 @@ export function NeedForm() {
       setBusy(false);
     }
   }
+  if (confirm)
+    return (
+      <section className="flow-page confirmation">
+        <FlowSteps current={2} />
+        <div className="confirmation-intro">
+          <div className="assistant-symbol" aria-hidden="true">
+            ✧
+          </div>
+          <div>
+            <p className="eyebrow">Krok 2 · Sprawdźmy razem</p>
+            <h1 ref={title} tabIndex={-1}>
+              Czy dobrze opisaliśmy Twoją potrzebę?
+            </h1>
+            <p className="lead">
+              Potwierdź informacje. Potem poszukamy pasujących rozwiązań i
+              organizacji.
+            </p>
+          </div>
+        </div>
+        <div className="confirmation-card card" aria-busy={busy}>
+          <h2>
+            <span className="check-icon" aria-hidden="true">
+              ✓
+            </span>{" "}
+            Twoja sytuacja
+          </h2>
+          <div className="confirmed-description">
+            <p>{draft.description}</p>
+            {draft.municipality && (
+              <p>
+                <strong>Gmina:</strong> {draft.municipality}
+              </p>
+            )}
+            {draft.targetGroups.length > 0 && (
+              <p>
+                <strong>Dla kogo:</strong> {draft.targetGroups.join(", ")}
+              </p>
+            )}
+            {draft.constraints && (
+              <p>
+                <strong>Zasoby i ograniczenia:</strong> {draft.constraints}
+              </p>
+            )}
+          </div>
+          <p className="help">
+            To Twój opis, bez dopisanych założeń. Wyniki mogą zawierać pytania,
+            które warto doprecyzować.
+          </p>
+          {error && (
+            <p role="alert" className="error">
+              {error}
+            </p>
+          )}
+          <div className="actions">
+            <button disabled={busy} onClick={submit}>
+              {busy ? "Zapisujemy i szukamy…" : "Tak, wszystko się zgadza →"}
+            </button>
+            <button
+              className="secondary"
+              disabled={busy}
+              onClick={() => {
+                setConfirm(false);
+                setError("");
+                requestAnimationFrame(() =>
+                  document.getElementById("description")?.focus(),
+                );
+              }}
+            >
+              Zmień informacje
+            </button>
+          </div>
+          <p className="privacy-note">
+            ♧ Twój opis jest prywatny i przypisany do tej przeglądarki.
+          </p>
+        </div>
+        <p className="handwritten">Razem łatwiej zrobić pierwszy krok.</p>
+      </section>
+    );
   return (
-    <form onSubmit={submit} className="form card" aria-busy={busy}>
-      <label htmlFor="description">
-        Co chcecie zmienić? <span>(wymagane)</span>
-      </label>
-      <p className="help" id="description-help">
-        Opisz sytuację, osoby potrzebujące wsparcia i oczekiwaną zmianę. Nie
-        podawaj imion, adresów, danych zdrowotnych ani innych danych osobowych.
-      </p>
-      <textarea
-        id="description"
-        name="description"
-        rows={6}
-        minLength={30}
-        maxLength={4000}
-        required
-        value={description}
-        onChange={(e) => {
-          setDescription(e.target.value);
-          key.current = "";
-        }}
-        aria-describedby="description-help"
-        placeholder="Np. seniorzy mieszkający samotnie rzadko uczestniczą w życiu lokalnym…"
-      />
-      <div className="form-row">
-        <div>
-          <label htmlFor="municipality">
-            Gmina <span>(opcjonalnie)</span>
-          </label>
-          <input
-            id="municipality"
-            name="municipality"
-            maxLength={200}
-            placeholder="Nazwa gminy"
-            onChange={() => {
-              key.current = "";
-            }}
+    <>
+      <FlowSteps current={1} />
+      <section className="help-hero">
+        <div className="hero-photo">
+          <Image
+            src="/images/community-hero.png"
+            alt=""
+            fill
+            priority
+            sizes="(max-width: 760px) 100vw, 65vw"
           />
         </div>
-        <div>
-          <label htmlFor="group">
-            Dla kogo? <span>(opcjonalnie)</span>
-          </label>
-          <select
-            id="group"
-            name="group"
-            onChange={() => {
-              key.current = "";
-            }}
-          >
-            <option value="">Wybierz grupę</option>
-            <option>Seniorzy</option>
-            <option>Młodzież</option>
-            <option>Opiekunowie</option>
-            <option>Osoby z niepełnosprawnościami</option>
-            <option>Mieszkańcy</option>
-          </select>
+
+        <div className="hero-copy">
+          <p className="eyebrow">
+            <span className="live-dot" /> Małopolska · Blisko ludzi
+          </p>
+          <h1>Potrzebujesz pomocy?</h1>
+          <p className="lead">
+            Opisz swoją sytuację własnymi słowami. Pomożemy znaleźć społeczne
+            rozwiązania i podpowiemy, co zrobić dalej.
+          </p>
         </div>
+        <span className="hero-sticker" aria-hidden="true">
+          Małe kroki.
+          <br />
+          Wielka zmiana.
+          <br />
+          <span>♡</span>
+        </span>
+        <span className="hero-sticker hero-sticker-together" aria-hidden="true">
+          Silniejsza
+          <br />
+          Małopolska
+          <br />— razem ♡
+        </span>
+        <form onSubmit={review} className="form card home-form">
+          <label htmlFor="description">Jakiej pomocy potrzebujesz?</label>
+          <textarea
+            id="description"
+            name="description"
+            rows={3}
+            required
+            minLength={30}
+            maxLength={4000}
+            value={draft.description}
+            onChange={(e) => change("description", e.target.value)}
+          />
+
+          <details className="optional-fields">
+            <summary>
+              Dodaj szczegóły <span>· opcjonalnie</span>
+            </summary>
+            <div className="form-row">
+              <div>
+                <label htmlFor="municipality">Gmina</label>
+                <input
+                  id="municipality"
+                  maxLength={200}
+                  value={draft.municipality}
+                  onChange={(e) => change("municipality", e.target.value)}
+                  placeholder="Np. Kraków"
+                />
+              </div>
+              <div>
+                <label htmlFor="group">Dla kogo?</label>
+                <input
+                  id="group"
+                  maxLength={200}
+                  value={draft.targetGroups[0] || ""}
+                  onChange={(e) =>
+                    change(
+                      "targetGroups",
+                      e.target.value ? [e.target.value] : [],
+                    )
+                  }
+                  placeholder="Np. seniorzy, mieszkańcy"
+                />
+              </div>
+            </div>
+            <label htmlFor="constraints">Zasoby i ograniczenia</label>
+            <textarea
+              id="constraints"
+              rows={2}
+              maxLength={1500}
+              value={draft.constraints}
+              onChange={(e) => change("constraints", e.target.value)}
+              placeholder="Co już macie, a czego brakuje?"
+            />
+          </details>
+          {error && (
+            <p className="error" role="alert">
+              {error}
+            </p>
+          )}
+          <div className="home-form-bottom">
+            <VoiceInput
+              onText={(text) => {
+                setDraft((previous) => ({
+                  ...previous,
+                  description: [previous.description.trim(), text.trim()]
+                    .filter(Boolean)
+                    .join(" ")
+                    .slice(0, 4000),
+                }));
+                key.current = "";
+              }}
+            />
+            <button type="submit">
+              Znajdź wsparcie <span aria-hidden="true">→</span>
+            </button>
+          </div>
+        </form>
+      </section>
+      <section className="how-it-works" id="jak-to-dziala">
+        <div>
+          <p className="eyebrow">Jesteśmy po Twojej stronie</p>
+          <h2>
+            Od potrzeby do działania.
+            <br />
+            Krok po kroku.
+          </h2>
+        </div>
+        <ol>
+          <li>
+            <span>1</span>
+            <div>
+              <strong>Opisz i potwierdź</strong>
+              <p>Nie musisz wiedzieć, jak nazywa się rozwiązanie.</p>
+            </div>
+          </li>
+          <li>
+            <span>2</span>
+            <div>
+              <strong>Wybierz organizację</strong>
+              <p>Sprawdź propozycje związane z Twoją potrzebą.</p>
+            </div>
+          </li>
+          <li>
+            <span>3</span>
+            <div>
+              <strong>Zobacz, co dalej</strong>
+              <p>Otrzymasz wskazówki i tekst do rozmowy.</p>
+            </div>
+          </li>
+        </ol>
+      </section>
+      <div className="catalog-invite">
+        <span>Wolisz najpierw poznać dostępne rozwiązania?</span>
+        <Link href="/innowacje">Zajrzyj do biblioteki innowacji →</Link>
       </div>
-      <label htmlFor="constraints">
-        Zasoby i ograniczenia <span>(opcjonalnie)</span>
-      </label>
-      <textarea
-        id="constraints"
-        name="constraints"
-        rows={3}
-        maxLength={1500}
-        placeholder="Np. mamy świetlicę i wolontariuszy, potrzebujemy rozwiązania bez aplikacji."
-        onChange={() => {
-          key.current = "";
-        }}
-      />
-      {error && (
-        <p role="alert" className="error">
-          {error}
-        </p>
-      )}
-      <div className="form-bottom">
-        <p className="help">
-          Zgłoszenie jest prywatne i przypisane do tej przeglądarki. Nie
-          udostępniaj urządzenia osobom nieuprawnionym.
-        </p>
-        <button disabled={busy} type="submit">
-          {busy ? "Zapisujemy…" : "Znajdź rozwiązania →"}
-        </button>
-      </div>
-    </form>
+    </>
   );
 }

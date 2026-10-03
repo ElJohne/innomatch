@@ -2,14 +2,17 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import type { Innovation, MatchResponse } from "@/lib/contracts";
+import { organizationOptions, type Organization } from "@/lib/organizations";
 export function MatchResults({
   id,
   initial,
   records,
+  organizations,
 }: {
   id: string;
   initial: MatchResponse | null;
   records: Innovation[];
+  organizations: Organization[];
 }) {
   const [result, setResult] = useState(initial);
   const [error, setError] = useState("");
@@ -43,13 +46,21 @@ export function MatchResults({
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
   if (busy)
     return (
-      <div className="card" role="status">
-        Szukamy rozwiązań w katalogu…
+      <div className="search-loading card" role="status">
+        <div className="assistant-symbol" aria-hidden="true">
+          ✧
+        </div>
+        <h1>Szukamy wsparcia dla Ciebie…</h1>
+        <p>Sprawdzamy rozwiązania w katalogu. To może potrwać chwilę.</p>
+        <span className="loading-dots" aria-hidden="true">
+          ● ● ●
+        </span>
       </div>
     );
   if (error)
     return (
       <div className="card">
+        <h1>Spróbujmy jeszcze raz</h1>
         <p role="alert" className="error">
           {error}
         </p>
@@ -57,87 +68,104 @@ export function MatchResults({
       </div>
     );
   if (!result) return null;
+  const options = organizationOptions(result, records, organizations);
   return (
     <section aria-label="Wyniki dopasowania">
-      <div className="section-title">
-        <h2>
+      <div className="flow-heading">
+        <p className="eyebrow">Krok 3 · Ty wybierasz</p>
+        <h1>
           {result.status === "no_match"
             ? "Nie znaleźliśmy wystarczającego dopasowania"
-            : "Propozycje do sprawdzenia"}
-        </h2>
-        <span className="tag">
-          {result.mode.retrieval === "semantic"
-            ? "Wyszukiwanie semantyczne"
-            : "Wyszukiwanie słów kluczowych"}
-        </span>
+            : "Wybierz organizację"}
+        </h1>
+        <p className="lead">
+          {options.length
+            ? "Wybierz jedną propozycję, a pokażemy Ci, co zrobić dalej."
+            : "Sprawdź dostępne rozwiązania i doprecyzuj swoją potrzebę."}
+        </p>
       </div>
-      <p className="muted">
-        {result.mode.explanation === "azure"
-          ? "Wyjaśnienia wygenerowane przez AI — wymagają oceny."
-          : "Wyjaśnienia szablonowe. Wyniki nie są rekomendacją wdrożenia."}
-      </p>
       {result.warnings.map((w) => (
         <p className="notice" key={w}>
           {w}
         </p>
       ))}
-      <div className="stack">
-        {result.matches.map((m) => {
-          const r = records.find((r) => r.id === m.innovationId);
-          if (!r) return null;
-          return (
-            <article className="card result" key={m.innovationId}>
-              <div className="result-number" aria-hidden="true">
-                0{m.rank}
-              </div>
-              <div>
-                <span className="eyebrow">
-                  {r.origin === "SYNTHETIC"
-                    ? "Przykład syntetyczny"
-                    : "Materiał źródłowy"}
+      {options.length > 0 && (
+        <>
+          <p className="demo-context">
+            Organizacje demonstracyjne · fikcyjne nazwy i powiązania. To podgląd
+            procesu, nie oferta pomocy.
+          </p>
+          <div className="organization-grid">
+            {options.map(({ organization: o, innovation: r }, index) => (
+              <article
+                className={`card organization-card organization-${index}`}
+                key={o.id}
+              >
+                <span className="organization-icon" aria-hidden="true">
+                  {o.symbol}
                 </span>
-                <h3>
-                  <Link href={`/innowacje/${r.id}`}>{r.title}</Link>
-                </h3>
-                <h4>Pasujące aspekty</h4>
-                <ul>
-                  {m.reasons.map((t) => (
-                    <li key={t}>{t}</li>
+                <span className="eyebrow">Przykład demonstracyjny</span>
+                <h2>{o.name}</h2>
+                <p>{o.description}</p>
+                <div className="tags">
+                  {r.targetGroups.map((t) => (
+                    <span key={t}>{t}</span>
                   ))}
-                </ul>
-                <h4>Ograniczenia i warunki</h4>
-                <ul>
-                  {m.limitations.map((t) => (
-                    <li key={t}>{t}</li>
-                  ))}
-                </ul>
-                <h4>Źródła</h4>
-                {m.sourceIds.map((s) => (
-                  <p className="help" key={s}>
-                    {r.sources.find((x) => x.id === s)?.sourceTitle}
-                  </p>
-                ))}
-                <Link className="text-link" href={`/innowacje/${r.id}`}>
-                  Poznaj rozwiązanie →
+                </div>
+                <div className="organization-solution">
+                  <span>Powiązana innowacja</span>
+                  <strong>{r.title}</strong>
+                </div>
+                <Link
+                  className="button"
+                  href={`/potrzeby/${id}/plan?organizacja=${o.id}`}
+                >
+                  Wybierz organizację <span className="sr-only">{o.name}</span>
+                  <span aria-hidden="true">→</span>
                 </Link>
-              </div>
-            </article>
-          );
-        })}
-      </div>
-      {result.status === "no_match" && (
-        <p>
-          W obecnym katalogu nie ma wystarczająco zbliżonego rozwiązania. Możesz
-          doprecyzować potrzebę w nowym zgłoszeniu.
-        </p>
+              </article>
+            ))}
+          </div>
+          <p className="selection-note">
+            Po wyborze zobaczysz kroki działania, źródła i ograniczenia
+            propozycji.
+          </p>
+        </>
       )}
-      <aside className="note">
-        <h3>Warto doprecyzować</h3>
-        {result.clarifyingQuestions.map((q) => (
-          <p key={q}>{q}</p>
-        ))}
-        <Link href="/potrzeby/nowa">Opisz kolejną potrzebę →</Link>
-      </aside>
+      {!options.length && result.status !== "no_match" && (
+        <div className="card">
+          <h2>Rozwiązania są dostępne, organizacje czekają na weryfikację</h2>
+          <p>
+            Nie mamy jeszcze potwierdzonych organizacji dla tych wyników. Możesz
+            poznać same innowacje:
+          </p>
+          <ul>
+            {result.matches.map((m) => {
+              const record = records.find((r) => r.id === m.innovationId);
+              return record ? (
+                <li key={record.id}>
+                  <Link href={`/innowacje/${record.id}`}>{record.title}</Link>
+                  <p>{m.reasons.join(" ")}</p>
+                </li>
+              ) : null;
+            })}
+          </ul>
+        </div>
+      )}
+      {result.status === "no_match" && (
+        <div className="card">
+          <p>
+            W obecnym katalogu nie ma wystarczająco zbliżonego rozwiązania. Nie
+            chcemy proponować przypadkowej organizacji.
+          </p>
+          {result.clarifyingQuestions.map((q) => (
+            <p key={q}>{q}</p>
+          ))}
+          <Link className="button" href="/potrzeby/nowa">
+            Opisz potrzebę ponownie →
+          </Link>
+        </div>
+      )}
     </section>
   );
 }
