@@ -27,19 +27,34 @@ export default function RootLayout({
             aria-label="Pomocny Punkt — strona główna"
           >
             <span className="brand-mark" aria-hidden="true">
-              <svg viewBox="0 0 48 40" width="45" height="38">
+              <svg viewBox="0 0 48 48" width="45" height="44" fill="none">
+                <defs>
+                  <linearGradient
+                    id="help-heart"
+                    x1="13"
+                    y1="3"
+                    x2="35"
+                    y2="27"
+                    gradientUnits="userSpaceOnUse"
+                  >
+                    <stop stopColor="#174a91" />
+                    <stop offset="0.55" stopColor="#087fb3" />
+                    <stop offset="1" stopColor="#49b5a1" />
+                  </linearGradient>
+                </defs>
                 <path
-                  d="M3 33 17 10 30 33M15 33 30 5 45 33"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="5"
-                  strokeLinejoin="round"
+                  d="M24 27C20 24 12 18 12 11a7 7 0 0 1 12-5 7 7 0 0 1 12 5c0 7-8 13-12 16Z"
+                  fill="url(#help-heart)"
                 />
                 <path
-                  d="m21 22 9-17 7 13"
-                  fill="none"
-                  stroke="#4b9276"
-                  strokeWidth="5"
+                  d="M20 45v-7c0-3-2-5-4-7l-5-6c-2-2-4 0-3 2l5 7-2 1-6-9-1-10c0-3-4-3-4 0v13c0 3 1 5 3 7l8 9Z"
+                  fill="currentColor"
+                  transform="translate(2 0)"
+                />
+                <path
+                  d="M20 45v-7c0-3-2-5-4-7l-5-6c-2-2-4 0-3 2l5 7-2 1-6-9-1-10c0-3-4-3-4 0v13c0 3 1 5 3 7l8 9Z"
+                  fill="#4b9276"
+                  transform="translate(46 0) scale(-1 1)"
                 />
               </svg>
             </span>{" "}
