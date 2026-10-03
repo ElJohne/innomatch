@@ -1,5 +1,4 @@
 import { IdeaEditor } from "@/components/idea-editor";
-import { IdeaResources } from "@/components/idea-resources";
 import Link from "next/link";
 export default function NewIdea() {
   return (
@@ -13,13 +12,16 @@ export default function NewIdea() {
           <h1>
             Dobry pomysł zaczyna się
             <br />
-            <em>od Ciebie.</em>
+            od Ciebie.
           </h1>
           <p>
-            Widzisz coś, co można zmienić na lepsze? Opisz swój pomysł. Nie musi
-            być gotowy — rozwiniesz go krok po kroku.
+            Masz pomysł na rozwiązanie problemu społecznego? Tutaj przygotujesz
+            jego kartę — od opisu problemu po pierwszy test z uczestnikami.
           </p>
-          <span className="idea-hero-tag">Mały krok. Nowe możliwości.</span>
+          <p className="idea-examples">
+            Na przykład: zakupy dla samotnych seniorów albo bezpłatna pomoc
+            dzieciom w nauce. Pomysł nie musi być gotowy — rozwiniesz go krok po kroku.
+          </p>
         </div>
         <svg
           className="idea-illustration"
@@ -72,9 +74,17 @@ export default function NewIdea() {
           />
         </svg>
       </div>
+      <aside className="idea-help-route" aria-label="Pomysł czy potrzeba pomocy?">
+        <div>
+          <h2>Szukasz pomocy dla siebie?</h2>
+          <p>Ta strona służy do proponowania inicjatyw społecznych. Jeśli potrzebujesz
+            wsparcia w swojej sytuacji życiowej, opisz ją na stronie głównej.</p>
+        </div>
+        <Link className="button secondary" href="/">Jakiej pomocy potrzebujesz? →</Link>
+      </aside>
       <div className="idea-workspace">
         <div className="idea-form-column">
-          <IdeaEditor />
+          <IdeaEditor hideDraftNotice />
         </div>
         <aside className="idea-guide" aria-label="Wskazówki do pomysłu">
           <div className="card idea-guide-card">
@@ -106,21 +116,13 @@ export default function NewIdea() {
                 <div>
                   <h3>Zdecyduj o konsultacji</h3>
                   <p>
-                    Gdy zechcesz, przekaż zapisaną kartę koordynatorowi i
-                    rozpocznij rozmowę.
+                    Szkic pozostaje prywatny. Personel zobaczy go dopiero po
+                    wybraniu „Przekaż pomysł do konsultacji”.
                   </p>
                 </div>
               </li>
             </ol>
           </div>
-          <div className="idea-tip">
-            <h2>Nie musisz znać wszystkich odpowiedzi.</h2>
-            <p>
-              Jeśli czegoś jeszcze nie wiesz, napisz, co pozostaje do ustalenia.
-              Pomysł może dojrzewać razem z Tobą.
-            </p>
-          </div>
-          <IdeaResources />
         </aside>
       </div>
     </section>
