@@ -11,3 +11,6 @@ micromatch → braces (одна root advisory GHSA-vfj7-8cjw-p6xm).
 Запропонований npm downgrade eslint-config-next до 14 не застосовано до Next 16.
 Production audit перевіряється окремо; перед публічним CI слід оновити lint toolchain
 після виходу сумісного виправлення. Не обробляти недовірені glob-шаблони через цей інструмент.
+
+Імпорт ROPS додав operator-only devDependencies: cheerio 1.2.0 (MIT), esbuild 0.28.2 (MIT).
+cheerio не включено у сервер застосунку; esbuild пакує operator CLI для deployment Job.

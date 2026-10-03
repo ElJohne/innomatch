@@ -6,7 +6,16 @@
 - data:validate: PASS, 114 інновацій + 69 ресурсів.
 - lint / typecheck: PASS. Production operator bundle + validate-corpus: PASS.
 - Unit/integration/E2E не запускались за дорученням власника.
-- Production build, migration, import, index і HTTPS перевірки: PENDING.
+- Production build, migration 0002, import, index, rollout: PASS.
+- Actions: https://github.com/ElJohne/innomatch/actions/runs/37123389180 (6b9b702).
+- Import Job: 114 innovations upserted; 69 knowledge validated; 166 indexed у 11 пакетах.
+- Повторний sync: innovations upserted 0, indexed 0, unchanged 166; без повторних embedding calls.
+- /api/ready: 200 ok; /api/innovations: total 114; /api/knowledge: total 69.
+- /innowacje, /wiedza, /wiedza?type=CHALLENGE: 200.
+- Одна явно синтетична production-потреба: matched; semantic/openai/source_backed; BaWita і Therapy Set, 3 related resources, warnings []. Дві AI-операції для підбору.
+- Перевірочне звернення видалено за його точним ID; видалено 1 запис.
+- backup-before-rops: Complete.
+- Повна незалежна оцінка якості пошуку, no-match та browser E2E у цій ітерації не виконувалися.
 
 
 ## OpenAI API — поточна ітерація

@@ -1,6 +1,6 @@
 # Стан — 2026-10-03
 
-## Джерела ROPS — імпорт підготовлено
+## Джерела ROPS — DONE, production підтверджено
 
 За наданими власником QR-посиланнями зібрано 114 інновацій із 115 унікальних карток / 9 категорій.
 69 матеріалів знань: 44 описи, 8 фрагментів карти викликів, 17 посилань на портали або документи без опису.
@@ -8,7 +8,14 @@
 Додано PostgreSQL KnowledgeResource, /wiedza, /api/knowledge, пов’язані матеріали в matching,
 батчеву індексацію та idempotent sync у deployment Actions.
 Перевірено: lint, typecheck, schema validation 114/69, production CLI bundle.
-Тести пропущено за вказівкою власника. Production build/import/index/rollout ще очікують запуску.
+Тести пропущено за вказівкою власника. Build/migration/import/index/rollout — PASS.
+Actions: https://github.com/ElJohne/innomatch/actions/runs/37123389180 (6b9b702).
+Production API: 114 інновацій, 69 ресурсів; 166 векторів (114 + 52), 11 embedding-запитів.
+HTTPS readiness, каталог і /wiedza — HTTP 200. Один синтетичний запит: matched, semantic/openai/source_backed, BaWita + Therapy Set, 3 пов’язані ресурси, без warnings.
+Перевірочне звернення видалено. Повторний sync: upserted 0, indexed 0, unchanged 166.
+Backup перед імпортом — Complete. Це операційна перевірка, не незалежна оцінка retrieval quality.
+Повні тексти звітів, числові дані обсерватора й інтерактивний Canvas не імпортовані.
+Наступна функціональна робота за SPEC: staff auth, модерація й приватні діалоги M6/M5.
 
 
 ## OpenAI API — DONE, live підтверджено
