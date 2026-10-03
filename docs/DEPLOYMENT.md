@@ -1,5 +1,11 @@
 # Запуск і підключення
 
+Актуальний підтверджений реліз: `a2f5c64a0b11edd8b4da191e936ccb63e10a1911`,
+Actions 37144087261 — SUCCESS (2026-10-03). Виправлення окремих ORM/raw SQL
+pools уже в production. Backup перед rollout — Complete, HTTPS readiness — ok;
+live API сценарії M1/M3/M4/M5/M7, recovery й analytics підтверджено в QA.md.
+Згадки нижче «локально / очікує rollout» є історичними.
+
 ## Уточнення після PostgreSQL QA — 2026-10-03, 20:19
 
 Локальне виправлення розділяє postgres-js для Drizzle і прямого SQL: по 5

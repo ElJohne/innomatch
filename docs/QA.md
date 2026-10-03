@@ -1,5 +1,51 @@
 # Перевірки — 2026-10-03, поточна ітерація та історія
 
+## Production a2f5c64: rollout і живі сценарії — 2026-10-03
+
+- Власник явно дозволив push/deploy та production QA. Локальний коміт виправлення
+  41c560e об'єднано з origin/master ef6954e (лише оновлення SVG-логотипа).
+  Збірка після merge — PASS, push master a2f5c64 — SUCCESS.
+- Backup `backup-qa-release-20261003` — Complete перед deployment.
+  Actions https://github.com/ElJohne/innomatch/actions/runs/37144087261:
+  build, corpus validation/operator package, migrate/deploy — SUCCESS.
+  Зовнішній `https://innomatch.brandly-io.com/api/ready` — HTTP 200 / ok.
+- Одноразовий QA-скрипт запущено всередині app pod; він звертався до публічного
+  HTTPS API з окремими cookies автора/іншого автора/тимчасового ADMIN/recovery.
+  У логах тільки статуси, режими та source IDs; credentials і тексти потреб
+  не друкувалися. Staff account створено з випадковим salted scrypt password.
+- M1: перша спроба для загальної потреби про соціальні зустрічі seniorów
+  не пройшла критерій позитивного live попадання (детальний режим не виводився).
+  У діагностичному повторі зафіксовано no_match при semantic/openai/source_backed,
+  warnings=0. Це сигнал щодо якості пошуку; не зарахований як позитивне попадання.
+- Джерельно обґрунтований синтетичний сценарій «немобільні seniorzy, терапія
+  при ліжку в DPS» повернув Therapy Set (`rops-therapy-set-76f33283`), matched,
+  semantic/openai/source_backed, warnings=0. Перша перевірка кешу в QA-скрипті
+  помилково порівнювала JSON рядки: JSONB змінює порядок ключів. Після переходу
+  до структурного порівняння повторний запит — PASS; код застосунку не змінювався.
+- M7: live OpenAI → збережений план → повторний POST з тим самим ключем →
+  той самий ID; PATCH revision 1 → 2; чужий owner → 404. Джерело плану —
+  `rops-therapy-set-76f33283-source`. Перегляд синтетичного результату підтвердив
+  відділення фактів від пропозицій, невідомі бюджет/строки як питання, ролі,
+  ризики й пропоновані метрики без вигаданих результатів. Це огляд одного
+  зразка агентом, не незалежне приймання експертом.
+- M5: sharing цього плану → GET координатором → відповідь → unread=1 → read
+  receipt; чужий owner → 404. Перевірено реальні HTTP-записи/читання PostgreSQL.
+- M3: приватна картка → live AI assist → ідентичний кеш → stage CONCEPT
+  збережено → явне submit → координатор читає картку через створену розмову.
+- M4: повторний test-interest повертає той самий ID; feedback зберігається
+  IN_REVIEW. Синтетичний відгук не публікувався в реальному каталозі.
+- Recovery: нова сесія відновлює власний план; ADMIN analytics має source=postgres,
+  авторський запит до аналітики — 403.
+- У finally кожної спроби транзакційно видалені лише записи її owner IDs:
+  повідомлення/розмови, участь/відгук, AI-поради/ідеї, плани, recovery, потреби,
+  персональні тестові counters та тимчасовий staff account. Cleanup — PASS
+  у всіх 4 спробах. Production corpus і чужі записи не редагувалися.
+  Глобальні AI-квоти й usage залишені як облік фактичних викликів.
+
+Межі: production перевірено через API, локальний браузерний PostgreSQL flow
+описано нижче. 12 незалежно розмічених retrieval cases, експертна оцінка
+планів, backup restore/off-host, навантаження й повний WCAG-аудит ще не виконані.
+
 ## Стабілізація з реальною PostgreSQL — 20:19 Europe/Warsaw
 
 Середовище: Windows, Node 22.16.0, npm 10.9.2, Chromium; одноразовий контейнер
