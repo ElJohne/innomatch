@@ -1,5 +1,19 @@
 # Перевірки — 2026-10-03, поточна ітерація та історія
 
+## Merge функцій із origin/master 46019bd
+
+- Після усунення конфліктів: lint, typecheck і production build — PASS (52 маршрути).
+- Автоматичний merge продублював `listKnowledge` у mock Azure fallback;
+  typecheck виявив проблему, після виправлення повторна перевірка — PASS.
+- Corpus validation: 114 інновацій, 69 матеріалів — valid.
+- Operator bundle — PASS поза sandbox; перший запуск блокувався доступом esbuild
+  до батьківського каталогу. GitHub CLI також потребував доступу до своєї конфігурації.
+- Разова localhost HTTP-перевірка fixtures/mock: головна 200, hero image 200,
+  навігація ідей/моїх справ присутня; створення потреби 201; matching, results,
+  plan 200; переходи до адаптації й координатора збережено; чужий plan 404.
+- Unit/integration/E2E suites і live AI не запускались. Нові SQL-міграції локально
+  не виконувались. Результат production workflow перевіряється після push окремо.
+
 ## Підсумковий огляд — 2026-10-03, 18:34 Europe/Warsaw
 
 - Статично оглянуто auth/session/recovery, ideas/adaptations, communication/pilots,
@@ -279,3 +293,53 @@ admin API та cross-origin writes заборонено. Axe WCAG2A/AA/2.1AA н�
 Doctor потребував виконання поза sandbox: tsx userInfo повертав системну помилку в sandbox.
 Жодних live AI-запитів не зроблено. Docker build, справжній імпорт, migrations і embeddings live — NOT RUN.
 Retrieval евристики перевірені тільки на synthetic, не є незалежною оцінкою якості.
+
+## Локальний дизайн — 2026-10-03, codex/local-design
+
+- Переглянуто SPEC.md та конкурсні PDF: CRITERIA (8 сторінок), польська частина RULES (1–7).
+- `npm run build`, `npm run typecheck`, `npm run lint`: PASS.
+- `npm test`: PASS, 16 тестів у 3 файлах. Нові перевірки виключають synthetic організації
+  у postgres, для прихованих / несинтетичних інновацій і для no-match.
+- `npm run test:e2e`: PASS, 6 Chromium-сценаріїв. Окрема production-збірка на 127.0.0.1:3100, fixtures/mock.
+- Перевірено шлях: опис → редагування підтвердження → вибір організації → прямий план;
+  повторне відкриття, приватність need і plan, невідомий organization ID → 404,
+  джерела / деталі, no-match, порожній каталог, помилка 503 / retry, idempotency, CSRF і admin deny.
+- Axe WCAG2A/AA/2.1AA: 0 violations на головній, підтвердженні, організаціях,
+  плані, деталях; також мобільній головній / плані та високому контрасті.
+- 320 CSS px, 200% текст, skip-link focus, Escape у панелі: PASS.
+- Copy перевірено з fallback: коли clipboard недоступний, текст виділяється й показується Ctrl+C.
+- Вбудований браузер: ручний прохід усіх 4 екранів. Desktop/mobile screenshots у test-results/.
+- Початковий запуск виявив contrast 4.38:1 на підписі й overflow логотипу при 200%; виправлено.
+- Старий server на 3000 блокував standalone build (EBUSY); зупинено тільки цей локальний процес.
+  E2E під sandbox не завершував свій server; запуск поза sandbox завершився успішно.
+- `npm run test:integration`: 1 skipped, немає TEST_DATABASE_URL. Live PostgreSQL/Azure не перевірялися.
+- Browser speech залежить від польського голосу; акустична перевірка не виконувалася.
+  Screen reader і повний keyboard-only аудит не виконані; це не сертифікація WCAG.
+- public assets додані в standalone start та Dockerfile; Docker-збірка окремо не запускалася.
+
+### Pomocny Punkt: відкрита доступність і перший екран
+
+- Production build PASS; 8 E2E PASS (оновлений набір вище).
+- Поле опису повністю в першому viewport: 1280×720, 1008×600, 390×844, 320×800.
+- Чотири палітри, aria-pressed, axe та 200% текст: PASS.
+- Назва сторінки й посилання на malopolska.pl: PASS.
+- Виклик browser speech із pl-PL і текстом main, стан початку й Stop: PASS з mock API.
+- Фактичне звучання встановленого голосу не перевірено.
+- Панель більше не розкривається кнопкою: старий тест Escape замінено перевіркою постійної видимості.
+
+### Очищення головної та диктування
+
+- Build, lint, typecheck: PASS. Unit: 16 PASS; E2E: 10 PASS; integration: 1 skipped без TEST_DATABASE_URL.
+- Нові E2E з mock SpeechRecognition: pl-PL, доповнення введеного тексту,
+  Stop, редагування перед підтвердженням, відмова доступу, відсутній API.
+- Перший екран на чотирьох viewport, 200% текст, чотири контрасти й axe: PASS.
+- Реальне аудіо мікрофона / зовнішній сервіс транскрипції не тестувалися.
+- За прямою вказівкою власника видалено глобальний demo-banner і AI-підпис фото;
+  походження фото зафіксоване у DEPENDENCIES.md, backend залишився fixtures/mock.
+
+## Перевірка merge з origin/master a22f390
+
+Build, lint, typecheck: PASS. Unit: 16 PASS; E2E: 10 PASS; corpus: 114/69 valid.
+Оновлено mock repository у тесті Azure fallback для нового listKnowledge.
+Integration: 1 skipped (TEST_DATABASE_URL відсутній). Реальні AI-виклики не виконувалися.
+Пакет GitHub Actions доповнено public, щоб зберегти hero image у standalone release.

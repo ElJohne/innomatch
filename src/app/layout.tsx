@@ -1,11 +1,11 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { config } from "@/server/config";
 import "./globals.css";
+import { Accessibility } from "@/components/accessibility";
 export const metadata: Metadata = {
   title: {
-    default: "MI Connect — od potrzeby do rozwiązania",
-    template: "%s | MI Connect",
+    default: "Pomocny Punkt — od potrzeby do rozwiązania",
+    template: "%s | Pomocny Punkt",
   },
   description:
     "Odkrywaj innowacje społeczne odpowiadające na lokalne potrzeby.",
@@ -14,7 +14,6 @@ export const dynamic = "force-dynamic";
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const c = config();
   return (
     <html lang="pl">
       <body>
@@ -25,43 +24,55 @@ export default function RootLayout({
           <Link
             className="brand"
             href="/"
-            aria-label="MI Connect — strona główna"
+            aria-label="Pomocny Punkt — strona główna"
           >
             <span className="brand-mark" aria-hidden="true">
-              mi
+              <svg viewBox="0 0 48 40" width="45" height="38">
+                <path
+                  d="M3 33 17 10 30 33M15 33 30 5 45 33"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="5"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="m21 22 9-17 7 13"
+                  fill="none"
+                  stroke="#4b9276"
+                  strokeWidth="5"
+                />
+              </svg>
             </span>{" "}
-            MI Connect
+            <span>
+              Pomocny Punkt<small>Małopolska. Razem możemy więcej.</small>
+            </span>
           </Link>
           <nav aria-label="Menu główne">
+            <Link href="/#jak-to-dziala">Jak to działa</Link>
             <Link href="/innowacje">Katalog innowacji</Link>
             <Link href="/wiedza">Wiedza</Link>
             <Link href="/pomysly/nowy">Mam pomysł</Link>
             <Link href="/moje-sprawy">Moje sprawy</Link>
+            <a
+              href="https://www.malopolska.pl"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Małopolska ↗
+            </a>
           </nav>
-          <Link className="button small" href="/potrzeby/nowa">
-            Opisz potrzebę <span aria-hidden="true">↗</span>
-          </Link>
+          <Accessibility />
         </header>
-        {(c.DATA_PROVIDER === "fixtures" ||
-          c.AI_PROVIDER === "mock" ||
-          c.DEMO_DATA_ENABLED === "true") && (
-          <aside className="demo" aria-label="Tryb demonstracyjny">
-            <strong>Wersja demonstracyjna</strong> ·{" "}
-            {c.DATA_PROVIDER === "fixtures"
-              ? "Dane syntetyczne. Zgłoszenia są tymczasowe i znikają po restarcie serwera."
-              : "Katalog może zawierać oznaczone dane syntetyczne."}{" "}
-            {c.AI_PROVIDER === "mock" &&
-              "AI: tryb testowy, bez połączenia z dostawcą AI."}
-          </aside>
-        )}
         <main id="main">{children}</main>
         <footer>
           <Link className="brand" href="/">
-            MI Connect
+            Pomocny Punkt
           </Link>
           <p>Od lokalnej potrzeby do wspólnego działania.</p>
-          <span>Prototyp na wyzwanie HubMI · 2026</span>
           <Link href="/admin">Strefa personelu</Link>
+          <a href="https://www.malopolska.pl" target="_blank" rel="noreferrer">
+            Małopolska — portal województwa ↗
+          </a>
         </footer>
       </body>
     </html>

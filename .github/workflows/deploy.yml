@@ -30,6 +30,7 @@ jobs:
       - name: Package standalone release
         run: |
           cp -r .next/static .next/standalone/.next/static
+          cp -r public .next/standalone/public
           mkdir -p .next/standalone/scripts .next/standalone/migrations
           cp scripts/migrate.mjs .next/standalone/scripts/
           cp scripts/check-openai.mjs .next/standalone/scripts/
