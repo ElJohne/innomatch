@@ -4,7 +4,6 @@ import { z } from "zod";
 import { config, required } from "@/server/config";
 import { db } from "@/server/db/client";
 import { usage } from "@/server/db/schema";
-import { consumeLimit } from "@/server/services/repository";
 import { randomUUID } from "node:crypto";
 
 export interface AiProvider {
@@ -80,20 +79,13 @@ class LiveAiProvider implements AiProvider {
     run: () => Promise<{ value: T; input: number; output: number }>,
   ) {
     const c = config();
-    // Persistent global quotas are mandatory for live application traffic.
+    // Live traffic requires durable usage accounting; no application daily AI cap.
     if (c.DATA_PROVIDER !== "postgres")
       throw new Error("LIVE_AI_REQUIRES_POSTGRES");
     if (active >= c.AI_MAX_CONCURRENCY) throw new Error("AI_BUSY");
     active++;
     const started = Date.now();
     try {
-      if (
-        !(await consumeLimit(
-          `${this.provider}:${new Date().toISOString().slice(0, 10)}`,
-          c.AI_DAILY_REQUEST_LIMIT,
-        ))
-      )
-        throw new Error("AI_LIMIT");
       const r = await run();
       await db()
         .insert(usage)
