@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import "./globals.css";
 import { Accessibility } from "@/components/accessibility";
+import { MainNavigation } from "@/components/main-navigation";
 export const metadata: Metadata = {
   title: {
     default: "Pomocny Punkt — od potrzeby do rozwiązania",
@@ -62,20 +63,7 @@ export default function RootLayout({
               Pomocny Punkt<small>Małopolska. Razem możemy więcej.</small>
             </span>
           </Link>
-          <nav aria-label="Menu główne">
-            <Link href="/">Strona główna</Link>
-            <Link href="/innowacje">Katalog innowacji</Link>
-            <Link href="/pomysly/nowy">Mam pomysł</Link>
-            <Link href="/moje-sprawy">Moje sprawy</Link>
-            <Link href="/pilna-pomoc">Pilna pomoc</Link>
-            <a
-              href="https://www.malopolska.pl"
-              target="_blank"
-              rel="noreferrer"
-            >
-              Małopolska ↗
-            </a>
-          </nav>
+          <MainNavigation />
           <Accessibility />
         </header>
         <main id="main">{children}</main>

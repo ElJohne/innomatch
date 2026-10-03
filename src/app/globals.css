@@ -2685,6 +2685,11 @@ html[style*="200%"] .innovation-catalog .filters {
   text-decoration: underline;
   text-underline-offset: 4px;
 }
+.header > nav a[aria-current] {
+  text-decoration-line: underline;
+  text-decoration-thickness: 3px;
+  text-underline-offset: 6px;
+}
 .flow-steps {
   padding: 14px 0;
 }
