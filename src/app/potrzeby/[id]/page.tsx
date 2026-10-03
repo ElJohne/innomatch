@@ -36,6 +36,7 @@ export default async function NeedPage({
           targetGroups: need.targetGroups,
           constraints: need.constraints,
           clarifications: need.clarifications,
+          skipClarification: need.skipClarification,
         }}
         records={await listInnovations()}
         organizations={listOrganizations()}

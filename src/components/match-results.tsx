@@ -119,7 +119,7 @@ export function MatchResults({
         <p className="lead">
           {options.length
             ? "Wybierz jedną propozycję, a pokażemy Ci, co zrobić dalej."
-            : "Sprawdź dostępne rozwiązania i doprecyzuj swoją potrzebę."}
+            : "Sprawdź wynik wyszukiwania i dostępne możliwości wsparcia."}
         </p>
       </div>
       <p className="muted">
@@ -237,11 +237,21 @@ export function MatchResults({
           )}
         </div>
       )}
+      {!!result.assumptions?.length && (
+        <aside className="note">
+          <h2>Przyjęte założenia</h2>
+          <ul>
+            {result.assumptions.map((assumption) => (
+              <li key={assumption}>{assumption}</li>
+            ))}
+          </ul>
+        </aside>
+      )}
       {result.status === "no_match" && (
         <div className="card">
           <p>
             {result.guidance === "clarify" ? (
-              "Potrzebujemy krótkiego doprecyzowania, żeby nie zgadywać Twojej sytuacji."
+              "Nie znamy jeszcze głównej potrzeby. Możesz odpowiedzieć na jedno pytanie albo od razu zobaczyć wynik na podstawie obecnego opisu."
             ) : (
               <>
                 W obecnym katalogu nie ma wystarczająco zbliżonego rozwiązania.

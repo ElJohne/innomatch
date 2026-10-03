@@ -11,6 +11,7 @@ export const needInput = z
     municipality: shortText.optional(),
     targetGroups: z.array(shortText.min(1)).max(10).default([]),
     constraints: z.string().trim().max(1500).optional(),
+    skipClarification: z.boolean().optional(),
     clarifications: z
       .array(
         z
@@ -91,6 +92,7 @@ export const explanationSchema = z
   })
   .strict();
 export const matchResponseSchema = explanationSchema.extend({
+  assumptions: z.array(z.string().max(300)).max(3).optional(),
   matchingVersion: z.number().int().optional(),
   guidance: z.enum(["emergency", "support", "clarify"]).optional(),
   contacts: z

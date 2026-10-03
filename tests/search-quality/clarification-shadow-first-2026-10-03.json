@@ -1,0 +1,820 @@
+{
+  "synthetic": true,
+  "shadowService": true,
+  "origin": "https://pomocnypunkt.pl",
+  "recordedAt": "2026-10-03T21:48:57.293Z",
+  "catalogHash": "d6d2c53f57a0e57526a463d1f21ace73c3a748ad61060502a0f04bdc16f3e945",
+  "labeling": "Agent-authored regression cases; not independent expert acceptance.",
+  "results": [
+    {
+      "id": "short-lonely",
+      "turn": 0,
+      "status": "no_match",
+      "guidance": null,
+      "questions": 0,
+      "matches": [],
+      "mode": {
+        "retrieval": "semantic",
+        "explanation": "openai",
+        "data": "source_backed"
+      },
+      "warnings": [],
+      "latencyMs": 3819,
+      "expectationMet": true,
+      "response": {
+        "matchingVersion": 3,
+        "assumptions": [
+          "Przyjmujemy, że szukasz sposobów na nawiązanie lub podtrzymanie kontaktu z innymi."
+        ],
+        "catalogVersions": {},
+        "status": "no_match",
+        "matches": [],
+        "clarifyingQuestions": [],
+        "needId": "cd38cb73-23f5-43c7-8f58-369c074059dc",
+        "relatedResources": [],
+        "mode": {
+          "retrieval": "semantic",
+          "explanation": "openai",
+          "data": "source_backed"
+        },
+        "warnings": []
+      }
+    },
+    {
+      "id": "short-mobility",
+      "turn": 0,
+      "status": "partial",
+      "guidance": null,
+      "questions": 0,
+      "matches": [
+        "rops-zakupy-bez-barier-1b49e89a"
+      ],
+      "mode": {
+        "retrieval": "semantic",
+        "explanation": "openai",
+        "data": "source_backed"
+      },
+      "warnings": [],
+      "latencyMs": 5072,
+      "expectationMet": true,
+      "response": {
+        "matchingVersion": 3,
+        "assumptions": [],
+        "catalogVersions": {
+          "innovation:rops-zakupy-bez-barier-1b49e89a": "6b7a11d17f8497524b7e5fb579e9f0c160900b93b3051e5e5dc72f3eb76d0cf3"
+        },
+        "status": "partial",
+        "matches": [
+          {
+            "innovationId": "rops-zakupy-bez-barier-1b49e89a",
+            "rank": 1,
+            "reasons": [
+              "Zapewnia asystę przy sięganiu po produkty umieszczone wysoko, co jest zbliżone do trudności z dosięgnięciem skrytki paczkomatu."
+            ],
+            "limitations": [
+              "Rozwiązanie dotyczy asysty podczas zakupów w sklepie, a nie odbierania przesyłek z paczkomatu.",
+              "Nie wiadomo, czy użytkownik ma ograniczoną mobilność ani czy taka asysta jest dostępna przy paczkomacie."
+            ],
+            "sourceIds": [
+              "rops-zakupy-bez-barier-1b49e89a-source"
+            ]
+          }
+        ],
+        "clarifyingQuestions": [],
+        "needId": "71dea7ee-3d51-4107-8120-0155d890dd80",
+        "relatedResources": [],
+        "mode": {
+          "retrieval": "semantic",
+          "explanation": "openai",
+          "data": "source_backed"
+        },
+        "warnings": []
+      }
+    },
+    {
+      "id": "short-hearing",
+      "turn": 0,
+      "status": "no_match",
+      "guidance": null,
+      "questions": 0,
+      "matches": [],
+      "mode": {
+        "retrieval": "semantic",
+        "explanation": "openai",
+        "data": "source_backed"
+      },
+      "warnings": [],
+      "latencyMs": 3316,
+      "expectationMet": true,
+      "response": {
+        "matchingVersion": 3,
+        "assumptions": [
+          "Przyjmujemy, że szukasz rozwiązań ułatwiających słuchanie telewizora."
+        ],
+        "catalogVersions": {},
+        "status": "no_match",
+        "matches": [],
+        "clarifyingQuestions": [],
+        "needId": "fd5cc8a9-a746-4f15-955f-dd9f649cf93d",
+        "relatedResources": [],
+        "mode": {
+          "retrieval": "semantic",
+          "explanation": "openai",
+          "data": "source_backed"
+        },
+        "warnings": []
+      }
+    },
+    {
+      "id": "short-medicine",
+      "turn": 0,
+      "status": "matched",
+      "guidance": null,
+      "questions": 0,
+      "matches": [
+        "rops-cold-box-5fed2b56"
+      ],
+      "mode": {
+        "retrieval": "semantic",
+        "explanation": "openai",
+        "data": "source_backed"
+      },
+      "warnings": [],
+      "latencyMs": 4507,
+      "expectationMet": true,
+      "response": {
+        "matchingVersion": 3,
+        "assumptions": [],
+        "catalogVersions": {
+          "innovation:rops-cold-box-5fed2b56": "94d541ae01db93ec6238b16d37b1f955dbf9eb9f55782b4d137343bc80eb50af"
+        },
+        "status": "matched",
+        "matches": [
+          {
+            "innovationId": "rops-cold-box-5fed2b56",
+            "rank": 1,
+            "reasons": [
+              "Mobilny pojemnik chłodzący jest przeznaczony do przechowywania leków wymagających chłodzenia, w tym insuliny.",
+              "Opis wskazuje na zasilanie bateryjne i utrzymywanie temperatury 4–7°C."
+            ],
+            "limitations": [
+              "To przenośny pojemnik, nie stacjonarna lodówka.",
+              "Koszt, dostępność i szczegółowe warunki użytkowania nie zostały podane; sprawdź je w dokumentacji rozwiązania."
+            ],
+            "sourceIds": [
+              "rops-cold-box-5fed2b56-source"
+            ]
+          }
+        ],
+        "clarifyingQuestions": [],
+        "needId": "d6d56ed3-5242-45ce-a26d-822b63e9ac28",
+        "relatedResources": [],
+        "mode": {
+          "retrieval": "semantic",
+          "explanation": "openai",
+          "data": "source_backed"
+        },
+        "warnings": []
+      }
+    },
+    {
+      "id": "senior-detail",
+      "turn": 0,
+      "status": "no_match",
+      "guidance": null,
+      "questions": 0,
+      "matches": [],
+      "mode": {
+        "retrieval": "semantic",
+        "explanation": "template",
+        "data": "source_backed"
+      },
+      "warnings": [
+        "Nie udało się teraz sprawdzić dopasowania. Spróbuj ponownie później lub zapytaj koordynatora. Nie musisz ponownie opisywać potrzeby."
+      ],
+      "latencyMs": 4707,
+      "expectationMet": true,
+      "response": {
+        "matchingVersion": 3,
+        "assumptions": [],
+        "catalogVersions": {},
+        "status": "no_match",
+        "matches": [],
+        "clarifyingQuestions": [],
+        "needId": "2ea1ca71-3268-425b-bbaf-90ae3d07e912",
+        "relatedResources": [],
+        "mode": {
+          "retrieval": "semantic",
+          "explanation": "template",
+          "data": "source_backed"
+        },
+        "warnings": [
+          "Nie udało się teraz sprawdzić dopasowania. Spróbuj ponownie później lub zapytaj koordynatora. Nie musisz ponownie opisywać potrzeby."
+        ]
+      }
+    },
+    {
+      "id": "one-hand",
+      "turn": 0,
+      "status": "matched",
+      "guidance": null,
+      "questions": 0,
+      "matches": [
+        "rops-biustspinka-f7f7a569"
+      ],
+      "mode": {
+        "retrieval": "semantic",
+        "explanation": "openai",
+        "data": "source_backed"
+      },
+      "warnings": [],
+      "latencyMs": 7558,
+      "expectationMet": true,
+      "response": {
+        "matchingVersion": 3,
+        "assumptions": [],
+        "catalogVersions": {
+          "innovation:rops-biustspinka-f7f7a569": "2e93ff73a58813fe993fb32309dda3b8f974626b857b80d6665786ed8a78b338"
+        },
+        "status": "matched",
+        "matches": [
+          {
+            "innovationId": "rops-biustspinka-f7f7a569",
+            "rank": 1,
+            "reasons": [
+              "To proste urządzenie zostało opisane jako pomoc przy samodzielnym zakładaniu, zapinaniu i zdejmowaniu biustonosza.",
+              "Jest przeznaczone m.in. dla kobiet z dysfunkcją ręki lub funkcjonalnością jednego ramienia, co odpowiada opisanej potrzebie."
+            ],
+            "limitations": [
+              "Nie podano informacji o dostępności, koszcie ani warunkach skorzystania; opis określa urządzenie jako tanie, ale nie potwierdza, że jest bezpłatne."
+            ],
+            "sourceIds": [
+              "rops-biustspinka-f7f7a569-source"
+            ]
+          }
+        ],
+        "clarifyingQuestions": [],
+        "needId": "df96dda9-a22a-4c8a-a8a3-280c7d81dbf7",
+        "relatedResources": [],
+        "mode": {
+          "retrieval": "semantic",
+          "explanation": "openai",
+          "data": "source_backed"
+        },
+        "warnings": []
+      }
+    },
+    {
+      "id": "deaf-library",
+      "turn": 0,
+      "status": "matched",
+      "guidance": null,
+      "questions": 0,
+      "matches": [
+        "rops-gluchy-czytelnik-w-bibliotece-70106b9e"
+      ],
+      "mode": {
+        "retrieval": "semantic",
+        "explanation": "openai",
+        "data": "source_backed"
+      },
+      "warnings": [],
+      "latencyMs": 4394,
+      "expectationMet": true,
+      "response": {
+        "matchingVersion": 3,
+        "assumptions": [],
+        "catalogVersions": {
+          "innovation:rops-gluchy-czytelnik-w-bibliotece-70106b9e": "a85faed589b8eb507418c3bdf8fb2e027e391a271c9c670e9ec28c04c3bb42e6"
+        },
+        "status": "matched",
+        "matches": [
+          {
+            "innovationId": "rops-gluchy-czytelnik-w-bibliotece-70106b9e",
+            "rank": 1,
+            "reasons": [
+              "Rozwiązanie dotyczy bezpośrednio korzystania z bibliotek przez osoby g/Głuche.",
+              "Publikacja jest w polskim języku migowym i przedstawia bibliotekę oraz sposoby korzystania z niej."
+            ],
+            "limitations": [
+              "To publikacja informacyjno-wspierająca, nie zbiór książek przełożonych na PJM; nie potwierdzono, że sama zapewnia dostęp do książek.",
+              "Grupa docelowa opisu obejmuje szczególnie rodziców i dzieci; nie wiadomo, czy materiały odpowiadają potrzebom wszystkich użytkowników biblioteki. Należy sprawdzić zasady wykorzystania u źródła."
+            ],
+            "sourceIds": [
+              "rops-gluchy-czytelnik-w-bibliotece-70106b9e-source"
+            ]
+          }
+        ],
+        "clarifyingQuestions": [],
+        "needId": "3e10b372-4aeb-4ee5-a218-8da2c4d7f654",
+        "relatedResources": [],
+        "mode": {
+          "retrieval": "semantic",
+          "explanation": "openai",
+          "data": "source_backed"
+        },
+        "warnings": []
+      }
+    },
+    {
+      "id": "no-money",
+      "turn": 0,
+      "status": "no_match",
+      "guidance": null,
+      "questions": 0,
+      "matches": [],
+      "mode": {
+        "retrieval": "semantic",
+        "explanation": "template",
+        "data": "source_backed"
+      },
+      "warnings": [
+        "Nie udało się teraz sprawdzić dopasowania. Spróbuj ponownie później lub zapytaj koordynatora. Nie musisz ponownie opisywać potrzeby."
+      ],
+      "latencyMs": 5300,
+      "expectationMet": true,
+      "response": {
+        "matchingVersion": 3,
+        "assumptions": [],
+        "catalogVersions": {},
+        "status": "no_match",
+        "matches": [],
+        "clarifyingQuestions": [],
+        "needId": "efd2d780-c4ac-4ef0-8ba6-8388b0c6cc0f",
+        "relatedResources": [],
+        "mode": {
+          "retrieval": "semantic",
+          "explanation": "template",
+          "data": "source_backed"
+        },
+        "warnings": [
+          "Nie udało się teraz sprawdzić dopasowania. Spróbuj ponownie później lub zapytaj koordynatora. Nie musisz ponownie opisywać potrzeby."
+        ]
+      }
+    },
+    {
+      "id": "car-repair",
+      "turn": 0,
+      "status": "no_match",
+      "guidance": null,
+      "questions": 0,
+      "matches": [],
+      "mode": {
+        "retrieval": "none",
+        "explanation": "openai",
+        "data": "source_backed"
+      },
+      "warnings": [],
+      "latencyMs": 1424,
+      "expectationMet": true,
+      "response": {
+        "matchingVersion": 3,
+        "needId": "bc6727db-c571-4c94-b002-6b1796c5c2f6",
+        "status": "no_match",
+        "matches": [],
+        "relatedResources": [],
+        "clarifyingQuestions": [],
+        "catalogVersions": {},
+        "mode": {
+          "retrieval": "none",
+          "explanation": "openai",
+          "data": "source_backed"
+        },
+        "warnings": []
+      }
+    },
+    {
+      "id": "clear-no-catalog",
+      "turn": 0,
+      "status": "no_match",
+      "guidance": null,
+      "questions": 0,
+      "matches": [],
+      "mode": {
+        "retrieval": "semantic",
+        "explanation": "openai",
+        "data": "source_backed"
+      },
+      "warnings": [],
+      "latencyMs": 3058,
+      "expectationMet": true,
+      "response": {
+        "matchingVersion": 3,
+        "assumptions": [],
+        "catalogVersions": {},
+        "status": "no_match",
+        "matches": [],
+        "clarifyingQuestions": [],
+        "needId": "3c7bc5f0-2b85-4fe6-84f1-c8e852d00f38",
+        "relatedResources": [],
+        "mode": {
+          "retrieval": "semantic",
+          "explanation": "openai",
+          "data": "source_backed"
+        },
+        "warnings": []
+      }
+    },
+    {
+      "id": "urgent",
+      "turn": 0,
+      "status": "no_match",
+      "guidance": "emergency",
+      "questions": 0,
+      "matches": [],
+      "mode": {
+        "retrieval": "none",
+        "explanation": "rules",
+        "data": "source_backed"
+      },
+      "warnings": [],
+      "latencyMs": 13,
+      "expectationMet": true,
+      "response": {
+        "matchingVersion": 3,
+        "guidance": "emergency",
+        "contacts": [
+          "112",
+          "999"
+        ],
+        "needId": "178ccf36-c0cb-4c0a-803c-c9079b1e37a2",
+        "status": "no_match",
+        "matches": [],
+        "relatedResources": [],
+        "clarifyingQuestions": [],
+        "catalogVersions": {},
+        "mode": {
+          "retrieval": "none",
+          "explanation": "rules",
+          "data": "source_backed"
+        },
+        "warnings": []
+      }
+    },
+    {
+      "id": "ordinary-medicine",
+      "turn": 0,
+      "status": "matched",
+      "guidance": null,
+      "questions": 0,
+      "matches": [
+        "rops-cold-box-5fed2b56"
+      ],
+      "mode": {
+        "retrieval": "semantic",
+        "explanation": "openai",
+        "data": "source_backed"
+      },
+      "warnings": [],
+      "latencyMs": 4388,
+      "expectationMet": true,
+      "response": {
+        "matchingVersion": 3,
+        "assumptions": [],
+        "catalogVersions": {
+          "innovation:rops-cold-box-5fed2b56": "94d541ae01db93ec6238b16d37b1f955dbf9eb9f55782b4d137343bc80eb50af"
+        },
+        "status": "matched",
+        "matches": [
+          {
+            "innovationId": "rops-cold-box-5fed2b56",
+            "rank": 1,
+            "reasons": [
+              "Mobilny pojemnik chłodzący został opisany jako rozwiązanie do przechowywania osobistych leków, w tym insuliny, podczas podróży.",
+              "Pojemnik ma baterię i utrzymuje temperaturę 4–7°C."
+            ],
+            "limitations": [
+              "Maturity rozwiązania jest nieznane; dostępność, koszt i warunki użycia nie zostały podane.",
+              "Nie podano, jak długo bateria utrzymuje chłodzenie ani czy zakres temperatur odpowiada wymaganiom przechowywania leku użytkownika."
+            ],
+            "sourceIds": [
+              "rops-cold-box-5fed2b56-source"
+            ]
+          }
+        ],
+        "clarifyingQuestions": [],
+        "needId": "6da5468d-8311-489e-879d-77e0a6ae85c2",
+        "relatedResources": [],
+        "mode": {
+          "retrieval": "semantic",
+          "explanation": "openai",
+          "data": "source_backed"
+        },
+        "warnings": []
+      }
+    },
+    {
+      "id": "loneliness-dialogue",
+      "turn": 0,
+      "status": "no_match",
+      "guidance": null,
+      "questions": 0,
+      "matches": [],
+      "mode": {
+        "retrieval": "semantic",
+        "explanation": "openai",
+        "data": "source_backed"
+      },
+      "warnings": [],
+      "latencyMs": 4015,
+      "expectationMet": true,
+      "response": {
+        "matchingVersion": 3,
+        "assumptions": [
+          "Przyjmujemy, że szukasz sposobów, by poczuć się mniej samotnie lub wprowadzić więcej zajęć do codzienności."
+        ],
+        "catalogVersions": {},
+        "status": "no_match",
+        "matches": [],
+        "clarifyingQuestions": [],
+        "needId": "0611234a-fcc2-4fa5-8b51-4ec84b152aaa",
+        "relatedResources": [],
+        "mode": {
+          "retrieval": "semantic",
+          "explanation": "openai",
+          "data": "source_backed"
+        },
+        "warnings": []
+      }
+    },
+    {
+      "id": "paper-dialogue",
+      "turn": 0,
+      "status": "no_match",
+      "guidance": "clarify",
+      "questions": 1,
+      "matches": [],
+      "mode": {
+        "retrieval": "none",
+        "explanation": "openai",
+        "data": "source_backed"
+      },
+      "warnings": [],
+      "latencyMs": 1688,
+      "expectationMet": true,
+      "response": {
+        "matchingVersion": 3,
+        "guidance": "clarify",
+        "needId": "e8fc4fd7-b720-4f0d-b66a-c1543dbe7482",
+        "status": "no_match",
+        "matches": [],
+        "relatedResources": [],
+        "clarifyingQuestions": [
+          "Czego dotyczy otrzymany papier i w czym potrzebujesz pomocy?"
+        ],
+        "catalogVersions": {},
+        "mode": {
+          "retrieval": "none",
+          "explanation": "openai",
+          "data": "source_backed"
+        },
+        "warnings": []
+      }
+    },
+    {
+      "id": "paper-dialogue",
+      "turn": 1,
+      "status": "no_match",
+      "guidance": null,
+      "questions": 0,
+      "matches": [],
+      "mode": {
+        "retrieval": "semantic",
+        "explanation": "openai",
+        "data": "source_backed"
+      },
+      "warnings": [],
+      "latencyMs": 3039,
+      "expectationMet": true,
+      "response": {
+        "matchingVersion": 3,
+        "assumptions": [],
+        "catalogVersions": {},
+        "status": "no_match",
+        "matches": [],
+        "clarifyingQuestions": [],
+        "needId": "c97a88ad-6753-466e-8597-a465b8470933",
+        "relatedResources": [],
+        "mode": {
+          "retrieval": "semantic",
+          "explanation": "openai",
+          "data": "source_backed"
+        },
+        "warnings": []
+      }
+    },
+    {
+      "id": "vague-dialogue",
+      "turn": 0,
+      "status": "no_match",
+      "guidance": "clarify",
+      "questions": 1,
+      "matches": [],
+      "mode": {
+        "retrieval": "none",
+        "explanation": "rules",
+        "data": "source_backed"
+      },
+      "warnings": [],
+      "latencyMs": 6,
+      "expectationMet": true,
+      "response": {
+        "matchingVersion": 3,
+        "guidance": "clarify",
+        "needId": "eece2b5b-e22b-4402-b8a1-7347694e78cd",
+        "status": "no_match",
+        "matches": [],
+        "relatedResources": [],
+        "clarifyingQuestions": [
+          "Co się wydarzyło lub w czym najbardziej potrzebujesz pomocy?"
+        ],
+        "catalogVersions": {},
+        "mode": {
+          "retrieval": "none",
+          "explanation": "rules",
+          "data": "source_backed"
+        },
+        "warnings": []
+      }
+    },
+    {
+      "id": "vague-dialogue",
+      "turn": 1,
+      "status": "no_match",
+      "guidance": null,
+      "questions": 0,
+      "matches": [],
+      "mode": {
+        "retrieval": "semantic",
+        "explanation": "openai",
+        "data": "source_backed"
+      },
+      "warnings": [],
+      "latencyMs": 3093,
+      "expectationMet": true,
+      "response": {
+        "matchingVersion": 3,
+        "assumptions": [],
+        "catalogVersions": {},
+        "status": "no_match",
+        "matches": [],
+        "clarifyingQuestions": [],
+        "needId": "2ace4b8e-d8d9-4875-a421-8b4eae9923a5",
+        "relatedResources": [],
+        "mode": {
+          "retrieval": "semantic",
+          "explanation": "openai",
+          "data": "source_backed"
+        },
+        "warnings": []
+      }
+    },
+    {
+      "id": "six-answers-already",
+      "turn": 0,
+      "status": "partial",
+      "guidance": null,
+      "questions": 0,
+      "matches": [
+        "rops-mobilne-centrum-pomocy-dla-osob-starszych-b7760778"
+      ],
+      "mode": {
+        "retrieval": "semantic",
+        "explanation": "openai",
+        "data": "source_backed"
+      },
+      "warnings": [],
+      "latencyMs": 4989,
+      "expectationMet": true,
+      "response": {
+        "matchingVersion": 3,
+        "assumptions": [],
+        "catalogVersions": {
+          "innovation:rops-mobilne-centrum-pomocy-dla-osob-starszych-b7760778": "1ae7428506be7c9075ca7d61f5e3983e3cdc87a6d863ba4bcfd7807f4c0f9d40",
+          "knowledge:rops-knowledge-c14c12a3da2ea85a": "723df499f67a0bab1ffba29b3ac24f29bd9e9b341e8a05293dba0e7229fdac58"
+        },
+        "status": "partial",
+        "matches": [
+          {
+            "innovationId": "rops-mobilne-centrum-pomocy-dla-osob-starszych-b7760778",
+            "rank": 1,
+            "reasons": [
+              "Rozwiązanie jest skierowane do seniorów i uwzględnia samotność oraz izolację społeczną.",
+              "Zakłada dostosowanie oferty do lokalnego środowiska, co może częściowo pomóc w zaplanowaniu działań dla seniorów."
+            ],
+            "limitations": [
+              "Opis dotyczy mobilnego wsparcia seniorów, w tym usług specjalistycznych i wizyt domowych, a nie organizacji grupowych spotkań w świetlicy.",
+              "Nie wiadomo, czy wymagane zasoby i model realizacji odpowiadają posiadanej sali oraz wolontariuszom; budżet i termin pilotażu również nie są określone."
+            ],
+            "sourceIds": [
+              "rops-mobilne-centrum-pomocy-dla-osob-starszych-b7760778-source"
+            ]
+          }
+        ],
+        "clarifyingQuestions": [],
+        "needId": "d3357bd5-01ba-470e-8778-61db85bebb6c",
+        "relatedResources": [
+          {
+            "resourceId": "rops-knowledge-c14c12a3da2ea85a",
+            "reason": "Wskazuje poszerzanie oferty aktywizacji i integracji seniorów jako istotne wyzwanie, bezpośrednio związane z celem zmniejszenia samotności przez wspólne spotkania."
+          }
+        ],
+        "mode": {
+          "retrieval": "semantic",
+          "explanation": "openai",
+          "data": "source_backed"
+        },
+        "warnings": []
+      }
+    },
+    {
+      "id": "followup-danger",
+      "turn": 0,
+      "status": "no_match",
+      "guidance": "emergency",
+      "questions": 0,
+      "matches": [],
+      "mode": {
+        "retrieval": "none",
+        "explanation": "rules",
+        "data": "source_backed"
+      },
+      "warnings": [],
+      "latencyMs": 5,
+      "expectationMet": true,
+      "response": {
+        "matchingVersion": 3,
+        "guidance": "emergency",
+        "contacts": [
+          "112",
+          "999"
+        ],
+        "needId": "b3b004d2-5830-4ffd-8250-842a4f77995d",
+        "status": "no_match",
+        "matches": [],
+        "relatedResources": [],
+        "clarifyingQuestions": [],
+        "catalogVersions": {},
+        "mode": {
+          "retrieval": "none",
+          "explanation": "rules",
+          "data": "source_backed"
+        },
+        "warnings": []
+      }
+    },
+    {
+      "id": "support-resolved",
+      "turn": 0,
+      "status": "partial",
+      "guidance": null,
+      "questions": 0,
+      "matches": [
+        "rops-senior-cuder-3e4f7869"
+      ],
+      "mode": {
+        "retrieval": "semantic",
+        "explanation": "openai",
+        "data": "source_backed"
+      },
+      "warnings": [],
+      "latencyMs": 4193,
+      "expectationMet": true,
+      "response": {
+        "matchingVersion": 3,
+        "assumptions": [
+          "Przyjmujemy, że szukasz lokalnych spotkań dla seniorów w świetlicy."
+        ],
+        "catalogVersions": {
+          "innovation:rops-senior-cuder-3e4f7869": "a3219518b9b599f99f79cd4bb7232a62d7c7ebc40f100c2ce8589c5f24f9aa9c"
+        },
+        "status": "partial",
+        "matches": [
+          {
+            "innovationId": "rops-senior-cuder-3e4f7869",
+            "rank": 1,
+            "reasons": [
+              "Gra jest przeznaczona dla seniorów i ma wspierać poprawę relacji z otoczeniem oraz nawiązywanie nowych znajomości, co częściowo odpowiada potrzebie przeciwdziałania samotności."
+            ],
+            "limitations": [
+              "To narzędzie do pracy z relacjami, a nie oferta spotkań seniorów w świetlicy; nie potwierdza organizacji ani lokalnej dostępności takich spotkań.",
+              "Nie wiadomo, czy gra jest dostępna w świetlicy ani jakie są warunki jej wykorzystania."
+            ],
+            "sourceIds": [
+              "rops-senior-cuder-3e4f7869-source"
+            ]
+          }
+        ],
+        "clarifyingQuestions": [],
+        "needId": "29ead7d0-4ebd-4e7e-8165-aae12d671c88",
+        "relatedResources": [],
+        "mode": {
+          "retrieval": "semantic",
+          "explanation": "openai",
+          "data": "source_backed"
+        },
+        "warnings": []
+      }
+    }
+  ]
+}

@@ -39,10 +39,43 @@ test("three-character input, preserved clarification and urgent help before subm
   const body = await (await page.request.get(`/api/needs/${id}`)).json();
   expect(body.description).toBe("abc");
   expect(body.clarifications[0].answer).toBe(answer);
+  expect(body.match.clarifyingQuestions).toEqual([]);
+  await expect(
+    page.getByRole("heading", { name: "Doprecyzujmy razem" }),
+  ).toHaveCount(0);
   expect((await request.get(`/api/needs/${id}`)).status()).toBe(404);
   await page.reload();
   await expect(
     page.getByRole("heading", { name: "Wybierz organizację", exact: true }),
+  ).toBeVisible();
+});
+
+test("skip clarification reaches a saved result and stays there on refresh", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.getByLabel("Jakiej pomocy potrzebujesz?").fill("Pomocy");
+  await page.getByRole("button", { name: "Znajdź wsparcie" }).click();
+  await page.getByRole("button", { name: "Tak, wszystko się zgadza" }).click();
+  await page
+    .getByRole("button", { name: "Pokaż wyniki bez dodatkowych odpowiedzi" })
+    .click();
+  await expect(
+    page.getByRole("heading", {
+      name: "Nie znaleźliśmy wystarczającego dopasowania",
+    }),
+  ).toBeVisible();
+  const id = page.url().split("/").at(-1);
+  const body = await (await page.request.get(`/api/needs/${id}`)).json();
+  expect(body.skipClarification).toBe(true);
+  expect(body.description).toBe("Pomocy");
+  expect(body.match.clarifyingQuestions).toEqual([]);
+  await page.reload();
+  await expect(
+    page.getByRole("heading", { name: "Doprecyzujmy razem" }),
+  ).toHaveCount(0);
+  await expect(
+    page.getByRole("link", { name: "Zapytaj koordynatora" }),
   ).toBeVisible();
 });
 

@@ -40,7 +40,7 @@ const need: Need = {
   description: "Seniorzy mieszkający samotnie potrzebują spotkań w świetlicy.",
   targetGroups: [],
 };
-it("Azure failure asks for clarification instead of recommending unverified candidates", async () => {
+it("Azure failure does not restart clarification or recommend unverified candidates", async () => {
   configure();
   vi.spyOn(AzureAiProvider.prototype, "embed").mockRejectedValue(
     new Error("timeout"),
@@ -56,7 +56,7 @@ it("Azure failure asks for clarification instead of recommending unverified cand
   });
   expect(result.matches).toEqual([]);
   expect(result.relatedResources).toEqual([]);
-  expect(result.clarifyingQuestions.length).toBeGreaterThan(0);
+  expect(result.clarifyingQuestions).toEqual([]);
   expect(result.warnings).toHaveLength(3);
 });
 it("fabricated AI sources never enter saved results", async () => {
