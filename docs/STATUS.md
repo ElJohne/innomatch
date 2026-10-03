@@ -481,3 +481,15 @@ Hover: кнопки, посилання, поля, summary й картки з п
 ## Підготовка push дизайну — 2026-10-03
 
 Об’єднано origin/master 2356087 з остаточним фото, футером, дизайном каталогу та Mam pomysł, контрастом/hover і видаленням Wiedza. Нові сценарії пошуку, уточнення та термінової допомоги збережено. Build, typecheck, lint, 40 unit і 20 E2E PASS. Integration: 8 skipped без TEST_DATABASE_URL. У реліз включено остаточне community-conversation.png; проміжні невикористані зображення залишено локально.
+
+Головна: яскравіший блакитно-м’ятний фон, жовті акценти, виразна форма й темно-синій перехід до каталогу. Фото та функції збережено. Локально, без push. Build, lint, typecheck, 40 unit, 20 E2E PASS; 8 integration skipped без TEST_DATABASE_URL.
+
+Header refresh — 2026-10-03: blue/mint masthead, framed logo, grouped accessibility controls, colourful navigation and step indicators. Built-in browser reviewed. Build, lint, typecheck, 40 unit and 20 E2E PASS; 8 integration skipped without TEST_DATABASE_URL. Four contrast modes, mobile/200% reflow and above-fold request field PASS. Local only.
+
+Steps 2–4 visual refresh — 2026-10-03: bright confirmation header, mint description, mint/yellow/blue organization cards, numbered plan cards and highlighted conversation draft. Existing behavior retained. Build, lint, typecheck, 40 unit and 20 E2E PASS; 8 integration skipped without TEST_DATABASE_URL. Desktop screenshots reviewed for all three steps; mobile flow and accessibility checks PASS. Local only.
+
+Bright catalog — 2026-10-03: blue/mint heading, yellow eyebrow, clearer filters and blue/mint/yellow cards with hover/focus. Search unchanged. Build, lint, typecheck, 40 unit and 20 E2E PASS; 8 integration skipped without TEST_DATABASE_URL. Four contrast modes, hover, mobile/200% reflow checked. Built-in browser reviewed. Local only.
+
+Header navigation — 2026-10-03: added Strona główna; Mam pomysł now shares standard catalog-link styling. Built-in browser home-link verified. Build, lint, typecheck, 40 unit and 20 E2E PASS; 8 integration skipped without TEST_DATABASE_URL. Local only.
+
+Yellow accent cleanup — 2026-10-03: unified home heading colour, removed underline and yellow backgrounds behind Małopolska / Biblioteka inspiracji; removed confirmation decorative symbol. Build, lint, typecheck, 40 unit and 20 E2E PASS; 8 integration skipped without TEST_DATABASE_URL. Local browser reviewed. Local only.

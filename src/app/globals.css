@@ -2367,19 +2367,24 @@ html[style*="200%"] .idea-illustration {
   display: none;
 }
 
-/* Quiet catalog styling; preserve the existing search and card contents. */
+/* Bright catalog, matching the public help flow. */
 .innovation-catalog .catalog-heading {
-  padding: 22px 26px;
-  border-left: 3px solid #70a796;
-  border-radius: 0 12px 12px 0;
-  background: #edf5fb;
+  padding: 28px;
+  border: 1px solid #bcdfe9;
+  border-top: 5px solid #159cba;
+  border-radius: 22px;
+  background: linear-gradient(110deg, #e0f5ff, #ecf8ee);
+  box-shadow: 0 10px 30px #175b750d;
 }
 .innovation-catalog .catalog-heading .eyebrow {
-  margin-bottom: 10px;
+  display: inline-block;
+  margin-bottom: 16px;
+  color: #275443;
 }
 .innovation-catalog .catalog-heading h1 {
   font-size: clamp(1.65rem, 2.8vw, 2.3rem);
   margin-bottom: 10px;
+  color: #123e5c;
 }
 .innovation-catalog .catalog-heading .lead {
   font-size: 0.95rem;
@@ -2388,9 +2393,9 @@ html[style*="200%"] .idea-illustration {
 .innovation-catalog .filters {
   margin: 24px 0 18px;
   padding: 20px;
-  box-shadow: none;
-  border: 1px solid #dce6ed;
-  border-radius: 12px;
+  box-shadow: 0 8px 28px #175b7510;
+  border: 1px solid #bcdce8;
+  border-radius: 18px;
   gap: 12px;
 }
 .innovation-catalog .filters > div {
@@ -2404,13 +2409,20 @@ html[style*="200%"] .idea-illustration {
 .innovation-catalog .filters select {
   min-height: 44px;
   padding: 10px 12px;
-  border-radius: 8px;
-  background: #fff;
+  border-radius: 10px;
+  background: #f6fcff;
+  border-color: #8cacbf;
   font-size: 0.85rem;
 }
 .innovation-catalog .filters button {
   min-height: 44px;
   padding: 10px 20px;
+  border-radius: 10px;
+  background: #006da4;
+  box-shadow: 0 3px 0 #004975;
+}
+.innovation-catalog .filters button:hover {
+  background: #004975;
 }
 .catalog-results-bar {
   display: flex;
@@ -2424,7 +2436,14 @@ html[style*="200%"] .idea-illustration {
   margin: 0;
 }
 .catalog-results-bar strong {
-  color: #183c55;
+  display: inline-block;
+  min-width: 32px;
+  padding: 4px 9px;
+  margin-left: 5px;
+  border-radius: 20px;
+  background: #dbf1e7;
+  color: #185c4a;
+  text-align: center;
 }
 .catalog-results-bar a {
   text-underline-offset: 3px;
@@ -2436,12 +2455,33 @@ html[style*="200%"] .idea-illustration {
   display: flex;
   flex-direction: column;
   padding: 24px;
-  border: 1px solid #dce6ed;
-  box-shadow: none;
-  border-radius: 12px;
+  border: 1px solid #b5d9ed;
+  border-top: 4px solid #199bc3;
+  background: linear-gradient(180deg, #eaf7ff, #fff 55%);
+  box-shadow: 0 6px 20px #155b7b0b;
+  border-radius: 20px;
+}
+.innovation-catalog .grid > .card:nth-child(3n + 2) {
+  border-color: #afdaca;
+  border-top-color: #32987b;
+  background: linear-gradient(180deg, #edf9f3, #fff 55%);
+}
+.innovation-catalog .grid > .card:nth-child(3n + 3) {
+  border-color: #e6d295;
+  border-top-color: #edbf3e;
+  background: linear-gradient(180deg, #fff7d8, #fff 55%);
+}
+.innovation-catalog .grid > .card .eyebrow {
+  color: #285571;
+  letter-spacing: 0.12em;
+}
+.innovation-catalog .grid > .card:focus-within {
+  outline: 2px solid #0967a9;
+  outline-offset: 4px;
 }
 .innovation-catalog .grid > .card:hover {
   border-color: #8fadc1;
+  box-shadow: 0 12px 30px #155b7b20;
 }
 .innovation-catalog .grid > .card h2 {
   font-size: 1.15rem;
@@ -2457,13 +2497,22 @@ html[style*="200%"] .idea-illustration {
 .innovation-catalog .grid > .card .tags span {
   font-size: 0.72rem;
   padding: 4px 8px;
-  background: #f0f5f8;
-  border-color: transparent;
+  background: #edf6fb;
+  border-color: #c5dce8;
+  color: #285571;
 }
 .innovation-catalog .grid > .card > .text-link {
   margin-top: auto;
   padding-top: 16px;
   font-size: 0.83rem;
+  color: #075d8c;
+  text-underline-offset: 4px;
+}
+.innovation-catalog > .note {
+  border: 1px solid #e1ca84;
+  border-radius: 18px;
+  background: #fff6d8;
+  color: #614c14;
 }
 @media (max-width: 900px) {
   .innovation-catalog .filters {
@@ -2487,6 +2536,347 @@ html[style*="200%"] .idea-illustration {
 }
 html[style*="200%"] .innovation-catalog .filters {
   grid-template-columns: minmax(0, 1fr);
+}
+
+/* Welcoming homepage: bright regional colours, with the request kept first. */
+.welcoming-hero {
+  border: 1px solid #b9deed;
+  border-top: 5px solid #159cba;
+  background: linear-gradient(115deg, #e0f5ff 0%, #eaf4fc 55%, #dcf4e9 100%);
+  box-shadow: 0 16px 44px #155b7b0d;
+}
+.welcoming-hero::after {
+  background: linear-gradient(90deg, #e0f5ff 15%, #eaf4fc00 65%);
+}
+.welcoming-hero .hero-copy .eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: #275443;
+  letter-spacing: 0.13em;
+}
+.welcoming-hero .hero-copy h1 {
+  font-size: clamp(1.7rem, 3.1vw, 2.65rem);
+  letter-spacing: -0.04em;
+  line-height: 1.18;
+  color: #123e5c;
+}
+.welcoming-hero h1 span {
+  color: inherit;
+}
+.welcoming-hero .hero-copy .lead {
+  color: #34556a;
+  margin-top: 16px;
+}
+.welcoming-hero .home-form {
+  border: 1px solid #bfdce8;
+  border-radius: 20px;
+  box-shadow: 0 12px 30px #0a517817;
+  background: #fff;
+}
+.welcoming-hero .home-form textarea {
+  background: #f7fcff;
+  border-color: #8cacbf;
+  border-radius: 12px;
+}
+.welcoming-hero .home-form-bottom > button {
+  background: #006da4;
+  border-color: #006da4;
+  border-radius: 12px;
+  box-shadow: 0 4px 0 #004975;
+}
+.welcoming-hero .home-form-bottom > button:hover {
+  background: #004975;
+}
+.welcoming-hero .voice-input button {
+  background: #e2f5ef;
+  color: #185c4a;
+  border-color: #8bbcac;
+  border-radius: 12px;
+}
+.welcoming-hero .voice-input button:hover {
+  background: #c9ebdf;
+}
+.home-discovery {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin: 22px 0 0;
+  padding: 22px 26px;
+  border: 1px solid #164b6b;
+  border-radius: 18px;
+  background: #143e59;
+  color: #fff;
+  text-align: left;
+}
+.home-discovery > span {
+  flex: 1;
+}
+.home-discovery .discovery-symbol {
+  flex: 0 0 46px;
+  width: 46px;
+  height: 46px;
+  color: #93e6d2;
+}
+.home-discovery a {
+  color: #fff1b6;
+  text-underline-offset: 5px;
+}
+@media (max-width: 760px) {
+  .welcoming-hero .hero-copy h1 { font-size: 1.7rem; }
+  .welcoming-hero .hero-copy .lead { margin-top: 12px; }
+  .home-discovery { flex-wrap: wrap; padding: 18px; gap: 12px; }
+  .home-discovery a { flex-basis: 100%; }
+}
+
+/* A colourful, compact masthead with always-visible accessibility controls. */
+.header {
+  border-top: 5px solid #159cba;
+  border-bottom: 1px solid #cce5ec;
+  background: linear-gradient(110deg, #e6f7ff, #fff 45%, #ecfaf3);
+  border-radius: 0 0 22px 22px;
+  box-shadow: 0 6px 24px #175b7510;
+}
+.header .brand-mark {
+  padding: 7px;
+  border-radius: 18px;
+  background: #fff;
+  border: 1px solid #bfdfeb;
+  box-shadow: 0 4px 0 #c5ece3;
+}
+.header > .brand {
+  color: #103e60;
+}
+.header > .brand small {
+  color: #386375;
+}
+.header .accessibility-group {
+  padding: 5px;
+  border: 1px solid #d0e3e9;
+  border-radius: 12px;
+  background: #fff;
+}
+.header .accessibility-group:last-child {
+  background: #e2f5ed;
+  border-color: #b2d8c9;
+}
+.header > nav {
+  gap: 6px;
+}
+.header > nav a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  padding: 6px 13px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  color: #164b68;
+  font-weight: 600;
+  text-decoration: none;
+}
+.header > nav a[href="/pilna-pomoc"] {
+  background: #fff0e9;
+  color: #8a3826;
+}
+.header > nav a:hover {
+  background: #d5eff9;
+  border-color: #6facc5;
+  color: #103e60;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.flow-steps {
+  padding: 14px 0;
+}
+.flow-steps ol {
+  gap: 10px;
+}
+.flow-steps li {
+  padding: 7px 13px;
+  border: 1px solid #d8e6ed;
+  border-radius: 30px;
+  background: #fff;
+  color: #456277;
+}
+.flow-steps li[aria-current] {
+  background: #dbf3fc;
+  border-color: #94cedf;
+  color: #085578;
+  box-shadow: 0 3px 0 #bce5ec;
+}
+.flow-steps li.done {
+  background: #e8f6ef;
+  border-color: #b5d8c7;
+}
+@media (max-width: 1050px) {
+  .header .accessibility-controls { gap: 5px; }
+  .header .accessibility-group { padding: 3px; }
+  .flow-steps li { padding: 6px 9px; }
+}
+@media (max-width: 760px) {
+  .header { padding-top: 8px; gap: 8px; }
+  .header .brand-mark { padding: 3px; border-radius: 12px; }
+  .header > nav { gap: 3px; }
+  .header > nav a { min-height: 30px; padding: 4px 7px; }
+  .header .accessibility-group { padding: 2px; border-radius: 8px; }
+  .flow-steps { padding: 10px 0; }
+  .flow-steps ol { gap: 5px; }
+  .flow-steps li { padding: 5px; gap: 5px; }
+}
+
+/* The same welcoming palette carries through confirmation, choice and plan. */
+.confirmation-intro,
+.flow-page .flow-heading {
+  padding: 28px;
+  border: 1px solid #bcdfe9;
+  border-top: 4px solid #159cba;
+  border-radius: 22px;
+  background: linear-gradient(110deg, #e0f5ff, #ecf8ee);
+}
+.confirmation-intro {
+  max-width: 900px;
+  margin: 26px auto 24px;
+}
+.flow-page .eyebrow {
+  color: #17624f;
+}
+.flow-page .flow-heading h1,
+.confirmation-intro h1 {
+  color: #123e5c;
+  font-size: clamp(1.65rem, 3vw, 2.4rem);
+  line-height: 1.2;
+}
+.flow-page .assistant-symbol {
+  background: #fff1b6;
+  color: #09678c;
+  border: 1px solid #e5ce79;
+  box-shadow: 0 6px 0 #eedf9f;
+}
+.confirmation-card {
+  border: 1px solid #bedce7;
+  border-radius: 22px;
+  box-shadow: 0 14px 40px #175b7512;
+}
+.confirmation-card .confirmed-description {
+  background: #e9f7f0;
+  border: 1px solid #a5d6c2;
+  border-left: 5px solid #32987b;
+  border-radius: 14px;
+}
+.flow-page :is(button, .button) {
+  border-radius: 12px;
+}
+.flow-page .organization-card {
+  border-radius: 22px;
+  border: 1px solid #afdaca;
+  border-top: 5px solid #32987b;
+  background: linear-gradient(180deg, #edf9f3, #fff 48%);
+  box-shadow: 0 8px 24px #155b7b0c;
+}
+.flow-page .organization-card:hover {
+  transform: none;
+  box-shadow: 0 12px 32px #155b7b24;
+}
+.flow-page .organization-card:focus-within {
+  outline: 2px solid #0967a9;
+  outline-offset: 4px;
+}
+.flow-page .organization-1 {
+  border-color: #e6d295;
+  border-top-color: #edbf3e;
+  background: linear-gradient(180deg, #fff7d8, #fff 48%);
+}
+.flow-page .organization-2 {
+  border-color: #b5d9ed;
+  border-top-color: #199bc3;
+  background: linear-gradient(180deg, #e8f7ff, #fff 48%);
+}
+.flow-page .organization-icon {
+  border: 1px solid #badacb;
+  background: #d8f2e7;
+  color: #185c4a;
+  box-shadow: 0 4px 0 #c2e4d6;
+}
+.flow-page .organization-1 .organization-icon {
+  background: #ffedab;
+  border-color: #e2c975;
+  color: #725310;
+  box-shadow: 0 4px 0 #efdda0;
+}
+.flow-page .organization-2 .organization-icon {
+  background: #d5effc;
+  border-color: #a2cfe3;
+  color: #075b85;
+  box-shadow: 0 4px 0 #b9dfed;
+}
+.flow-page .organization-solution {
+  background: #eef6fb;
+  border: 1px solid #d4e4ed;
+  border-radius: 12px;
+}
+.flow-page .organization-card .tags span {
+  background: #edf6fb;
+  color: #285571;
+  border: 1px solid #c5dce8;
+}
+.plan-page .action-steps li {
+  border-radius: 18px;
+  border-color: #bddce8;
+  box-shadow: 0 5px 18px #155b7b0b;
+}
+.plan-page .action-steps li > span {
+  width: 40px;
+  height: 40px;
+  background: #006da4;
+  box-shadow: 0 0 0 5px #e1f3fb;
+}
+.plan-page .action-steps li:nth-child(2) > span {
+  background: #ffecab;
+  color: #624b09;
+  box-shadow: 0 0 0 5px #fff8df;
+}
+.plan-page .action-steps li:nth-child(3) > span {
+  background: #207b60;
+  box-shadow: 0 0 0 5px #e4f4ec;
+}
+.plan-page .selected-organization {
+  border: 1px solid #a8d6c4;
+  border-top: 5px solid #32987b;
+  border-radius: 22px;
+  background: linear-gradient(145deg, #e2f5ec, #f4fbf7);
+}
+.plan-page .message-draft {
+  border: 1px solid #9ecedf;
+  border-top: 4px solid #159cba;
+  border-radius: 22px;
+  background: linear-gradient(110deg, #e1f4fe, #edf9f5);
+  box-shadow: 0 8px 28px #155b7b0d;
+}
+.plan-page .message-draft textarea {
+  border: 1px solid #87adc0;
+  border-radius: 12px;
+}
+.plan-page .notice {
+  background: #fff6d8;
+  border: 1px solid #e1ca84;
+  color: #614c14;
+  border-radius: 14px;
+}
+.plan-page .plan-evidence {
+  border-color: #bcd9e6;
+  border-radius: 16px;
+}
+.flow-page .search-loading {
+  border: 1px solid #bcdfe9;
+  border-radius: 24px;
+  background: linear-gradient(120deg, #e3f5ff, #edf9f0);
+}
+@media (max-width: 760px) {
+  .confirmation-intro,
+  .flow-page .flow-heading { padding: 20px; margin-block: 18px; }
+  .confirmation-card { padding: 20px; }
+  .flow-page .organization-card { padding: 22px; }
+  .plan-page .action-steps li { padding: 18px; gap: 14px; }
 }
 
 /* Contrast themes apply to every page, including generated content and controls. */

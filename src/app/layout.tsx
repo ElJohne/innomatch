@@ -63,6 +63,7 @@ export default function RootLayout({
             </span>
           </Link>
           <nav aria-label="Menu główne">
+            <Link href="/">Strona główna</Link>
             <Link href="/innowacje">Katalog innowacji</Link>
             <Link href="/pomysly/nowy">Mam pomysł</Link>
             <Link href="/moje-sprawy">Moje sprawy</Link>

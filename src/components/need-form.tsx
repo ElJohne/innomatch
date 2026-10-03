@@ -75,9 +75,6 @@ export function NeedForm() {
         )}
         <FlowSteps current={2} />
         <div className="confirmation-intro">
-          <div className="assistant-symbol" aria-hidden="true">
-            ✧
-          </div>
           <div>
             <p className="eyebrow">Krok 2 · Sprawdźmy razem</p>
             <h1 ref={title} tabIndex={-1}>
@@ -151,7 +148,7 @@ export function NeedForm() {
   return (
     <>
       <FlowSteps current={1} />
-      <section className="help-hero inclusive-hero">
+      <section className="help-hero inclusive-hero welcoming-hero">
         <div className="hero-photo">
           <Image
             src="/images/community-conversation.png"
@@ -166,7 +163,7 @@ export function NeedForm() {
           <p className="eyebrow">
             <span className="live-dot" /> Małopolska · Blisko ludzi
           </p>
-          <h1>Potrzebujesz pomocy?</h1>
+          <h1>Potrzebujesz <span>pomocy?</span></h1>
           <p className="lead">
             Opisz swoją sytuację własnymi słowami. Pomożemy znaleźć społeczne
             rozwiązania i podpowiemy, co zrobić dalej.
@@ -258,7 +255,11 @@ export function NeedForm() {
           </div>
         </form>
       </section>
-      <div className="catalog-invite">
+      <div className="catalog-invite home-discovery">
+        <svg className="discovery-symbol" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+          <path d="M10 10h12v12H10zM27 10h12v12H27zM10 27h12v12H10z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
+          <path d="M33 27v12m-6-6h12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+        </svg>
         <span>Wolisz najpierw poznać dostępne rozwiązania?</span>
         <Link href="/innowacje">Zajrzyj do biblioteki innowacji →</Link>
       </div>
