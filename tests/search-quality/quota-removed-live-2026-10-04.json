@@ -1,0 +1,166 @@
+{
+  "synthetic": true,
+  "shadowService": false,
+  "origin": "https://pomocnypunkt.pl",
+  "recordedAt": "2026-10-03T22:47:50.083Z",
+  "catalogHash": "d6d2c53f57a0e57526a463d1f21ace73c3a748ad61060502a0f04bdc16f3e945",
+  "labeling": "Agent-authored regression cases; not independent expert acceptance.",
+  "results": [
+    {
+      "id": "short-medicine",
+      "turn": 0,
+      "status": "matched",
+      "guidance": null,
+      "questions": 0,
+      "matches": [
+        "rops-cold-box-5fed2b56"
+      ],
+      "mode": {
+        "retrieval": "semantic",
+        "explanation": "openai",
+        "data": "source_backed"
+      },
+      "warnings": [],
+      "latencyMs": 8719,
+      "expectationMet": true,
+      "response": {
+        "matchingVersion": 4,
+        "assumptions": [
+          "Przyjmujemy, że szukasz dostępu do lodówki, w której można przechowywać insulinę."
+        ],
+        "catalogVersions": {
+          "innovation:rops-cold-box-5fed2b56": "94d541ae01db93ec6238b16d37b1f955dbf9eb9f55782b4d137343bc80eb50af"
+        },
+        "status": "matched",
+        "matches": [
+          {
+            "innovationId": "rops-cold-box-5fed2b56",
+            "rank": 1,
+            "reasons": [
+              "To przenośny pojemnik chłodzący przeznaczony do przechowywania leków, w tym insuliny, w odpowiednich warunkach termicznych.",
+              "Ma wbudowaną baterię i według opisu utrzymuje temperaturę 4–7°C."
+            ],
+            "limitations": [
+              "To mobilny pojemnik, a niekoniecznie lodówka stacjonarna.",
+              "Nie podano ceny, dostępności ani szczegółowych warunków wykorzystania; należy je sprawdzić u źródła."
+            ],
+            "sourceIds": [
+              "rops-cold-box-5fed2b56-source"
+            ]
+          }
+        ],
+        "clarifyingQuestions": [],
+        "needId": "ca21ac28-93b4-4988-b3dc-370281e27d48",
+        "relatedResources": [],
+        "mode": {
+          "retrieval": "semantic",
+          "explanation": "openai",
+          "data": "source_backed"
+        },
+        "warnings": []
+      }
+    },
+    {
+      "id": "one-hand",
+      "turn": 0,
+      "status": "matched",
+      "guidance": null,
+      "questions": 0,
+      "matches": [
+        "rops-biustspinka-f7f7a569"
+      ],
+      "mode": {
+        "retrieval": "semantic",
+        "explanation": "openai",
+        "data": "source_backed"
+      },
+      "warnings": [],
+      "latencyMs": 7019,
+      "expectationMet": true,
+      "response": {
+        "matchingVersion": 4,
+        "assumptions": [],
+        "catalogVersions": {
+          "innovation:rops-biustspinka-f7f7a569": "2e93ff73a58813fe993fb32309dda3b8f974626b857b80d6665786ed8a78b338"
+        },
+        "status": "matched",
+        "matches": [
+          {
+            "innovationId": "rops-biustspinka-f7f7a569",
+            "rank": 1,
+            "reasons": [
+              "To proste urządzenie wspomaga samodzielne zapinanie biustonosza.",
+              "Jest przeznaczone m.in. dla osób z dysfunkcją ręki lub sprawnością jednej ręki, co odpowiada opisanej potrzebie."
+            ],
+            "limitations": [
+              "Dostępność, koszt i wymagane zasoby nie są określone; sprawdź je u źródła."
+            ],
+            "sourceIds": [
+              "rops-biustspinka-f7f7a569-source"
+            ]
+          }
+        ],
+        "clarifyingQuestions": [],
+        "needId": "662386bc-dc75-4f96-8433-af8efb3045a8",
+        "relatedResources": [],
+        "mode": {
+          "retrieval": "semantic",
+          "explanation": "openai",
+          "data": "source_backed"
+        },
+        "warnings": []
+      }
+    },
+    {
+      "id": "deaf-library",
+      "turn": 0,
+      "status": "partial",
+      "guidance": null,
+      "questions": 0,
+      "matches": [
+        "rops-gluchy-czytelnik-w-bibliotece-70106b9e"
+      ],
+      "mode": {
+        "retrieval": "semantic",
+        "explanation": "openai",
+        "data": "source_backed"
+      },
+      "warnings": [],
+      "latencyMs": 5764,
+      "expectationMet": true,
+      "response": {
+        "matchingVersion": 4,
+        "assumptions": [],
+        "catalogVersions": {
+          "innovation:rops-gluchy-czytelnik-w-bibliotece-70106b9e": "a85faed589b8eb507418c3bdf8fb2e027e391a271c9c670e9ec28c04c3bb42e6"
+        },
+        "status": "partial",
+        "matches": [
+          {
+            "innovationId": "rops-gluchy-czytelnik-w-bibliotece-70106b9e",
+            "rank": 1,
+            "reasons": [
+              "Publikacja w polskim języku migowym jest skierowana do osób g/Głuchych i wyjaśnia, jak korzystać z biblioteki, więc może pomóc bibliotece udostępniać jej ofertę osobom posługującym się PJM."
+            ],
+            "limitations": [
+              "To materiał informacyjny o bibliotece i czytaniu, a nie rozwiązanie opisujące udostępnianie książek w PJM ani tłumaczenie samych książek.",
+              "Grupa docelowa wskazuje szczególnie rodziców i dzieci w wieku szkolnym; przydatność dla pozostałych czytelników nie jest potwierdzona."
+            ],
+            "sourceIds": [
+              "rops-gluchy-czytelnik-w-bibliotece-70106b9e-source"
+            ]
+          }
+        ],
+        "clarifyingQuestions": [],
+        "needId": "877ac547-b09d-4c92-a138-3ec7f45bb3ee",
+        "relatedResources": [],
+        "mode": {
+          "retrieval": "semantic",
+          "explanation": "openai",
+          "data": "source_backed"
+        },
+        "warnings": []
+      }
+    }
+  ]
+}

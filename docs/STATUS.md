@@ -1,5 +1,21 @@
 # Стан — 2026-10-04
 
+## AI на production відновлено — 2026-10-04
+
+За явним підтвердженням власника прибрано глобальну добову AI-квоту й розгорнуто
+реліз `4e5554c78275e0fedc1db155f437efb0e0efe7d7-37159479316-1`.
+Кластер: rollout успішний, migration/corpus jobs Complete, readiness ok.
+GitHub CLI повертав 404 для Actions; deployment підтверджено безпосередньо
+за release mount, статусом rollout і фактичним production API.
+
+3/3 синтетичні production HTTPS запити: Cold Box, Biustspinka, Głuchy czytelnik
+w bibliotece — semantic/openai/source_backed, без warnings і без питань.
+Усі результати matchingVersion=4; тестові needs прибрано, usage збережено.
+Ліміт AI_DAILY_REQUEST_LIMIT повністю вилучено, а не підвищено чи скинуто.
+Повторне відкриття старих v3 результатів запускає актуальний пошук.
+Залишені timeout/concurrency та окремі сесійні API-ліміти; квот провайдера ця
+зміна не змінює. Паралельні незавершені зміни основної папки не включалися.
+
 ## Вилучення глобальної AI-квоти — 2026-10-04, підготовлено до rollout
 
 Власник прямо доручив прибрати ліміт, який блокував production запити.

@@ -1,5 +1,22 @@
 # Перевірки — 2026-10-03, поточна ітерація та історія
 
+## Відновлення live AI — production, 2026-10-04
+
+- Власник явно підтвердив видалення ліміту та push з production auto-deploy.
+  Реліз `4e5554c78275e0fedc1db155f437efb0e0efe7d7-37159479316-1`.
+- Release mount містить цей SHA/run ID; rollout успішний, jobs
+  migrate-37159479316-1 і corpus-37159479316-1 мають succeeded=1. Readiness ok.
+  GitHub CLI Actions lookup давав 404; фінальний статус workflow через API
+  не отримано, результат перевірено безпосередньо в кластері та через HTTPS.
+- 3 live HTTP пошуки: short-medicine → Cold Box / matched / 8719 ms;
+  one-hand → Biustspinka / matched / 7019 ms; deaf-library → Głuchy czytelnik
+  w bibliotece / partial / 5764 ms. Усі semantic/openai/source_backed,
+  matchingVersion=4, questions=[], warnings=[]. Це справжні AI-відповіді після
+  видалення внутрішньої квоти, не keyword/template fallback.
+- Докази: tests/search-quality/quota-removed-live-2026-10-04.json. Синтетична
+  агентська перевірка, не незалежне приймання. Runner cleanup PASS; його needs
+  видалено, фактичні ai_usage збережено. Shared corpus і чужі needs не змінено.
+
 ## Вилучення глобальної AI-квоти — 2026-10-04, локальна перевірка
 
 - Production read-only підтвердив внутрішню квоту 300 і використання 375.
