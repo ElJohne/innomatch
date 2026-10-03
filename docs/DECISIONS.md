@@ -1,0 +1,20 @@
+# Рішення
+
+2026-10-03:
+- Зберегти вкладений Git-репозиторій `innomatch`, наявну LICENSE та PDF без змін.
+- Передбачений SPEC стек, npm і один package-lock. Next 16.3.8 / React 19.3.0 перевірено через npm registry; Node 24.19.0 у середовищі.
+- Гостьові сесії iron-session, HttpOnly + SameSite=Lax; Secure залежить від HTTPS APP_URL.
+- Fixtures — мінімальна пам'ять процесу, не альтернативна production БД. В UI є повідомлення про втрату записів після рестарту.
+- PostgreSQL JSONB для початкових векторів: немає залежності від дозволу на pgvector; dimensions/deployment/hash зберігаються.
+- Azure OpenAI v1 через OpenAI SDK, Chat Completions JSON mode із Zod і allowlist ID. Підтримку deployment перевірити live.
+- Збережений результат не перезапускає AI при refresh. Приховані джерела відфільтровуються повторно.
+- 12 вигаданих концепцій; не називати їх ROPS або перевіреними рішеннями. Реальних джерельних записів — 0.
+- Поки немає staff auth, admin API відмовляє всім. Не створювати публічний перемикач ролі.
+- Навички PDF/OpenAI Docs використані для читання наданих джерел та API. Нових дозволів на публікацію не отримано.
+
+Технічні джерела, відкриті 2026-10-03:
+- https://learn.microsoft.com/en-us/azure/foundry/openai/api-version-lifecycle
+- https://nextjs.org/docs/app/getting-started/installation
+- https://developers.openai.com/api/docs/libraries
+
+Уточнень власника/організаторів понад SPEC немає.

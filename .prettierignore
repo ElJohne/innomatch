@@ -1,0 +1,9 @@
+node_modules
+.next
+.tools
+package-lock.json
+docs/dependencies.json
+SPEC.md
+LICENSE
+test-results
+playwright-report

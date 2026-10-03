@@ -1,0 +1,334 @@
+[
+  {
+    "id": "demo-sasiedzki-stol",
+    "title": "Sąsiedzki stół",
+    "problem": "Seniorzy mieszkający samotnie mają mało okazji do spotkań.",
+    "solution": "Regularne spotkania seniorów w świetlicy, przygotowywane przez wolontariuszy. Zaproszenia papierowe i telefoniczne, bez aplikacji mobilnej.",
+    "targetGroups": [
+      "Seniorzy"
+    ],
+    "categories": [
+      "Samotność",
+      "Relacje sąsiedzkie"
+    ],
+    "requirements": [
+      "Świetlica dostępna architektonicznie",
+      "Koordynator i wolontariusze"
+    ],
+    "origin": "SYNTHETIC",
+    "publicationStatus": "PUBLISHED",
+    "maturity": "CONCEPT",
+    "sources": [
+      {
+        "id": "source-demo-sasiedzki-stol",
+        "sourceRef": "data/demo/innovations.json#demo-sasiedzki-stol",
+        "sourceTitle": "Przykład syntetyczny MI Connect — Sąsiedzki stół",
+        "evidenceExcerpt": "Regularne spotkania seniorów w świetlicy, przygotowywane przez wolontariuszy. Zaproszenia papierowe i telefoniczne, bez aplikacji mobilnej."
+      }
+    ]
+  },
+  {
+    "id": "demo-cyfrowy-duet",
+    "title": "Cyfrowy duet",
+    "problem": "Seniorzy napotykają trudności w korzystaniu z internetu.",
+    "solution": "Indywidualne ćwiczenia obsługi telefonu i usług cyfrowych z osobą wspierającą.",
+    "targetGroups": [
+      "Seniorzy"
+    ],
+    "categories": [
+      "Wykluczenie cyfrowe"
+    ],
+    "requirements": [
+      "Dostęp do urządzenia",
+      "Osoba prowadząca zajęcia"
+    ],
+    "origin": "SYNTHETIC",
+    "publicationStatus": "PUBLISHED",
+    "maturity": "CONCEPT",
+    "sources": [
+      {
+        "id": "source-demo-cyfrowy-duet",
+        "sourceRef": "data/demo/innovations.json#demo-cyfrowy-duet",
+        "sourceTitle": "Przykład syntetyczny MI Connect — Cyfrowy duet",
+        "evidenceExcerpt": "Indywidualne ćwiczenia obsługi telefonu i usług cyfrowych z osobą wspierającą."
+      }
+    ]
+  },
+  {
+    "id": "demo-krag-opiekunow",
+    "title": "Krąg opiekunów",
+    "problem": "Opiekunowie rodzinni potrzebują kontaktu i wymiany doświadczeń.",
+    "solution": "Moderowane spotkania opiekunów i mapa lokalnych możliwości wsparcia.",
+    "targetGroups": [
+      "Opiekunowie"
+    ],
+    "categories": [
+      "Wsparcie opiekunów"
+    ],
+    "requirements": [
+      "Moderator",
+      "Bezpieczna przestrzeń spotkań"
+    ],
+    "origin": "SYNTHETIC",
+    "publicationStatus": "PUBLISHED",
+    "maturity": "CONCEPT",
+    "sources": [
+      {
+        "id": "source-demo-krag-opiekunow",
+        "sourceRef": "data/demo/innovations.json#demo-krag-opiekunow",
+        "sourceTitle": "Przykład syntetyczny MI Connect — Krąg opiekunów",
+        "evidenceExcerpt": "Moderowane spotkania opiekunów i mapa lokalnych możliwości wsparcia."
+      }
+    ]
+  },
+  {
+    "id": "demo-mlodzi-razem",
+    "title": "Młodzi razem",
+    "problem": "Młodzież szuka bezpiecznej przestrzeni do budowania relacji.",
+    "solution": "Warsztaty współpracy i wspólne działania prowadzone przez animatora, bez diagnoz medycznych.",
+    "targetGroups": [
+      "Młodzież"
+    ],
+    "categories": [
+      "Relacje",
+      "Aktywność lokalna"
+    ],
+    "requirements": [
+      "Animator",
+      "Zasady ochrony uczestników"
+    ],
+    "origin": "SYNTHETIC",
+    "publicationStatus": "PUBLISHED",
+    "maturity": "CONCEPT",
+    "sources": [
+      {
+        "id": "source-demo-mlodzi-razem",
+        "sourceRef": "data/demo/innovations.json#demo-mlodzi-razem",
+        "sourceTitle": "Przykład syntetyczny MI Connect — Młodzi razem",
+        "evidenceExcerpt": "Warsztaty współpracy i wspólne działania prowadzone przez animatora, bez diagnoz medycznych."
+      }
+    ]
+  },
+  {
+    "id": "demo-dostepny-urzad",
+    "title": "Dostępna wizyta",
+    "problem": "Osoby z niepełnosprawnościami napotykają bariery w urzędach.",
+    "solution": "Przegląd ścieżki wizyty z użytkownikami i lista zmian organizacyjnych poprawiających dostępność.",
+    "targetGroups": [
+      "Osoby z niepełnosprawnościami"
+    ],
+    "categories": [
+      "Dostępność usług"
+    ],
+    "requirements": [
+      "Udział użytkowników",
+      "Koordynator dostępności"
+    ],
+    "origin": "SYNTHETIC",
+    "publicationStatus": "PUBLISHED",
+    "maturity": "CONCEPT",
+    "sources": [
+      {
+        "id": "source-demo-dostepny-urzad",
+        "sourceRef": "data/demo/innovations.json#demo-dostepny-urzad",
+        "sourceTitle": "Przykład syntetyczny MI Connect — Dostępna wizyta",
+        "evidenceExcerpt": "Przegląd ścieżki wizyty z użytkownikami i lista zmian organizacyjnych poprawiających dostępność."
+      }
+    ]
+  },
+  {
+    "id": "demo-jezyk-sasiedztwa",
+    "title": "Język sąsiedztwa",
+    "problem": "Nowi mieszkańcy z doświadczeniem migracji potrzebują kontaktów i praktyki języka.",
+    "solution": "Spotkania konwersacyjne i wspólne poznawanie lokalnych usług.",
+    "targetGroups": [
+      "Migranci"
+    ],
+    "categories": [
+      "Integracja",
+      "Język"
+    ],
+    "requirements": [
+      "Prowadzący spotkania",
+      "Materiały w prostym języku"
+    ],
+    "origin": "SYNTHETIC",
+    "publicationStatus": "PUBLISHED",
+    "maturity": "CONCEPT",
+    "sources": [
+      {
+        "id": "source-demo-jezyk-sasiedztwa",
+        "sourceRef": "data/demo/innovations.json#demo-jezyk-sasiedztwa",
+        "sourceTitle": "Przykład syntetyczny MI Connect — Język sąsiedztwa",
+        "evidenceExcerpt": "Spotkania konwersacyjne i wspólne poznawanie lokalnych usług."
+      }
+    ]
+  },
+  {
+    "id": "demo-powrot-do-pracy",
+    "title": "Mały krok do pracy",
+    "problem": "Osoby długotrwale bezrobotne potrzebują wsparcia w powrocie do aktywności.",
+    "solution": "Warsztaty rozpoznania umiejętności i przygotowanie do rozmowy z doradcą zawodowym.",
+    "targetGroups": [
+      "Osoby bezrobotne"
+    ],
+    "categories": [
+      "Praca"
+    ],
+    "requirements": [
+      "Doradca",
+      "Miejsce warsztatów"
+    ],
+    "origin": "SYNTHETIC",
+    "publicationStatus": "PUBLISHED",
+    "maturity": "CONCEPT",
+    "sources": [
+      {
+        "id": "source-demo-powrot-do-pracy",
+        "sourceRef": "data/demo/innovations.json#demo-powrot-do-pracy",
+        "sourceTitle": "Przykład syntetyczny MI Connect — Mały krok do pracy",
+        "evidenceExcerpt": "Warsztaty rozpoznania umiejętności i przygotowanie do rozmowy z doradcą zawodowym."
+      }
+    ]
+  },
+  {
+    "id": "demo-punkt-napraw",
+    "title": "Punkt wspólnych napraw",
+    "problem": "Mieszkańcy wyrzucają przedmioty, które można naprawić, i rzadko współpracują.",
+    "solution": "Otwarte spotkania naprawcze z wolontariuszami i wymianą umiejętności.",
+    "targetGroups": [
+      "Mieszkańcy"
+    ],
+    "categories": [
+      "Ekologia",
+      "Współpraca"
+    ],
+    "requirements": [
+      "Narzędzia i zasady bezpieczeństwa",
+      "Osoby z doświadczeniem napraw"
+    ],
+    "origin": "SYNTHETIC",
+    "publicationStatus": "PUBLISHED",
+    "maturity": "CONCEPT",
+    "sources": [
+      {
+        "id": "source-demo-punkt-napraw",
+        "sourceRef": "data/demo/innovations.json#demo-punkt-napraw",
+        "sourceTitle": "Przykład syntetyczny MI Connect — Punkt wspólnych napraw",
+        "evidenceExcerpt": "Otwarte spotkania naprawcze z wolontariuszami i wymianą umiejętności."
+      }
+    ]
+  },
+  {
+    "id": "demo-spacer-bez-barier",
+    "title": "Spacer bez barier",
+    "problem": "Osoby o ograniczonej mobilności mają trudności z wyborem dostępnych tras.",
+    "solution": "Wspólne przejście krótkich tras i opis napotkanych barier, bez obietnicy pełnej dostępności.",
+    "targetGroups": [
+      "Osoby z niepełnosprawnościami"
+    ],
+    "categories": [
+      "Mobilność",
+      "Dostępność"
+    ],
+    "requirements": [
+      "Opiekun trasy",
+      "Weryfikacja warunków na miejscu"
+    ],
+    "origin": "SYNTHETIC",
+    "publicationStatus": "PUBLISHED",
+    "maturity": "CONCEPT",
+    "sources": [
+      {
+        "id": "source-demo-spacer-bez-barier",
+        "sourceRef": "data/demo/innovations.json#demo-spacer-bez-barier",
+        "sourceTitle": "Przykład syntetyczny MI Connect — Spacer bez barier",
+        "evidenceExcerpt": "Wspólne przejście krótkich tras i opis napotkanych barier, bez obietnicy pełnej dostępności."
+      }
+    ]
+  },
+  {
+    "id": "demo-rodzic-w-sieci",
+    "title": "Rodzice blisko",
+    "problem": "Rodzice małych dzieci potrzebują kontaktów z innymi rodzicami.",
+    "solution": "Sąsiedzkie spotkania rodziców z dziećmi w dostępnym miejscu.",
+    "targetGroups": [
+      "Rodzice"
+    ],
+    "categories": [
+      "Rodzina",
+      "Relacje"
+    ],
+    "requirements": [
+      "Miejsce przyjazne dzieciom",
+      "Koordynator"
+    ],
+    "origin": "SYNTHETIC",
+    "publicationStatus": "PUBLISHED",
+    "maturity": "CONCEPT",
+    "sources": [
+      {
+        "id": "source-demo-rodzic-w-sieci",
+        "sourceRef": "data/demo/innovations.json#demo-rodzic-w-sieci",
+        "sourceTitle": "Przykład syntetyczny MI Connect — Rodzice blisko",
+        "evidenceExcerpt": "Sąsiedzkie spotkania rodziców z dziećmi w dostępnym miejscu."
+      }
+    ]
+  },
+  {
+    "id": "demo-ogrod-pokolen",
+    "title": "Ogród pokoleń",
+    "problem": "Mieszkańcom brakuje wspólnych działań łączących różne pokolenia.",
+    "solution": "Mały ogród społeczny z podziałem obowiązków i otwartymi spotkaniami.",
+    "targetGroups": [
+      "Mieszkańcy"
+    ],
+    "categories": [
+      "Międzypokoleniowość",
+      "Ekologia"
+    ],
+    "requirements": [
+      "Zgoda na użycie terenu",
+      "Dostęp do wody"
+    ],
+    "origin": "SYNTHETIC",
+    "publicationStatus": "PUBLISHED",
+    "maturity": "CONCEPT",
+    "sources": [
+      {
+        "id": "source-demo-ogrod-pokolen",
+        "sourceRef": "data/demo/innovations.json#demo-ogrod-pokolen",
+        "sourceTitle": "Przykład syntetyczny MI Connect — Ogród pokoleń",
+        "evidenceExcerpt": "Mały ogród społeczny z podziałem obowiązków i otwartymi spotkaniami."
+      }
+    ]
+  },
+  {
+    "id": "demo-prosty-list",
+    "title": "Prosty list",
+    "problem": "Mieszkańcy mają trudności ze zrozumieniem urzędowych pism.",
+    "solution": "Warsztaty upraszczania komunikatów i testowanie ich z odbiorcami.",
+    "targetGroups": [
+      "Mieszkańcy"
+    ],
+    "categories": [
+      "Prosty język",
+      "Dostępność usług"
+    ],
+    "requirements": [
+      "Redaktor",
+      "Weryfikacja merytoryczna pisma"
+    ],
+    "origin": "SYNTHETIC",
+    "publicationStatus": "PUBLISHED",
+    "maturity": "CONCEPT",
+    "sources": [
+      {
+        "id": "source-demo-prosty-list",
+        "sourceRef": "data/demo/innovations.json#demo-prosty-list",
+        "sourceTitle": "Przykład syntetyczny MI Connect — Prosty list",
+        "evidenceExcerpt": "Warsztaty upraszczania komunikatów i testowanie ich z odbiorcami."
+      }
+    ]
+  }
+]
