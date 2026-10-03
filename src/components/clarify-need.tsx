@@ -16,25 +16,30 @@ export function ClarifyNeed({
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const key = useRef("");
-  const remaining = 6 - (input.clarifications?.length ?? 0);
-  const shown = questions.slice(0, Math.min(2, remaining));
+  const keyMode = useRef(false);
+  const shown =
+    input.skipClarification || input.clarifications?.length
+      ? []
+      : questions.slice(0, 1);
   if (!shown.length) return null;
-  async function submit(e: React.FormEvent) {
-    e.preventDefault();
+  async function submit(skip = false) {
     if (busy) return;
     const extra = shown
       .map((question, i) => ({ question, answer: answers[i]?.trim() ?? "" }))
       .filter((x) => x.answer);
-    if (!extra.length) {
+    if (!extra.length && !skip) {
       setError("Odpowiedz na przynajmniej jedno pytanie.");
       return;
     }
     setBusy(true);
     setError("");
+    if (keyMode.current !== skip) key.current = "";
+    keyMode.current = skip;
     key.current ||= crypto.randomUUID();
     try {
       const body = needInput.parse({
         ...input,
+        skipClarification: skip,
         clarifications: [...(input.clarifications ?? []), ...extra],
       });
       const r = await fetch("/api/needs", {
@@ -57,11 +62,18 @@ export function ClarifyNeed({
     }
   }
   return (
-    <form className="card form" onSubmit={submit}>
+    <form
+      className="card form"
+      onSubmit={(e) => {
+        e.preventDefault();
+        void submit();
+      }}
+    >
       <h2>Doprecyzujmy razem</h2>
       <p>
         Odpowiedz własnymi słowami. Zachowamy Twój pierwotny opis i wcześniejsze
-        odpowiedzi. Nie wpisuj danych osobowych.
+        odpowiedzi. To jedyne doprecyzowanie — możesz też od razu przejść do
+        wyników. Nie wpisuj danych osobowych.
       </p>
       <details>
         <summary>Twój dotychczasowy opis</summary>
@@ -98,6 +110,14 @@ export function ClarifyNeed({
       )}
       <button disabled={busy}>
         {busy ? "Zapisujemy odpowiedź…" : "Uwzględnij odpowiedź i szukaj"}
+      </button>
+      <button
+        type="button"
+        className="secondary"
+        disabled={busy}
+        onClick={() => void submit(true)}
+      >
+        Pokaż wyniki bez dodatkowych odpowiedzi
       </button>
     </form>
   );

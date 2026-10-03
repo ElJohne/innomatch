@@ -24,6 +24,7 @@ export async function GET(
       targetGroups: need.targetGroups,
       constraints: need.constraints,
       clarifications: need.clarifications ?? [],
+      skipClarification: need.skipClarification ?? false,
       createdAt: need.createdAt,
       match: need.match ? await visibleMatch(need.match) : null,
     });

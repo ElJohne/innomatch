@@ -73,3 +73,11 @@ export function fallbackQuestions(text: string) {
     return ["Jaki kontakt z innymi byłby dla Ciebie możliwy i wygodny?"];
   return ["Co się wydarzyło lub w czym najbardziej potrzebujesz pomocy?"];
 }
+
+// Only content-free requests need a question before search; length alone is not
+// evidence of ambiguity (e.g. "Jestem samotny" is already a useful need).
+export function lacksNeedTopic(text: string) {
+  return /^(pomocy|pomoc|help|abc|nie wiem|nie dziala|potrzebuje pomocy)[.!?\s]*$/.test(
+    plain(text).trim(),
+  );
+}

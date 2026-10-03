@@ -57,7 +57,14 @@ NeedInput також приймає optional `clarifications`: до 6 об'єк�
 clarifications; чужій сесії 404. До координатора уточнення потрапляють лише
 разом із явно відкритою автором розмовою; вони також доступні AI-адаптації.
 
-MatchResponse v2: `matchingVersion:2`, optional `guidance: emergency|support|clarify`,
+NeedInput v3 додатково приймає optional `skipClarification:boolean` (GET повертає
+false за відсутності). Один раунд / одне питання дозволені лише до першої відповіді;
+після будь-якої clarification або skip сервер переходить до результату без нових
+питань. До 6 старих відповідей залишаються сумісними. Короткий опис сам по собі
+не є причиною уточнення; завершений пошук, no_match і збій AI не додають питань.
+
+MatchResponse v3: `matchingVersion:3`, optional `assumptions:string[]` (до 3 × 300
+символів, видимі як припущення), optional `guidance: emergency|support|clarify`,
 optional allowlisted `contacts:[112,999]` (рядки), retrieval додатково `none`,
 explanation додатково `rules`. Термінове скерування не містить інновацій/матеріалів.
 Сильні сигнали перевіряються до AI-квоти/слотів після ownership guard; додаткове

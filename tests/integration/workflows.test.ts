@@ -313,6 +313,9 @@ describe.skipIf(!process.env.TEST_DATABASE_URL)(
         },
         randomUUID(),
       );
+      // Anchor the fixture inside the interval: Docker's clock can lead Node's
+      // clock, making a DB-generated `now()` briefly fall after report.through.
+      await sql`update needs set created_at=${baseline.period.from}::timestamptz where id=${need.id}`;
       const report = await needAnalytics(admin, { days: "7" });
       expect(report.total).toBe(baseline.total + 1);
       expect(report.withMunicipality).toBe(baseline.withMunicipality + 1);

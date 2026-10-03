@@ -4,6 +4,7 @@ import {
   urgentSignal,
   supportSignal,
   fallbackQuestions,
+  lacksNeedTopic,
 } from "@/lib/need-guidance";
 import {
   intakeSchema,
@@ -81,6 +82,8 @@ export async function matchNeed(need: Need): Promise<MatchResponse> {
   if (need.match?.matchingVersion === MATCHING_VERSION)
     return visibleMatch(need.match);
   const c = config();
+  const clarificationAllowed =
+    !need.skipClarification && !need.clarifications?.length;
   const original = [
     need.description,
     need.constraints,
@@ -112,7 +115,7 @@ export async function matchNeed(need: Need): Promise<MatchResponse> {
       status: "no_match",
       matches: [],
       relatedResources: [],
-      clarifyingQuestions: questions.slice(0, 2),
+      clarifyingQuestions: clarificationAllowed ? questions.slice(0, 1) : [],
       catalogVersions: {},
       mode: {
         retrieval: "none",
@@ -129,13 +132,14 @@ export async function matchNeed(need: Need): Promise<MatchResponse> {
     return guided("support", [
       "Czy jesteś teraz w bezpiecznym miejscu i możesz porozmawiać z kimś zaufanym?",
     ]);
-  if (answersOnly.trim().length < 30)
+  if (clarificationAllowed && lacksNeedTopic(original))
     return guided("clarify", fallbackQuestions(answersOnly));
   // Validate live AI configuration before entering the transient fallback path.
   const ai = c.AI_PROVIDER === "mock" ? null : createLiveAiProvider();
   if (ai && c.DATA_PROVIDER !== "postgres")
     throw new Error("LIVE_AI_REQUIRES_POSTGRES");
   let query = original;
+  let assumptions: string[] = [];
   const warnings: string[] = [];
   if (ai) {
     try {
@@ -147,6 +151,7 @@ export async function matchNeed(need: Need): Promise<MatchResponse> {
             constraints: need.constraints,
             targetGroups: need.targetGroups,
             clarifications: need.clarifications ?? [],
+            clarificationAllowed,
           },
           intakeSchema,
         ),
@@ -161,7 +166,7 @@ export async function matchNeed(need: Need): Promise<MatchResponse> {
             : ["Czy możesz teraz porozmawiać z kimś zaufanym?"],
           mode,
         );
-      if (intake.route === "clarify")
+      if (intake.route === "clarify" && clarificationAllowed)
         return guided(
           "clarify",
           intake.questions.length
@@ -177,6 +182,7 @@ export async function matchNeed(need: Need): Promise<MatchResponse> {
         return response;
       }
       if (intake.query.trim()) query = intake.query;
+      if (intake.route === "search") assumptions = intake.assumptions;
     } catch {
       warnings.push(
         "Nie udało się doprecyzować opisu automatycznie. Szukamy na podstawie Twoich słów.",
@@ -261,9 +267,7 @@ export async function matchNeed(need: Need): Promise<MatchResponse> {
         ],
         sourceIds: r.sources.map((s) => s.id),
       })),
-      clarifyingQuestions: candidates.length
-        ? ["Jakie wsparcie i zasoby masz do dyspozycji?"]
-        : fallbackQuestions(answersOnly),
+      clarifyingQuestions: [],
     },
     candidates,
   );
@@ -308,13 +312,20 @@ export async function matchNeed(need: Need): Promise<MatchResponse> {
         ),
       );
       const { relatedResources: selected, ...explanationResult } = generated;
-      if (
-        new Set(selected.map((x) => x.resourceId)).size !== selected.length ||
-        selected.some((x) => !related.some((r) => r.id === x.resourceId))
-      )
-        throw new Error("INVALID_RESOURCES");
       result = validateExplanation(explanationResult, candidates);
-      relatedResources = result.matches.length ? selected : [];
+      // Optional material IDs must not discard independently validated matches.
+      // Drop unknown/duplicate references, never widen the allowlist.
+      const allowedResources = selected.filter(
+        (x, i) =>
+          related.some((r) => r.id === x.resourceId) &&
+          selected.findIndex((other) => other.resourceId === x.resourceId) ===
+            i,
+      );
+      if (allowedResources.length !== selected.length)
+        warnings.push(
+          "Pominięto materiały, których źródeł nie udało się potwierdzić.",
+        );
+      relatedResources = result.matches.length ? allowedResources : [];
       explanation = c.AI_PROVIDER === "openai" ? "openai" : "azure";
     } catch (error) {
       const safeReasons = [
@@ -337,19 +348,21 @@ export async function matchNeed(need: Need): Promise<MatchResponse> {
       result = {
         status: "no_match",
         matches: [],
-        clarifyingQuestions: fallbackQuestions(answersOnly),
+        clarifyingQuestions: [],
       };
       warnings.push(
-        "Nie udało się potwierdzić dopasowania. Doprecyzuj opis lub spróbuj ponownie później.",
+        "Nie udało się teraz sprawdzić dopasowania. Spróbuj ponownie później lub zapytaj koordynatora. Nie musisz ponownie opisywać potrzeby.",
       );
     }
   }
-  if (!result.matches.length && result.clarifyingQuestions.length === 0)
-    result.clarifyingQuestions = fallbackQuestions(answersOnly);
+  // Intake is the only place allowed to ask one essential question. A completed
+  // search (including no-match or provider failure) must never restart the form.
+  result.clarifyingQuestions = [];
   const corpus = [...records, ...knowledge];
   const synthetic = corpus.filter((r) => r.origin === "SYNTHETIC").length;
   const response: MatchResponse = {
     matchingVersion: MATCHING_VERSION,
+    assumptions,
     catalogVersions: Object.fromEntries([
       ...records
         .filter((r) => result.matches.some((m) => m.innovationId === r.id))

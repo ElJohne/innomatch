@@ -1,5 +1,75 @@
 # Перевірки — 2026-10-03, поточна ітерація та історія
 
+## Production rollout — 2026-10-04
+
+- Власник явно дозволив push з автоматичним deployment. Коміт виправлення
+  a2b2bc5, об'єднаний із навігацією origin/master 74bcd42 у реліз 09e0f95.
+  Повтор після merge: lint/build (із TypeScript) PASS, 22/22 Chrome fixtures/mock E2E PASS.
+- Backup job `backup-clarify-20261004` Complete; Actions build/deploy SUCCESS:
+  https://github.com/ElJohne/innomatch/actions/runs/37157218895.
+  Поточний mount /app підтверджує точний реліз
+  `09e0f956e741eaa9fdf339baf02c9169ffa4cd09-37157218895-1`.
+- Публічні `/` → 200, `/api/ready` → 200/ok. Production API: skip-vague → 0 питань;
+  urgent → emergency; vague-dialogue → 1 питання, після «не знаю» → 0 питань.
+  Усі 4 відповіді мають matchingVersion=3, expectationMet=true.
+  Доказ: `tests/search-quality/clarification-deployed-2026-10-04.json`.
+- AI-квота: configured=300, used=375, без змін. Тому звичайний smoke пройшов
+  keyword/template fallback, не live AI. Квота оновлюється за UTC-добою; readiness
+  не свідчить про наявність AI-квоти. Live-поведінка нового коду перевірена раніше
+  окремим shadow runner, як задокументовано нижче.
+- Runner cleanup PASS: лише його синтетичні needs; AI usage/квоти збережені.
+  Тимчасові smoke-файли SSH host/pod прибрано після збереження доказів.
+
+## Цикл уточнень — 23:56 Europe/Warsaw
+
+- **Production baseline:** публічний HTTPS `pomocnypunkt.pl`, 18 синтетичних кейсів,
+  34 matches POST із послідовними відповідями. 25 відповідей із питаннями, з них
+  15 після вже наданої відповіді; самотність і «не знаю» доходять до шести відповідей
+  без завершення опитування. Усі 4 короткі зрозумілі описи заблоковані правилом <30.
+  2 emergency сценарії повернули контакти без AI. Наприкінці лічильник досяг 300;
+  останні 3 пошуки вже використали fallback. Це не 34 успішні live AI-відповіді.
+- **Перший shadow:** 18 кейсів / 20 запусків поточного сервісу, реальні PostgreSQL
+  та OpenAI, без deployment. Питання лише у 2 початкових неясних описах, після
+  відповіді — 0 питань. У 2 ясних senior кейсах INVALID_RESOURCES відкинув усю
+  відповідь; окремо виправлено відбір необов'язкових матеріалів.
+- **Фінальний shadow:** 10 кейсів / 12 запусків: skip-vague, skip-urgent,
+  short-lonely, short-mobility, senior-detail, no-money, loneliness-dialogue,
+  paper-dialogue (2 кроки), vague-dialogue (2 кроки), six-answers-already.
+  Усі завершуються без повторного уточнення; 2 питання лише на першому кроці.
+  senior-detail/no-money/six-answers повернули partial, у no-money відкинуто
+  непідтверджений матеріал зі збереженням перевіреної рекомендації. Skip не
+  вимикає emergency. 75 додаткових AI-викликів із дозволених власником 80,
+  загальний лічильник 300 → 375; production limit залишився 300.
+- Разом **20 різних сценаріїв, 66 пошукових запусків**, з них лише 34 — production
+  HTTP, решта 32 — shadow. `expectationMet` перевіряє маршрут/відсутність циклу,
+  **не Hit@3 або корисність рекомендацій**. Є no_match для широкої самотності й
+  слуху; короткий поштомат отримав Zakupy bez barier з явним застереженням, що це
+  асиста в магазині, не біля поштомата. Релевантність цього суміжного результату
+  слабка; не зараховуємо його як пряме попадання Merkury. Експертного приймання немає.
+- Докази: `tests/search-quality/clarification-cases.json`,
+  `clarification-baseline-2026-10-03.json`, `clarification-shadow-first-2026-10-03.json`;
+  runner `scripts/evaluate-clarifications.ts`. Фінальний повтор підтверджений
+  stdout із 12 summary та cleanup PASS. Його повний JSON втрачено: pod був замінений
+  зовнішньою операцією до копіювання /tmp. Не видаємо його за збережений повний запис.
+- Кожен runner видалив лише needs зі своїми UUID request keys. AI usage і квоти
+  залишені; каталог не змінювався. Наші файли /tmp на SSH host прибрано; pod tmp
+  зник разом зі старим pod. `/api/ready` наприкінці → 200 / ok. Нашого deploy/push немає.
+- **Локальні перевірки:** npm lint/typecheck/build PASS, 58 unit PASS, 8 integration
+  PASS на новому одноразовому postgres:17.11-alpine; контейнер прибрано. Unit перевіряє
+  1–6 відповідей навіть при наполяганні AI, skip, короткі змістовні описи, кеш,
+  emergency/support, timeout/AI_LIMIT, fabricated optional resource і fake sourceId.
+- **E2E:** 21/21 PASS у встановленому Google Chrome, fixtures/mock. Команда
+  `npm run test:e2e -- --config tmp/playwright.local.config.ts`; тимчасова конфігурація
+  імпортує штатну, змінюючи channel=chrome і абсолютні testDir/cwd. Перевірено skip,
+  збереження відповідей, reload, ownership, контакт emergency після вичерпання
+  пошукової квоти, keyboard/mobile/200%/контраст, основні M3/M5/M7 сценарії.
+- Початкові проблеми середовища: typecheck посилався на застарілий generated
+  `/wiedza` route, штатний build відновив types; integration timestamp із DB був
+  поза Node report.through — fixture прив'язано до початку тестового періоду.
+  Звичайний E2E не стартував без Chromium revision 1243; install із CDN завершився
+  timeout, тому suite пройдено в Chrome. Перша тимчасова конфігурація мала
+  неправильний cwd; виправлено до повтору. Це не приховані успішні запуски.
+
 ## Перемикання на pomocnypunkt.pl — 23:20 Europe/Warsaw
 
 - dev-k3s: Ingress і APP_URL оновлено, rollout PASS, Ready 1/1; підтверджено

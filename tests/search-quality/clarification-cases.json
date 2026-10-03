@@ -1,0 +1,148 @@
+{
+  "synthetic": true,
+  "labeling": "Agent-authored regression cases; not independent expert acceptance.",
+  "cases": [
+    {
+      "id": "skip-vague",
+      "description": "Pomocy",
+      "skipClarification": true,
+      "expect": "answer"
+    },
+    {
+      "id": "skip-urgent",
+      "description": "Mąż nie oddycha",
+      "skipClarification": true,
+      "expect": "emergency"
+    },
+    {
+      "id": "short-lonely",
+      "description": "Jestem samotny",
+      "expect": "answer"
+    },
+    {
+      "id": "short-mobility",
+      "description": "Nie dosięgam paczkomatu",
+      "expect": "answer"
+    },
+    {
+      "id": "short-hearing",
+      "description": "Nie słyszę telewizora",
+      "expect": "answer"
+    },
+    {
+      "id": "short-medicine",
+      "description": "Lodówka na insulinę",
+      "expect": "answer"
+    },
+    {
+      "id": "senior-detail",
+      "description": "Seniorzy mieszkający samotnie potrzebują spotkań w świetlicy. Mamy wolontariuszy, ale nie znamy jeszcze budżetu ani liczby uczestników.",
+      "expect": "answer"
+    },
+    {
+      "id": "one-hand",
+      "description": "Po utracie sprawności jednej ręki trudno mi samodzielnie zapiąć biustonosz. Szukam prostego ułatwienia.",
+      "expect": "answer"
+    },
+    {
+      "id": "deaf-library",
+      "description": "Biblioteka chce udostępnić książki osobom głuchym, które posługują się polskim językiem migowym.",
+      "expect": "answer"
+    },
+    {
+      "id": "no-money",
+      "description": "Chcemy ograniczyć samotność seniorów. Mamy salę i wolontariuszy, ale nie mamy budżetu na zakup urządzeń.",
+      "expect": "answer"
+    },
+    {
+      "id": "car-repair",
+      "description": "Samochód nie odpala, szukam mechanika do wymiany rozrusznika.",
+      "expect": "answer"
+    },
+    {
+      "id": "clear-no-catalog",
+      "description": "Potrzebuję bezpłatnej porady przy rozliczeniu podatku od sprzedaży mieszkania.",
+      "expect": "answer"
+    },
+    { "id": "urgent", "description": "Mąż nie oddycha", "expect": "emergency" },
+    {
+      "id": "ordinary-medicine",
+      "description": "Biorę insulinę zgodnie z zaleceniem lekarza i potrzebuję chłodzenia leku podczas podróży.",
+      "expect": "answer"
+    },
+    {
+      "id": "loneliness-dialogue",
+      "description": "W domu pusto i chciałabym coś zmienić, ale nie wiem jak.",
+      "expect": "answer",
+      "answers": [
+        "Chcę mieć z kim porozmawiać i spotkać się z ludźmi.",
+        "Mam 70 lat, mogę wychodzić z domu i chodzić do świetlicy.",
+        "Wolałabym małą grupę i spokojne zajęcia.",
+        "Mogę przychodzić raz w tygodniu, nie mam szczególnych ograniczeń.",
+        "Budżetu jeszcze nie znam, proszę o ogólne propozycje.",
+        "Nie wiem nic więcej. Proszę o rozwiązania na podstawie tego opisu."
+      ]
+    },
+    {
+      "id": "paper-dialogue",
+      "description": "Dostałam papier i nie wiem co z nim zrobić.",
+      "expect": "clarify",
+      "answers": [
+        "To pismo z urzędu dotyczące wniosku o pomoc mieszkaniową. Potrzebuję wyjaśnienia prostym językiem.",
+        "Nie rozumiem trudnych urzędowych słów, potrzebuję pomocy w czytaniu.",
+        "Nie chcę podawać danych osobowych. Szukam ogólnego sposobu uzyskania wsparcia.",
+        "Mogę poprosić zaufaną osobę, ale szukam też rozwiązania ułatwiającego czytanie.",
+        "Nie mam więcej szczegółów.",
+        "Proszę już pokazać dostępne możliwości."
+      ]
+    },
+    {
+      "id": "vague-dialogue",
+      "description": "Pomocy",
+      "expect": "clarify",
+      "answers": [
+        "Nie wiem",
+        "Nie umiem tego lepiej opisać.",
+        "Nie mam więcej informacji.",
+        "Nie wiem od czego zacząć.",
+        "Nie potrafię odpowiedzieć.",
+        "Proszę o ogólne możliwości wsparcia."
+      ]
+    },
+    {
+      "id": "six-answers-already",
+      "description": "Potrzebuję kontaktu z ludźmi.",
+      "expect": "answer",
+      "clarifications": [
+        { "question": "Dla kogo?", "answer": "Dla seniorów." },
+        {
+          "question": "Jaki cel?",
+          "answer": "Mniej samotności i wspólne spotkania."
+        },
+        { "question": "Gdzie?", "answer": "W świetlicy w gminie." },
+        { "question": "Zasoby?", "answer": "Sala i wolontariusze." },
+        { "question": "Budżet?", "answer": "Jeszcze nie wiadomo." },
+        { "question": "Kiedy?", "answer": "Możemy zacząć od małego pilotażu." }
+      ]
+    },
+    {
+      "id": "followup-danger",
+      "description": "Pomocy",
+      "expect": "emergency",
+      "clarifications": [
+        { "question": "Co się stało?", "answer": "Mąż nie oddycha" }
+      ]
+    },
+    {
+      "id": "support-resolved",
+      "description": "Wszystkim zawadzam i nie wiem po co wstawać.",
+      "expect": "answer",
+      "clarifications": [
+        {
+          "question": "Czy jesteś w bezpiecznym miejscu?",
+          "answer": "Tak, jestem bezpieczna i rozmawiam z bliską osobą. Chodzi o samotność, szukam spotkań dla seniorów w świetlicy."
+        }
+      ]
+    }
+  ]
+}
