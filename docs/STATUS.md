@@ -1,12 +1,22 @@
 # Стан — 2026-10-03
 
-## Production deployment — поточна сесія
+## Production deployment — DONE на сервері, public DNS PENDING
 
 Власник дозволив production на `dev-k3s`, GitHub Actions і пропуск тестів.
 Створено окремий namespace `innomatch`, PostgreSQL 17.11 з PVC 5 GiB,
 секрети БД/сесій, ingress `innomatch.brandly-io.com`, Actions runner та щоденний локальний backup.
-Перший workflow і публічна доступність ще перевіряються. Azure і source-backed corpus відсутні:
+Actions run https://github.com/ElJohne/innomatch/actions/runs/37119025421 — SUCCESS,
+build + deploy для коміту `26750d4ea6afc946c675262217e7289d1bafd705`.
+Deployment `innomatch` 1/1 Ready; migration Job Complete; ingress головна HTTP 200;
+`/api/ready` повертає `ok` із реальною БД; каталог повертає 0 записів.
+Backup до і після міграції (`backup-network-ready`, `backup-deployed`) — Complete.
+Зовнішній HTTPS ще не перевірений: DNS `innomatch.brandly-io.com` поки не визначається.
+Власник узяв на себе додавання public hostname до наявного Cloudflare Tunnel.
+Azure і source-backed corpus відсутні:
 production конфігурація — `postgres`, явно позначений `mock`, без автоматичного demo seed.
+Unit/integration/E2E пропущено за прямою вимогою власника. Наступний крок: маршрут Cloudflare,
+потім Azure та дозволені джерельні записи. Локальний npm у цьому checkout несправний;
+Linux production build пройшов у Actions.
 Історичні результати нижче стосуються попередньої локальної ітерації.
 
 Початок: 11:48 Europe/Warsaw; дедлайн за наданим регламентом — 2026-10-04 11:00.

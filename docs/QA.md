@@ -6,7 +6,19 @@
 - `git diff --check`: PASS.
 - Unit, integration та E2E не запускались на пряму вимогу власника.
 - k3s bootstrap: PASS; ресурси БД, storage, runner, ingress і backup створені.
-- Actions build, migration, rollout та зовнішній HTTPS: перевірка триває.
+- Actions run `37119025421`: SUCCESS, build + deploy; коміт `26750d4`.
+- `npm ci`, `npm run build` із TypeScript та імпорт postgres зі standalone artifact: PASS у Linux Actions.
+- Migration Job: Complete (7 секунд); Deployment innomatch: 1/1 Ready.
+- Через локальний Traefik ingress із правильним Host: головна HTTP 200;
+  `/api/ready` → `{ "status": "ok" }`; `/api/innovations` → порожній каталог, total 0.
+- PostgreSQL login innomatch: rolsuper=false, rolcreatedb=false.
+- Runner online; `kubectl auth can-i get secrets -n default` від його ServiceAccount: no.
+- Backup `backup-network-ready` та `backup-deployed` після міграції: Complete (по 6 секунд).
+- Public HTTPS: PENDING, DNS домену ще відсутній; власник сам додає Cloudflare Tunnel route.
+- Перші deployment спроби виявили readonly mountpoint для cache та відсутній postgres
+  у standalone artifact. Обидві причини усунуто і підтверджено успішним run.
+- Перші backup Jobs падали через раннє підключення до мережі нового pod; додано bounded wait,
+  повторний backup успішний. Відновлення з backup не виконувалось.
 - Локальний `npm run lint`: BLOCKED — системний npm посилається на відсутній npm-cli.js,
   а node_modules і попередній `.tools` у цьому checkout відсутні. Linux build виконує Actions.
 

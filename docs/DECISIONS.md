@@ -4,7 +4,9 @@
 - Ціль: наявний `dev-k3s` / `localserver`, окремий namespace `innomatch`;
   це уточнення попереднього обмеження SPEC щодо Kubernetes.
 - Власник дозволив деплой через Actions, нову проєктну БД, пропуск тестів
-  та домен `innomatch.brandly-io.com`. Push workflow необхідний для цього деплою.
+  та домен `innomatch.brandly-io.com`. Після відхилення push автоматичною перевіркою
+  власник окремо підтвердив: «Дозволяю пуш». Push та production workflow виконано.
+  Маршрут Cloudflare Tunnel власник додає самостійно.
 - GitHub-hosted Linux build → standalone artifact → namespaced runner → міграція → rollout.
   Registry і нові платні сервіси не потрібні. Workflow лише для master, без pull_request.
 - PostgreSQL 17.11, окремий несуперкористувацький login, PVC, ClusterIP і NetworkPolicy.
