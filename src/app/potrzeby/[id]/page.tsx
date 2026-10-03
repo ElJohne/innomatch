@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import Link from "next/link";
 import { session } from "@/server/auth/session";
 import {
   getNeed,
@@ -35,6 +36,16 @@ export default async function NeedPage({
         records={await listInnovations()}
         resources={await listKnowledge()}
       />
+      <aside className="note">
+        <h2>Potrzebujesz wsparcia?</h2>
+        <p>
+          Zapytaj o dobór rozwiązania lub współpracę. Koordynator otrzyma opis
+          tej potrzeby i Twoją wiadomość.
+        </p>
+        <Link className="button" href={`/wiadomosci/nowa?needId=${need.id}`}>
+          Zapytaj koordynatora
+        </Link>
+      </aside>
     </section>
   );
 }

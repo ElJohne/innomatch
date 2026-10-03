@@ -2,6 +2,7 @@
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { needInput } from "@/lib/contracts";
+import { audienceGroups } from "@/lib/contracts/analytics";
 export function NeedForm() {
   const router = useRouter();
   const key = useRef<string>("");
@@ -98,11 +99,9 @@ export function NeedForm() {
             }}
           >
             <option value="">Wybierz grupę</option>
-            <option>Seniorzy</option>
-            <option>Młodzież</option>
-            <option>Opiekunowie</option>
-            <option>Osoby z niepełnosprawnościami</option>
-            <option>Mieszkańcy</option>
+            {audienceGroups.map((group) => (
+              <option key={group}>{group}</option>
+            ))}
           </select>
         </div>
       </div>

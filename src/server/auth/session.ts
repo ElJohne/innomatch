@@ -10,10 +10,15 @@ export async function session(create = false) {
   if (!password && c.DATA_PROVIDER === "fixtures")
     password = root.miDemoSecret ??= randomBytes(32).toString("hex");
   if (!password || password.length < 32) throw new Error("AUTH_CONFIGURATION");
-  const s = await getIronSession<{ ownerId?: string }>(await cookies(), {
+  const s = await getIronSession<{
+    ownerId?: string;
+    staffId?: string;
+    authVersion?: number;
+    staffExpiresAt?: number;
+  }>(await cookies(), {
     password,
     cookieName: "mi-session",
-    ttl: 86400,
+    ttl: 90 * 86400,
     cookieOptions: {
       httpOnly: true,
       sameSite: "lax",

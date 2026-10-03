@@ -1,4 +1,5 @@
 import "server-only";
+import { catalogVersion, locallyManagedRecords } from "./catalog";
 import {
   explanationSchema,
   type MatchResponse,
@@ -26,22 +27,35 @@ export async function visibleMatch(
 ): Promise<MatchResponse> {
   const records = await listInnovations();
   const knowledge = await listKnowledge();
+  const managed = await locallyManagedRecords();
   const matches = match.matches
     .filter((m) =>
       records.some(
         (r) =>
           r.id === m.innovationId &&
+          (match.catalogVersions?.[`innovation:${r.id}`]
+            ? match.catalogVersions[`innovation:${r.id}`] === catalogVersion(r)
+            : !managed.includes(`innovation:${r.id}`)) &&
           m.sourceIds.every((id) => r.sources.some((s) => s.id === id)),
       ),
     )
     .map((m, i) => ({ ...m, rank: i + 1 }));
-  const changed = matches.length !== match.matches.length;
+  const relatedResources = match.relatedResources.filter((r) =>
+    knowledge.some(
+      (k) =>
+        k.id === r.resourceId &&
+        (match.catalogVersions?.[`knowledge:${k.id}`]
+          ? match.catalogVersions[`knowledge:${k.id}`] === catalogVersion(k)
+          : !managed.includes(`knowledge:${k.id}`)),
+    ),
+  );
+  const changed =
+    matches.length !== match.matches.length ||
+    relatedResources.length !== match.relatedResources.length;
   return {
     ...match,
     matches,
-    relatedResources: match.relatedResources.filter((r) =>
-      knowledge.some((k) => k.id === r.resourceId),
-    ),
+    relatedResources,
     status: matches.length ? (changed ? "partial" : match.status) : "no_match",
     warnings: changed
       ? [...match.warnings, "Część wyników jest już niedostępna."]
@@ -154,8 +168,15 @@ export async function matchNeed(need: Need): Promise<MatchResponse> {
       );
     }
   }
-  const synthetic = records.filter((r) => r.origin === "SYNTHETIC").length;
+  const corpus = [...records, ...knowledge];
+  const synthetic = corpus.filter((r) => r.origin === "SYNTHETIC").length;
   const response: MatchResponse = {
+    catalogVersions: Object.fromEntries([
+      ...records
+        .filter((r) => result.matches.some((m) => m.innovationId === r.id))
+        .map((r) => [`innovation:${r.id}`, catalogVersion(r)]),
+      ...related.map((r) => [`knowledge:${r.id}`, catalogVersion(r)]),
+    ]),
     ...result,
     needId: need.id,
     relatedResources: related.map((r) => ({
@@ -167,7 +188,7 @@ export async function matchNeed(need: Need): Promise<MatchResponse> {
       retrieval,
       explanation,
       data:
-        synthetic === records.length && records.length
+        synthetic === corpus.length && corpus.length
           ? "synthetic"
           : synthetic
             ? "mixed"
@@ -176,5 +197,7 @@ export async function matchNeed(need: Need): Promise<MatchResponse> {
     warnings,
   };
   await saveMatch(need.id, need.ownerId, response);
-  return response;
+  // Moderation can change sources during the AI request. Apply the same
+  // publication/version checks to the first response as to cached results.
+  return visibleMatch(response);
 }

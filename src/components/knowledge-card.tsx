@@ -5,6 +5,11 @@ export function KnowledgeCard({ item }: { item: KnowledgeResource }) {
     <article className="card" id={item.id}>
       <p className="eyebrow">{knowledgeTypes[item.type]}</p>
       <h2>{item.title}</h2>
+      {item.origin === "SYNTHETIC" && (
+        <p className="notice">
+          Materiał syntetyczny do demonstracji. Nie jest źródłem ROPS.
+        </p>
+      )}
       <p className="help">{coverageLabels[item.coverage]}</p>
       <p style={{ whiteSpace: "pre-line" }}>{item.description}</p>
       <div className="tags">

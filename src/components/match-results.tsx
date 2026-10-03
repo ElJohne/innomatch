@@ -130,6 +130,14 @@ export function MatchResults({
                 <Link className="text-link" href={`/innowacje/${r.id}`}>
                   Poznaj rozwiązanie →
                 </Link>
+                <p>
+                  <Link
+                    className="text-link"
+                    href={`/adaptacje/nowa?innovationId=${r.id}&needId=${id}`}
+                  >
+                    Dostosuj do mojej instytucji →
+                  </Link>
+                </p>
               </div>
             </article>
           );
@@ -138,7 +146,8 @@ export function MatchResults({
       {result.status === "no_match" && (
         <p>
           W obecnym katalogu nie ma wystarczająco zbliżonego rozwiązania. Możesz
-          doprecyzować potrzebę w nowym zgłoszeniu.
+          doprecyzować potrzebę w nowym zgłoszeniu lub{" "}
+          <Link href="/pomysly/nowy">zapisać własny pomysł</Link>.
         </p>
       )}
       {!!result.relatedResources.length && (

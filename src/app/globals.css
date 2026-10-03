@@ -393,6 +393,76 @@ textarea {
   display: grid;
   gap: 20px;
 }
+.message-body {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.metric-summary {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+.metric-number {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin: 12px 0;
+}
+.metric-list {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 18px;
+}
+.metric-label {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 6px;
+  overflow-wrap: anywhere;
+}
+.metric-track {
+  height: 8px;
+  border-radius: 4px;
+  background: var(--line);
+}
+.metric-track span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--green);
+}
+@media (max-width: 600px) {
+  .metric-summary {
+    grid-template-columns: 1fr;
+  }
+}
+.editor-fields {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+.editor-fields > legend {
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+.source-editor {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 18px;
+  min-width: 0;
+}
+.checkbox-label {
+  display: flex !important;
+  align-items: flex-start;
+  gap: 12px;
+}
+.checkbox-label input {
+  width: 22px;
+  min-height: 22px;
+  flex-shrink: 0;
+  margin-top: 3px;
+}
 .result {
   display: grid;
   grid-template-columns: 40px 1fr;

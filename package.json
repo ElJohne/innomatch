@@ -19,6 +19,7 @@
     "data:import": "tsx --conditions=react-server scripts/manage.ts import",
     "data:index": "tsx --conditions=react-server scripts/manage.ts index",
     "doctor": "tsx --conditions=react-server scripts/manage.ts doctor",
+    "auth:staff": "tsx --conditions=react-server scripts/manage.ts staff",
     "format": "prettier --write src scripts tests *.ts *.mjs package.json",
     "data:collect": "node scripts/collect-rops.mjs",
     "data:validate": "tsx --conditions=react-server scripts/manage.ts validate-corpus",

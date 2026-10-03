@@ -10,6 +10,9 @@ import {
 import postgres from "postgres";
 import OpenAI from "openai";
 import { config, required } from "../src/server/config";
+import { randomUUID } from "node:crypto";
+import { hashPassword } from "../src/server/auth/password";
+import { sql } from "drizzle-orm";
 import { sqlClient, db } from "../src/server/db/client";
 import { embeddings, knowledgeEmbeddings } from "../src/server/db/schema";
 import {
@@ -118,6 +121,26 @@ function writeDatabaseGuard() {
 }
 async function main() {
   if (command === "doctor") return doctor();
+  if (command === "staff") {
+    writeDatabaseGuard();
+    if (config().DATA_PROVIDER !== "postgres")
+      throw new Error("POSTGRES_REQUIRED");
+    const login = z
+      .string()
+      .email()
+      .max(200)
+      .parse(required("STAFF_LOGIN").trim().toLowerCase());
+    const role = z.enum(["ADMIN", "EXPERT"]).parse(required("STAFF_ROLE"));
+    const passwordHash = await hashPassword(required("STAFF_PASSWORD"));
+    await sqlClient()`insert into staff_users (id,login,password_hash,role)
+      values (${randomUUID()},${login},${passwordHash},${role})
+      on conflict (login) do update set password_hash = excluded.password_hash,
+      role = excluded.role, active = true, auth_version = staff_users.auth_version + 1`;
+    console.log(
+      "Staff account: configured; previous sessions invalidated on update.",
+    );
+    return;
+  }
   if (command === "validate-corpus" || command === "sync-corpus") {
     const corpus = z
       .object({
@@ -283,6 +306,9 @@ async function indexCorpus() {
           .insert(table)
           .values({ recordId: item.id, record })
           .onConflictDoUpdate({ target: table.recordId, set: { record } });
+        await tx.execute(
+          sql`update catalog_controls set index_pending=false where record_type=${item.kind} and record_id=${item.id} and content_hash=${item.hash}`,
+        );
         indexed++;
       }
     });

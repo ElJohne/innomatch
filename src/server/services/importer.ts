@@ -26,6 +26,9 @@ export async function importRecords(
   let upserted = 0;
   await db().transaction(async (tx) => {
     for (const record of records) {
+      await tx.execute(
+        sql`select pg_advisory_xact_lock(hashtextextended(${`innovation:${record.id}`}, 0))`,
+      );
       const rows = await tx
         .insert(innovations)
         .values({ id: record.id, record })
@@ -37,9 +40,11 @@ export async function importRecords(
               : record,
             updatedAt: new Date(),
           },
-          setWhere: preservePublication
-            ? sql`${innovations.record} IS DISTINCT FROM jsonb_set(${JSON.stringify(record)}::jsonb, '{publicationStatus}', ${innovations.record}->'publicationStatus')`
-            : sql`${innovations.record} IS DISTINCT FROM ${JSON.stringify(record)}::jsonb`,
+          setWhere: sql`not exists (select 1 from catalog_controls where record_type='innovation' and record_id=${record.id} and managed_locally) and (${
+            preservePublication
+              ? sql`${innovations.record} IS DISTINCT FROM jsonb_set(${JSON.stringify(record)}::jsonb, '{publicationStatus}', ${innovations.record}->'publicationStatus')`
+              : sql`${innovations.record} IS DISTINCT FROM ${JSON.stringify(record)}::jsonb`
+          })`,
         })
         .returning({ id: innovations.id });
       upserted += rows.length;
@@ -49,6 +54,8 @@ export async function importRecords(
 }
 export async function importKnowledge(input: unknown) {
   const records = z.array(knowledgeSchema).min(1).max(5000).parse(input);
+  if (records.some((r) => r.origin !== "PUBLIC_SOURCE"))
+    throw new Error("PUBLIC_SOURCES_REQUIRED");
   if (new Set(records.map((r) => r.id)).size !== records.length)
     throw new Error("DUPLICATE_IMPORT_ID");
   if (
@@ -58,7 +65,10 @@ export async function importKnowledge(input: unknown) {
   )
     throw new Error("MISSING_EVIDENCE");
   await db().transaction(async (tx) => {
-    for (const record of records)
+    for (const record of records) {
+      await tx.execute(
+        sql`select pg_advisory_xact_lock(hashtextextended(${`knowledge:${record.id}`}, 0))`,
+      );
       await tx
         .insert(knowledge)
         .values({ id: record.id, record })
@@ -68,8 +78,9 @@ export async function importKnowledge(input: unknown) {
             record: sql`jsonb_set(${JSON.stringify(record)}::jsonb, '{publicationStatus}', ${knowledge.record}->'publicationStatus')`,
             updatedAt: new Date(),
           },
-          setWhere: sql`${knowledge.record} IS DISTINCT FROM jsonb_set(${JSON.stringify(record)}::jsonb, '{publicationStatus}', ${knowledge.record}->'publicationStatus')`,
+          setWhere: sql`not exists (select 1 from catalog_controls where record_type='knowledge' and record_id=${record.id} and managed_locally) and ${knowledge.record} IS DISTINCT FROM jsonb_set(${JSON.stringify(record)}::jsonb, '{publicationStatus}', ${knowledge.record}->'publicationStatus')`,
         });
+    }
   });
   return { validated: records.length };
 }

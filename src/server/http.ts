@@ -19,7 +19,7 @@ export function writeGuard(request: Request) {
   if (!request.headers.get("content-type")?.startsWith("application/json"))
     throw new HttpError(415, "CONTENT_TYPE", "Wymagany format JSON.");
 }
-export async function readBody(request: Request) {
+export async function readBody(request: Request, maximumBytes = 20000) {
   // Bound the stream, not only a client-controlled Content-Length header.
   const reader = request.body?.getReader();
   if (!reader) throw new HttpError(400, "BODY", "Brak danych.");
@@ -29,7 +29,7 @@ export async function readBody(request: Request) {
     const { done, value } = await reader.read();
     if (done) break;
     length += value.length;
-    if (length > 20000) {
+    if (length > maximumBytes) {
       await reader.cancel();
       throw new HttpError(413, "TOO_LARGE", "Opis jest zbyt długi.");
     }
@@ -61,8 +61,7 @@ export async function handle(action: () => Promise<Response>) {
       return json(
         {
           code: "VALIDATION",
-          message:
-            "Sprawdź pola formularza: opis 30–4000 znaków, ograniczenia do 1500 znaków.",
+          message: "Sprawdź wymagane pola i dopuszczalną długość tekstu.",
           requestId,
         },
         400,

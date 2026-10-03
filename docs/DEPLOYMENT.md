@@ -1,9 +1,43 @@
 # Запуск і підключення
 
+## Поточний локальний реліз: M4, потрібна міграція 0007
+
+0007_pilots_feedback додає pilot_participations і innovation_feedback; unique(owner_id,
+innovation_id) у кожній. Readiness вимагає 0007. Перед запуском поточного checkout
+потрібні всі накопичені 0003–0007; у цій ітерації жодна не виконувалась.
+Нових secrets, AI-викликів або зовнішніх сервісів для M4 немає.
+Спочатку перевірити ізольовану БД: атомарність заявки/повідомлення, дедуплікацію,
+owner isolation, ADMIN-only moderation, revision conflict, edit → IN_REVIEW,
+source change/hide → виключення публічного відгуку. Локальний fixtures flow цього
+не замінює. Потім backup та окремо погоджений rollout.
+
+## Попередня ітерація: M3, міграція 0006
+
+0006_ideas додає ideas/idea_assists і nullable threads.idea_id. CHECK контексту розмови
+змінюється: рівно одна з need_id/innovation_id/idea_id; адаптації зберігають need_id.
+Міграція транзакційна через наявний runner. У тій ітерації readiness вимагав 0006;
+поточну вимогу див. вище. 0003–0006 ще не виконувались.
+Нових зовнішніх сервісів або secrets немає. M3 використовує наявний AI_PROVIDER.
+Перевірити ізольовану БД: private drafts, atomic submit, edit/submit races, assist cache,
+доступ персоналу лише через Thread. Live AI M3 перевірити окремо на синтетичній картці.
+Canvas у картці береться лише з опублікованого knowledge record; fixtures його не містять.
+Грантових наборів, генератора заявок та публічної публікації ідей немає.
+
+## Попередня ітерація: міграції до 0005
+
+Новий checkout ще не deployed. 0005_adaptations додає приватні плани, reservation для
+генерації, revision у JSON і nullable threads.adaptation_id. Існуючі діалоги зберігаються.
+У тій ітерації readiness вимагав 0005; поточну вимогу див. вище.
+Для M7 використовується наявний AI_PROVIDER і ті самі secrets/quotas, нових сервісів немає.
+Спочатку перевірити 0003–0005 на ізольованій БД: owner permissions, reservation/retry,
+revision conflict, source invalidation, явне sharing і читання персоналом.
+Live M7 перевірити окремою синтетичною потребою; попередній live M1 не доводить якість M7.
+Потім backup та погоджений rollout. У цій ітерації ці операції не виконувались.
+
 ## Production: dev-k3s / GitHub Actions
 
 Власник погодив сервер `dev-k3s` (SSH `eljohne`, k3s node `localserver`),
-namespace `innomatch` та `https://innomatch.brandly-io.com`.
+namespace `innomatch` та `https://innomatch.brandly-io.com` (тимчасово повернуто за вказівкою власника 2026-10-03).
 На сервері kubectl використовує `KUBECONFIG=$HOME/.kube/config`; sudo не потрібен.
 
 `.github/workflows/deploy.yml` запускається після push у `master` або вручну.
@@ -28,7 +62,8 @@ PostgreSQL 17.11: окрема БД `innomatch`, окремий login без sup
 `app-env` містить DATABASE_URL, AUTH_SECRET, APP_URL та режими; значення не друкувати.
 Production використовує postgres; OpenAI-конфігурація накладається через окремий secret
 `openai-env`, який Actions оновлює через stdin без запису ключа на диск або в argv.
-Каталог порожній, demo seed відсутній. Імпорт та індексацію виконувати лише для дозволених матеріалів.
+У попередньому rollout імпортовано 114 інновацій і 69 матеріалів ROPS, автоматичного demo seed немає.
+Імпорт та індексацію виконувати лише для дозволених матеріалів.
 
 Ingress очікує Cloudflare Tunnel public hostname `innomatch.brandly-io.com`
 із service `http://localhost:80` і оригінальним Host header. TLS завершується на Cloudflare.
@@ -147,3 +182,50 @@ Corpus Job імпортує дані та індексує зміни пакет
 Міграція 0002 додає лише knowledge_resources і knowledge_embeddings; старий app сумісний.
 Для ручної синхронізації у production pod: `node scripts/manage.cjs sync-corpus`.
 Для локальної перевірки без DB/AI: `npm run data:validate`.
+
+## Персонал і діалоги — міграція 0003
+
+Зміна ще не розгорнута. Спочатку `npm run test:integration` на виділеній тестовій PostgreSQL,
+потім backup і погоджена міграція/rollout. 0003 додає staff_users, threads, messages без зміни
+старих даних. Поточна readiness вимагає також 0004_catalog_recovery; попередня версія сумісна з новими таблицями.
+
+Для account приватно задати лише операторському процесу: STAFF_LOGIN (email), STAFF_ROLE
+(ADMIN або EXPERT), STAFF_PASSWORD (14–200 символів), DATABASE_URL, DATA_PROVIDER=postgres,
+DATABASE_CONFIRMED_FOR_PROJECT=true. Пароль не передавати через argv, чат або журнали.
+
+```sh
+npm run auth:staff
+# Еквівалент у production artifact:
+node scripts/manage.cjs staff
+```
+
+Після команди прибрати STAFF_PASSWORD з конфігурації/оточення оператора. Runtime не потребує
+STAFF_PASSWORD. У БД salted scrypt (N=32768, r=8, p=1); повторна команда змінює пароль/роль,
+активує account і збільшує auth_version, відкликаючи попередні staff sessions.
+Відключення account: оператор БД встановлює active=false. Вхід `/personel/logowanie`, скринька `/admin`.
+
+Fixtures персонал працює лише з явними DEMO_STAFF_LOGIN / DEMO_STAFF_PASSWORD_HASH
+(scrypt-v1), без стандартного пароля; PostgreSQL ігнорує ці значення.
+E2E сам генерує випадкові тимчасові credentials і запускає окремий fixtures/mock сервер.
+Потрібні вільний localhost:3000 та Chromium (`npx playwright install chromium`).
+У поточному Windows checkout браузер у tmp/playwright; перед тестами:
+`$env:PLAYWRIGHT_BROWSERS_PATH = Join-Path (Get-Location) 'tmp\playwright'`.
+
+Сповіщення внутрішні, без email/push; оновлення вручну, staff_read спільний для команди.
+Гостьовий cookie TTL — 90 днів; `/moje-sprawy` дозволяє зберегти код відновлення.
+Staff права — окремі 8 годин; старі staff cookies після оновлення потребують нового входу.
+
+## Редактор та відновлення — міграція 0004
+
+0004 додає catalog_controls, audit_events та owner_recovery. Виконувати до import/index
+і запуску нової версії; readiness відхилить БД без неї. У цій ітерації міграції не виконано.
+ADMIN має редактор, EXPERT — лише скриньку. Ручна правка робить запис managed_locally:
+імпорт більше не перезаписує його навіть при зміні джерела. Походження запису незмінне.
+Збереження вилучає embedding і ставить index_pending; явна кнопка оновлення AI або
+data:index перебудовує вектор. До цього залишається пошук за словами.
+Аудит містить actor/action/object/time, без приватних текстів чи кодів. У БД — лише
+хеш коду відновлення. Ротація AUTH_SECRET закриває cookie сесії, але не відкликає
+коди: це окремі записи owner_recovery.
+До rollout перевірити на ізольованій БД міграції, права ADMIN/EXPERT, конкурентні
+записи, збереження правок при імпорті, reindex і відновлення в іншій сесії.
+Після цього backup, погоджений rollout та provisioning персоналу.

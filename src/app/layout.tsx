@@ -35,6 +35,7 @@ export default function RootLayout({
           <nav aria-label="Menu główne">
             <Link href="/innowacje">Katalog innowacji</Link>
             <Link href="/wiedza">Wiedza</Link>
+            <Link href="/pomysly/nowy">Mam pomysł</Link>
             <Link href="/moje-sprawy">Moje sprawy</Link>
           </nav>
           <Link className="button small" href="/potrzeby/nowa">
@@ -60,6 +61,7 @@ export default function RootLayout({
           </Link>
           <p>Od lokalnej potrzeby do wspólnego działania.</p>
           <span>Prototyp na wyzwanie HubMI · 2026</span>
+          <Link href="/admin">Strefa personelu</Link>
         </footer>
       </body>
     </html>
