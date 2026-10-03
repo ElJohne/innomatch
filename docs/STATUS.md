@@ -1,5 +1,17 @@
 # Стан — 2026-10-04
 
+## Вилучення глобальної AI-квоти — 2026-10-04, підготовлено до rollout
+
+Власник прямо доручив прибрати ліміт, який блокував production запити.
+Підтверджено configured=300 / used=375; це внутрішня квота застосунку.
+Видалено перевірку добової квоти для OpenAI/Azure і AI_DAILY_REQUEST_LIMIT
+із конфігурації. Облік ai_usage, timeout і concurrency збережено.
+MatchingVersion=4 оновлює старі кешовані відповіді після квоти.
+Ізольований worktree зберіг незавершені зміни основної робочої папки;
+інтегровано останній origin/master 31c20c1 зі змінами форми ідеї.
+Lint/typecheck/build PASS; 60 unit, 8 PostgreSQL integration, 22 Chrome E2E PASS.
+Production rollout і live smoke ще не підтверджені на момент цього запису.
+
 ## Цикл уточнень — розгорнуто на production
 
 За явним дозволом власника виконано push із автоматичним deployment.

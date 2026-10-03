@@ -1,5 +1,16 @@
 # Перевірки — 2026-10-03, поточна ітерація та історія
 
+## Вилучення глобальної AI-квоти — 2026-10-04, локальна перевірка
+
+- Production read-only підтвердив внутрішню квоту 300 і використання 375.
+- Ізольований реліз видаляє consumeLimit для AI, не облік usage. Стара env
+  AI_DAILY_REQUEST_LIMIT і старі request_counters більше не блокують провайдера.
+- 2 нові unit-кейси (OpenAI/Azure): стара квота=1, reservation повертав би false;
+  3 послідовні виклики успішні, reservation не викликається, usage записано 3 рази.
+- Фінальні lint/typecheck/build PASS, 60 unit PASS, 8 PostgreSQL integration PASS
+  на окремому postgres:17.11-alpine (після тестів прибрано), 22 Chrome E2E PASS.
+  Live production-перевірку буде записано після rollout. Нових міграцій немає.
+
 ## Production rollout — 2026-10-04
 
 - Власник явно дозволив push з автоматичним deployment. Коміт виправлення
