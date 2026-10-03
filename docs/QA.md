@@ -640,3 +640,9 @@ Header navigation — 2026-10-03: added Strona główna; Mam pomysł now shares 
 Yellow accent cleanup — 2026-10-03: unified home heading colour, removed underline and yellow backgrounds behind Małopolska / Biblioteka inspiracji; removed confirmation decorative symbol. Build, lint, typecheck, 40 unit and 20 E2E PASS; 8 integration skipped without TEST_DATABASE_URL. Local browser reviewed. Local only.
 
 Active header navigation — 2026-10-03: pathname-aware client navigation with persistent underline and aria-current (page/location), including nested catalog/idea pages. Build, lint, typecheck, 40 unit and 21 E2E PASS; 8 integration skipped without TEST_DATABASE_URL. Added navigation regression covering client transitions, filtered catalog, details and four contrast palettes. Local only.
+
+Mam pomysł guidance — 2026-10-04: homepage-style blue/mint hero and form, single-colour heading, social-initiative explanation with two examples, help-for-yourself link to home, field-specific accessible hints, audience/stage explanation and explicit private-until-consultation guidance. Save/AI/consultation behavior unchanged. Build, lint, typecheck, 40 unit and 21 E2E PASS; 8 integration skipped without TEST_DATABASE_URL. Built-in browser reviewed; contrast and mobile 200% checks PASS. Local only.
+
+Mam pomysł cleanup — 2026-10-04: removed initial draft notice, reassurance tip and resources/grants panel from new-idea page at owner request. Saved-idea status messaging remains. Build, lint, typecheck, 40 unit and 21 E2E PASS; 8 integration skipped without TEST_DATABASE_URL. Absence of requested blocks verified in built-in browser. Local only.
+
+Release verification — 2026-10-04: merged origin/master 9a0f8ba with Mam pomysł design and content cleanup. Build, lint, typecheck, 58 unit and 22 E2E PASS. Eight integration tests skipped without TEST_DATABASE_URL. No live AI or database changes.
