@@ -20,15 +20,11 @@ const data = Object.fromEntries(
   ]),
 );
 const result = spawnSync(
-  "kubectl",
+  "bash",
   [
-    "-n",
-    "innomatch",
-    "patch",
-    "secret",
-    "openai-env",
-    "--type=merge",
-    "--patch-file=/dev/stdin",
+    "-o", "pipefail", "-c",
+    // Node uses a socket for child stdin; cat supplies a POSIX pipe that /dev/stdin can open.
+    "cat | kubectl -n innomatch patch secret openai-env --type=merge --patch-file=/dev/stdin",
   ],
   {
     input: JSON.stringify({ data }),
