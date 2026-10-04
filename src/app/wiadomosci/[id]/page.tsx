@@ -6,6 +6,7 @@ import { HttpError } from "@/server/http";
 import { getThread } from "@/server/services/communication";
 import { AdaptationView } from "@/components/adaptation-view";
 import { IdeaView } from "@/components/idea-view";
+import { GrantView } from "@/components/grant-view";
 import {
   MessageForm,
   ReadReceipt,
@@ -88,6 +89,9 @@ export default async function ThreadPage({
               skuteczności.
             </p>
             <IdeaView card={thread.idea.card} />
+            {thread.idea.grantDraft && (
+              <GrantView draft={thread.idea.grantDraft} />
+            )}
           </details>
         )}
         {thread.adaptationUnavailable && (

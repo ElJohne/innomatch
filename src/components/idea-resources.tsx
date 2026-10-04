@@ -11,9 +11,11 @@ export async function IdeaResources() {
         To uproszczony arkusz pracy; oryginalne plansze znajdziesz poniżej.
       </p>
       <p>
-        Nie udostępniono aktywnego naboru ani jego formularza. Generator wniosku
-        grantowego nie jest dostępny. Zapisanie lub przekazanie pomysłu nie jest
-        zgłoszeniem do konkursu.
+        Po zapisaniu karty możesz przygotować szkic merytoryczny na podstawie
+        opublikowanego formularza IWS 2.0, policzyć koszty i wydrukować
+        materiał. Ten nabór jest zakończony. Zapisanie lub przekazanie pomysłu
+        nie jest zgłoszeniem do konkursu; aktualne warunki sprawdź u
+        organizatora.
       </p>
       {canvas ? (
         <div>

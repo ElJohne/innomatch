@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { ideaCanvas } from "./canvas";
+import type { GrantDraft } from "./grant";
 export const ideaCard = z
   .object({
     title: z.string().trim().min(3).max(200),
@@ -41,6 +42,7 @@ export type Idea = {
   threadId: string | null;
   createdAt: string;
   updatedAt: string;
+  grantDraft?: GrantDraft;
 };
 export const ideaLabels = {
   title: "Tytuł pomysłu",

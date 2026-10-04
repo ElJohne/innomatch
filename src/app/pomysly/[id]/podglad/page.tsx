@@ -4,6 +4,7 @@ import { session } from "@/server/auth/session";
 import { getIdea } from "@/server/services/ideas";
 import { IdeaView } from "@/components/idea-view";
 import { PrintButton } from "@/components/print-button";
+import { GrantView } from "@/components/grant-view";
 
 export default async function IdeaPreview({
   params,
@@ -38,6 +39,7 @@ export default async function IdeaPreview({
         </p>
       </header>
       <IdeaView card={idea.card} />
+      {idea.grantDraft && <GrantView draft={idea.grantDraft} />}
     </article>
   );
 }

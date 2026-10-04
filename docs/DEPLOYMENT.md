@@ -1,5 +1,11 @@
 # Запуск і підключення
 
+Production оновлення 2026-10-04: bc82c12 / GitHub Actions 37165955711 SUCCESS.
+Deployment mount bc82c12b4b054f1a5a11688bc6fb618c2d2ffc1a-37165955711-1
+підтверджено SSH. Backup backup-quality-20261004-0246 Complete перед rollout;
+0008 пройшла migration job. Ручний HTTPS M1 → M7 → M5 PASS на синтетичному
+сценарії. Попередні записи «ще не deployed» нижче — історія цього пакета.
+
 ## Пакет якості 2026-10-04 — ще не deployed
 
 Поточні зміни потребують `0008_shared_plan_snapshot`; readiness перевіряє саме її.

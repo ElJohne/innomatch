@@ -1,5 +1,24 @@
 # Перевірки — 2026-10-03, поточна ітерація та історія
 
+## Ручний production і нова грантова частина — 2026-10-04, 03:07
+
+- bc82c12 / Actions 37165955711 SUCCESS; migration 0008 та release mount
+  підтверджені rollout. Ручний браузер production: синтетична потреба бібліотеки
+  про bankomat/paczkomat → Merkury → live AI plan → ручний firstStep edit →
+  revision 2 → send → thread із shared plan revision 2 PASS.
+- Знімок тільки власного синтетичного сценарію:
+  screenshots/live-shared-plan-20261004.jpg. Розмова явно позначена QA;
+  production-записи ще чекають прибирання після завершення перевірки.
+- Новий grant draft локально: create idea → prefill → три витрати
+  125,50 + 50 + 0 PLN → сума 175,50 → save → mock AI preview → explicit apply
+  → save → reload → owner preview PASS. Бюджет не змінюється AI.
+- Lint/typecheck/build PASS; 68 наявних unit PASS. Нових тестів/пайплайнів немає;
+  PostgreSQL integration та повний E2E цього пакета не повторювали за пріоритетом
+  власника на короткі ручні сценарії. Live grant AI, консультація/SQL persistence
+  цього доповнення ще не підтверджені.
+- Повторний build спочатку EBUSY через запущений локальний standalone server.
+  Після його зупинки фінальний build PASS; це lock середовища, не збій форми.
+
 ## Конкурентний пакет / Canvas — 2026-10-04, 02:30 Europe/Warsaw
 
 - `npm run lint`, `npm run typecheck`, `npm test`: PASS, 66 unit / 8 файлів.

@@ -277,6 +277,11 @@ export function IdeaEditor({
       </form>
       {idea && (
         <div className="actions">
+          <Link className="button secondary" href={`/pomysly/${idea.id}/grant`}>
+            {idea.grantDraft
+              ? "Edytuj szkic grantowy"
+              : "Przygotuj szkic grantowy"}
+          </Link>
           <Link
             className="button secondary"
             href={`/pomysly/${idea.id}/podglad`}
