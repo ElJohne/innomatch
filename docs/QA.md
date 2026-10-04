@@ -1,5 +1,17 @@
 # Перевірки — 2026-10-03, поточна ітерація та історія
 
+## Live grant resources / QA cleanup — 2026-10-04, 03:57
+
+- 2d0bc9d / Actions 37169054931 SUCCESS. Manual production seniorzy → Mapa
+  Wyzwań page 41 → explicit append → save → reload: попередній diagnosis і URL
+  збережено PASS. Повторне додавання того самого URL disabled.
+- Screenshot лише власної синтетичної чернетки: live-grant-resources-20261004.jpg.
+- Cleanup підтверджено SQL transaction: тільки власні known IDs — 1 need,
+  2 ideas, 3 threads, 1 adaptation та їхні messages/idea_assists. Guards:
+  synthetic назви, owner equality, exact IDs, немає STAFF replies. AI accounting
+  і сторонні записи не змінено. Попередні «QA ще чекає» нижче — історія.
+- Наступний catalog search: lint/build PASS; live ручна перевірка ще очікує.
+
 ## Live мета звернення / бюджет; джерела локально — 2026-10-04, 03:50
 
 - c697f0c / Actions 37168777448 SUCCESS. Власна синтетична ідея → MENTORSHIP

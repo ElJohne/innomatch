@@ -1,5 +1,19 @@
 # Стан — 2026-10-04
 
+## Джерела діагнозу live PASS; каталог покращено локально — 03:57
+
+2d0bc9d / Actions 37169054931 SUCCESS. Ручний production grant: пошук seniorzy
+→ Mapa wyzwań — Seniorzy, page 41 → append → save → reload diagnosis PASS.
+Текст автора збережений; посилання не видається за доказ масштабу місцевої
+проблеми. Доказ: screenshots/live-grant-resources-20261004.jpg.
+Точково прибрано лише власні QA: 1 need, 2 ideas, 3 threads, 1 adaptation;
+guards перевірили UUID, synthetic назви, спільного owner і відсутність відповіді
+personel. Облік AI-використання не очищали.
+
+Наступне локальне покращення каталогу: кілька слів у різних частинах опису,
+польські довгі словоформи, перевага точної назви; перехід до опису потреби.
+Lint/build PASS; live каталог ще очікує rollout.
+
 ## Мета звернення і бюджет live PASS; джерела діагнозу локально — 03:50
 
 c697f0c / Actions 37168777448 SUCCESS. Production idea → mentorship submit →
