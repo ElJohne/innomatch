@@ -3,185 +3,102 @@ import { notFound } from "next/navigation";
 import { session } from "@/server/auth/session";
 import { getNeed, listInnovations } from "@/server/services/repository";
 import { visibleMatch } from "@/server/services/matching";
+import { listThreads } from "@/server/services/communication";
 import { listOrganizations } from "@/server/services/organizations";
 import { organizationOptions } from "@/lib/organizations";
 import { FlowSteps } from "@/components/flow-steps";
-import { MessageDraft } from "@/components/message-draft";
-
+import { QuickHelp } from "@/components/quick-help";
 export default async function PlanPage({
   params,
   searchParams,
 }: {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ organizacja?: string }>;
+  searchParams: Promise<{ innovationId?: string; organizacja?: string }>;
 }) {
   const s = await session();
   if (!s.ownerId) notFound();
   const need = await getNeed((await params).id, s.ownerId);
   if (!need?.match) notFound();
-  const result = await visibleMatch(need.match);
-  const organizationId = (await searchParams).organizacja;
-  const selected = organizationOptions(
-    result,
-    await listInnovations(),
-    listOrganizations(),
-  ).find((x) => x.organization.id === organizationId);
-  if (!selected) notFound();
-  const { organization, innovation, match } = selected;
-  const clarification = need.clarifications?.map((x) => x.answer).join(" ");
-  const message = `Dzień dobry, szukam wsparcia w następującej sprawie: ${need.description}${clarification ? ` Doprecyzowanie: ${clarification}` : ""}${need.municipality ? ` Gmina: ${need.municipality}.` : ""} Interesuje mnie rozwiązanie „${innovation.title}”. Czy zajmują się Państwo takim obszarem i czy możemy omówić możliwości współpracy?${need.constraints ? ` Nasze zasoby i ograniczenia: ${need.constraints}` : ""}`;
+  const result = await visibleMatch(need.match),
+    query = await searchParams,
+    records = await listInnovations();
+  const innovationId =
+    query.innovationId ??
+    (query.organizacja
+      ? organizationOptions(result, records, listOrganizations()).find(
+          (x) => x.organization.id === query.organizacja,
+        )?.innovation.id
+      : undefined);
+  const match = result.matches.find((m) => m.innovationId === innovationId),
+    innovation = records.find((r) => r.id === innovationId);
+  if (!match || !innovation) notFound();
+  const existingThread = (await listThreads({ ownerId: s.ownerId })).find(
+    (t) => t.needId === need.id,
+  )?.id;
   return (
-    <section className="flow-page plan-page">
-      <FlowSteps current={4} />
+    <section className="flow-page plan-page narrow">
+      <FlowSteps current={3} />
       <Link className="back-link" href={`/potrzeby/${need.id}`}>
-        ← Wybierz inną organizację
+        ← Wybierz inną pomoc
       </Link>
       <div className="flow-heading">
-        <p className="eyebrow">Krok 4 · Mały krok, wspólna zmiana</p>
-        <h1>Co zrobić dalej?</h1>
-        <p className="lead">
-          Spokojnie, krok po kroku. Przygotowaliśmy wskazówki do pierwszej
-          rozmowy.
+        <h1>Co zrobić teraz?</h1>
+      </div>
+      <div className="card next-action">
+        <p className="eyebrow">{innovation.title}</p>
+        <h2>
+          {match.nextStep ||
+            "Poproś koordynatora o pomoc w skorzystaniu z tego rozwiązania."}
+        </h2>
+        {(result.mode.explanation === "mock" ||
+          innovation.origin === "SYNTHETIC") && (
+          <p className="help">Przykład demonstracyjny</p>
+        )}
+        <QuickHelp
+          needId={need.id}
+          solution={innovation.title}
+          existingThread={existingThread}
+        />
+      </div>
+      {need.audience === "INSTITUTION" && (
+        <p>
+          <Link
+            href={`/adaptacje/nowa?innovationId=${innovation.id}&needId=${need.id}`}
+          >
+            Przygotuj plan dla instytucji →
+          </Link>
         </p>
-      </div>
-      <div className="plan-layout">
-        <div>
-          <ol className="action-steps">
-            <li>
-              <span>1</span>
-              <div>
-                <h2>Przygotuj się do kontaktu</h2>
-                <p>
-                  Wybrana organizacja: <strong>{organization.name}</strong>. W
-                  wersji rzeczywistej najpierw sprawdź jej oficjalne dane
-                  kontaktowe i obszar działania.
-                </p>
-              </div>
-            </li>
-            <li>
-              <span>2</span>
-              <div>
-                <h2>Opowiedz o swojej potrzebie</h2>
-                <p>
-                  Skorzystaj z tekstu poniżej. Zapytaj o rozwiązanie{" "}
-                  <strong>„{innovation.title}”</strong> i o to, czy odpowiada
-                  Twojej sytuacji.
-                </p>
-              </div>
-            </li>
-            <li>
-              <span>3</span>
-              <div>
-                <h2>Ustalcie możliwy następny krok</h2>
-                <p>
-                  Zapytaj o dostępność, potrzebne zasoby i warunki udziału.
-                  Wspólnie uzgodnijcie termin, jeśli organizacja potwierdzi
-                  możliwość wsparcia.
-                </p>
-              </div>
-            </li>
-          </ol>
-          <p className="notice">
-            To przykład demonstracyjny. Organizacja jest fikcyjna — nie podajemy
-            numeru telefonu ani adresu. Te wskazówki nie oznaczają przyjęcia
-            zgłoszenia.
-          </p>
-        </div>
-        <aside className="selected-organization card">
-          <span className="organization-icon" aria-hidden="true">
-            {organization.symbol}
-          </span>
-          <p className="eyebrow">Twój wybór · demo</p>
-          <h2>{organization.name}</h2>
-          <p>{organization.description}</p>
-          <div className="organization-solution">
-            <span>Rozwiązanie do omówienia</span>
-            <strong>{innovation.title}</strong>
-          </div>
-          <p className="handwritten">
-            Razem łatwiej
-            <br />
-            zrobić pierwszy krok. ♡
-          </p>
-        </aside>
-      </div>
-      <MessageDraft initial={message} />
-      <div className="actions">
-        <Link
-          className="button"
-          href={`/adaptacje/nowa?innovationId=${innovation.id}&needId=${need.id}`}
-        >
-          Dostosuj do mojej instytucji
-        </Link>
-        <Link
-          className="button secondary"
-          href={`/wiadomosci/nowa?needId=${need.id}`}
-        >
-          Zapytaj koordynatora
-        </Link>
-      </div>
+      )}
       <details className="card plan-evidence">
-        <summary>
-          Dlaczego ta propozycja? Zobacz rozwiązanie, źródła i ograniczenia
-        </summary>
-        <h2>{innovation.title}</h2>
+        <summary>Szczegóły i źródła</summary>
         <p>{innovation.solution}</p>
-        <p className="help">
-          {result.mode.explanation === "azure" ||
-          result.mode.explanation === "openai"
-            ? "Wyjaśnienia AI — wymagają oceny."
-            : "Wyjaśnienia szablonowe — bez analizy AI."}{" "}
-          Powiązanie z organizacją jest fikcyjne. To ogólne wskazówki, nie plan
-          adaptacji zatwierdzony przez ROPS.
-        </p>
-        <h3>Pasujące aspekty</h3>
+        <h3>Dlaczego ta propozycja?</h3>
         <ul>
           {match.reasons.map((t) => (
             <li key={t}>{t}</li>
           ))}
         </ul>
-        <h3>Ograniczenia i warunki</h3>
+        <h3>Warunki</h3>
         <ul>
-          {match.limitations.map((t) => (
-            <li key={t}>{t}</li>
-          ))}
-          {innovation.requirements.map((t) => (
+          {[...match.limitations, ...innovation.requirements].map((t) => (
             <li key={t}>{t}</li>
           ))}
         </ul>
-        <h3>Warto doprecyzować</h3>
-        <ul>
-          {result.clarifyingQuestions.map((t) => (
-            <li key={t}>{t}</li>
-          ))}
-        </ul>
-        <h3>Źródła</h3>
         {innovation.sources
           .filter((source) => match.sourceIds.includes(source.id))
           .map((source) => (
             <p key={source.id}>
-              {source.sourceTitle}
-              {source.sourceUrl && (
-                <>
-                  {" "}
-                  ·{" "}
-                  <a href={source.sourceUrl} target="_blank" rel="noreferrer">
-                    Otwórz źródło
-                  </a>
-                </>
+              {source.sourceUrl ? (
+                <a href={source.sourceUrl} target="_blank" rel="noreferrer">
+                  {source.sourceTitle} ↗
+                </a>
+              ) : (
+                source.sourceTitle
               )}
             </p>
           ))}
-        <Link className="text-link" href={`/innowacje/${innovation.id}`}>
-          Poznaj pełny opis innowacji →
-        </Link>
+        <Link href={`/innowacje/${innovation.id}`}>Pełny opis rozwiązania</Link>
       </details>
-      <div className="catalog-invite">
-        <span>Ta propozycja nie odpowiada Twojej potrzebie?</span>
-        <Link href={`/potrzeby/${need.id}`}>
-          Sprawdź pozostałe organizacje →
-        </Link>
-      </div>
     </section>
   );
 }

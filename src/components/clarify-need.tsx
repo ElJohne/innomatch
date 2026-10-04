@@ -69,12 +69,6 @@ export function ClarifyNeed({
         void submit();
       }}
     >
-      <h2>Doprecyzujmy razem</h2>
-      <p>
-        Odpowiedz własnymi słowami. Zachowamy Twój pierwotny opis i wcześniejsze
-        odpowiedzi. To jedyne doprecyzowanie — możesz też od razu przejść do
-        wyników. Nie wpisuj danych osobowych.
-      </p>
       <details>
         <summary>Twój dotychczasowy opis</summary>
         <p>{input.description}</p>
@@ -108,16 +102,14 @@ export function ClarifyNeed({
           {error}
         </p>
       )}
-      <button disabled={busy}>
-        {busy ? "Zapisujemy odpowiedź…" : "Uwzględnij odpowiedź i szukaj"}
-      </button>
+      <button disabled={busy}>{busy ? "Szukamy…" : "Szukaj →"}</button>
       <button
         type="button"
         className="secondary"
         disabled={busy}
         onClick={() => void submit(true)}
       >
-        Pokaż wyniki bez dodatkowych odpowiedzi
+        Pomiń pytanie
       </button>
     </form>
   );

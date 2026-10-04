@@ -26,7 +26,7 @@ export default async function NewPlan({
         </p>
       )}
       <Link href={`/innowacje/${innovation.id}`}>← Innowacja</Link>
-      <p className="eyebrow detail-label">Middleman Innowacji</p>
+      <p className="eyebrow detail-label">Plan dla instytucji</p>
       <h1>Dostosuj do mojej instytucji</h1>
       <p className="lead">{innovation.title}</p>
       <p>

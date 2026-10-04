@@ -3300,9 +3300,20 @@ html:is(
 .idea-preview {
   overflow-wrap: anywhere;
 }
-.regional-table-scroll { overflow-x: auto; }
-.regional-table-scroll table { width: 100%; border-collapse: collapse; }
-.regional-table-scroll th, .regional-table-scroll td { padding: .65rem; border-bottom: 1px solid currentColor; text-align: left; min-width: 8rem; }
+.regional-table-scroll {
+  overflow-x: auto;
+}
+.regional-table-scroll table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.regional-table-scroll th,
+.regional-table-scroll td {
+  padding: 0.65rem;
+  border-bottom: 1px solid currentColor;
+  text-align: left;
+  min-width: 8rem;
+}
 @media print {
   body:has(.idea-preview) {
     background: white !important;
@@ -3332,4 +3343,34 @@ html:is(
   .idea-preview a {
     color: black !important;
   }
+}
+
+/* Short, direct resident journey. */
+.audience-choice {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.audience-choice button {
+  min-width: 0;
+  padding: 12px 10px;
+  font-size: 16px;
+}
+.compact-match h2 {
+  margin: 0 0 10px;
+}
+.compact-match .match-summary {
+  margin: 0 0 18px;
+  max-width: 65ch;
+}
+.compact-match .match-more {
+  margin-top: 18px;
+}
+.next-action h2 {
+  font-size: clamp(1.25rem, 3vw, 1.6rem);
+  line-height: 1.45;
+  margin: 14px 0 24px;
+}
+.next-action .stack {
+  gap: 8px;
 }

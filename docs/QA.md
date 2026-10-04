@@ -1,5 +1,20 @@
 # Перевірки — 2026-10-03, поточна ітерація та історія
 
+## Minimal resident journey — 2026-10-04, 08:08
+
+- Local fixtures/mock, visibly synthetic: single textarea + two persona buttons,
+  submit → results directly (no confirmation), closed details, three short cards.
+- Choose card → one next action, no budget/institution form → one-click request →
+  actual saved private thread with selected solution and linked need PASS.
+- Publication/need ownership rechecked server-side on personal action page;
+  existing thread is opened instead of creating a duplicate.
+- Lint/typecheck PASS; unit 68/68 PASS after updating existing structured-provider
+  stub with summary/nextStep. First production build PASS. Reply form now collapsed
+  behind “Dodaj wiadomość”; final production build PASS; live AI journey pending.
+- Full existing E2E not run (legacy 4-screen selectors need later maintenance).
+  PostgreSQL integration not run in this iteration; no schema/database change.
+- Prior county diagnosis deployment ba72b15 / Actions 37170012179 SUCCESS.
+
 ## Regional diagnosis local — 2026-10-04, 04:06
 
 - Collector directly fetched ROPS: IDs 285/17/215/25, кожен 22 унікальні повіти;

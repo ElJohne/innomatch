@@ -3,6 +3,7 @@ import { z } from "zod";
 const shortText = z.string().trim().max(200);
 export const needInput = z
   .object({
+    audience: z.enum(["PRIVATE", "INSTITUTION"]).optional(),
     description: z
       .string()
       .trim()
@@ -84,6 +85,8 @@ export const matchEvidenceSchema = z
   .strict();
 export const matchSchema = z
   .object({
+    summary: z.string().max(220).optional(),
+    nextStep: z.string().max(280).optional(),
     innovationId: z.string(),
     rank: z.number().int().min(1).max(3),
     reasons: z.array(z.string().max(700)).min(1).max(5),

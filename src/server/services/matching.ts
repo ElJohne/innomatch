@@ -321,6 +321,8 @@ export async function matchNeed(
         matches: z
           .array(
             matchSchema.omit({ evidence: true }).extend({
+              summary: z.string().min(10).max(220),
+              nextStep: z.string().min(10).max(280),
               evidenceIds: z.array(z.string().min(1).max(100)).max(3),
               reasons: z.array(z.string().min(10).max(400)).min(1).max(2),
               limitations: z.array(z.string().min(10).max(400)).min(1).max(2),
@@ -342,9 +344,10 @@ export async function matchNeed(
       const generated = schema.parse(
         await ai.generateStructured(
           rerankTask +
-            " Każdy powód i ograniczenie zapisz jako jedno krótkie, pełne zdanie po polsku (cel: do 150 znaków). Nie urywaj zdań. Nazwy pól JSON, takie jak sourceIds i evidenceIds, nigdy nie są treścią wyjaśnienia dla użytkownika.",
+            " Pisz dla osoby szukającej pomocy, prostym językiem. summary: jedno zdanie, do 140 znaków, co to rozwiązanie daje w tej konkretnej sytuacji. nextStep: jedna konkretna, łatwa czynność do wykonania teraz, do 180 znaków, zwracaj się bezpośrednio do użytkownika. Dla audience=PRIVATE nie każ tworzyć projektu, instytucji, budżetu ani pilotażu; użytkownik chce poradzić sobie z codziennym problemem. Dla INSTITUTION dopasuj pierwszy krok do opisanej sytuacji organizacji. Nie wymyślaj kontaktów, dostępności ani zobowiązań innych osób. Nie pisz w summary i nextStep o AI, hipotezach ani zatwierdzeniu ROPS. Powody i ograniczenia są szczegółami: każde jako jedno krótkie, pełne zdanie (do 150 znaków). Nazwy pól JSON nigdy nie są treścią dla użytkownika.",
           {
             need: {
+              audience: need.audience ?? "PRIVATE",
               description: need.description,
               constraints: need.constraints,
               targetGroups: need.targetGroups,

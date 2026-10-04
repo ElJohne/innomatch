@@ -7,7 +7,6 @@ import {
   listKnowledge,
 } from "@/server/services/repository";
 import { visibleMatch } from "@/server/services/matching";
-import { listOrganizations } from "@/server/services/organizations";
 import { MatchResults } from "@/components/match-results";
 import { FlowSteps } from "@/components/flow-steps";
 export default async function NeedPage({
@@ -21,7 +20,7 @@ export default async function NeedPage({
   if (!need) notFound();
   return (
     <section className="flow-page">
-      <FlowSteps current={3} />
+      <FlowSteps current={2} />
       <MatchResults
         key={need.id}
         id={need.id}
@@ -31,6 +30,7 @@ export default async function NeedPage({
             : null
         }
         input={{
+          audience: need.audience,
           description: need.description,
           municipality: need.municipality,
           targetGroups: need.targetGroups,
@@ -39,7 +39,6 @@ export default async function NeedPage({
           skipClarification: need.skipClarification,
         }}
         records={await listInnovations()}
-        organizations={listOrganizations()}
         resources={await listKnowledge()}
       />
     </section>

@@ -15,8 +15,10 @@ import {
 } from "@/components/communication-forms";
 export default async function ThreadPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ id: string }>;
+  searchParams: Promise<{ sent?: string }>;
 }) {
   if (!(await session()).ownerId) notFound();
   const a = await actor();
@@ -33,7 +35,16 @@ export default async function ThreadPage({
         ← {a.staff ? "Skrzynka zgłoszeń" : "Moje sprawy"}
       </Link>
       <p className="eyebrow detail-label">Rozmowa prywatna</p>
-      <h1>{a.staff ? "Rozmowa ze zgłaszającym" : "Rozmowa z koordynatorem"}</h1>
+      <h1>
+        {a.staff
+          ? "Rozmowa ze zgłaszającym"
+          : (await searchParams).sent === "1"
+            ? "Prośba wysłana"
+            : "Rozmowa z koordynatorem"}
+      </h1>
+      {!a.staff && (await searchParams).sent === "1" && (
+        <p>Odpowiedź znajdziesz tutaj lub w Moich sprawach.</p>
+      )}
       {thread.innovation && (
         <p>
           Innowacja:{" "}
@@ -142,7 +153,14 @@ export default async function ThreadPage({
         id={thread.id}
         through={thread.messages.at(-1)?.sequence ?? 0}
       />
-      <MessageForm threadId={thread.id} contactOptions={!a.staff} />
+      {a.staff ? (
+        <MessageForm threadId={thread.id} />
+      ) : (
+        <details className="card">
+          <summary>Dodaj wiadomość</summary>
+          <MessageForm threadId={thread.id} contactOptions={!thread.need} />
+        </details>
+      )}
     </section>
   );
 }

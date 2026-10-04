@@ -226,6 +226,9 @@ it("keeps a source-validated match while dropping fabricated optional materials"
           {
             innovationId: candidate.id,
             rank: 1,
+            summary: "Wspólne posiłki pomagają nawiązać relacje.",
+            nextStep:
+              "Poproś koordynatora o pomoc w znalezieniu wspólnego spotkania.",
             reasons: ["Wspólny cel."],
             limitations: ["Do sprawdzenia."],
             sourceIds: [candidate.sourceIds[0]],
