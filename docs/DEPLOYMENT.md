@@ -1,5 +1,12 @@
 # Запуск і підключення
 
+Актуальний функціональний реліз 04.10.2026 09:33: `d16ed07`,
+[Actions37185993820](https://github.com/ElJohne/innomatch/actions/runs/37185993820)
+SUCCESS. Збережено актуальний redesign master; нових migrations немає.
+Backup `backup-functional-20261004` Complete. Production mount
+`d16ed07e00795e1ce5dd7a3f8a69abdbcce12f06-37185993820-1`, rollout та HTTPS
+health/ready200 підтверджено. Короткий public smoke PASS; деталі в QA/STATUS.
+
 Наступні production релізи без міграцій: 3193da5 / Actions 37167103864 SUCCESS
 (grant JSONB) і 2c5f0bc / Actions 37167868599 SUCCESS (idea comparison).
 Live grant persistence/AI/consultation та compare/append/reopen підтверджені.

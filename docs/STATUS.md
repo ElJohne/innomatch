@@ -1,5 +1,25 @@
 # Стан — 2026-10-04
 
+## Функціональні виправлення + актуальний редизайн на production — 09:33
+
+За прямим дозволом власника розгорнуто `d16ed07e00795e1ce5dd7a3f8a69abdbcce12f06`.
+GitHub Actions [37185993820](https://github.com/ElJohne/innomatch/actions/runs/37185993820)
+SUCCESS; production mount `d16ed07e00795e1ce5dd7a3f8a69abdbcce12f06-37185993820-1`
+підтверджено SSH, rollout успішний. Backup `backup-functional-20261004` Complete.
+Збережено новіший redesign `6127baa` / `f100695`: функціональні виправлення
+поєднано з ним, а не повернуто старий UI. Матеріали/регіон мають окремі маршрути
+`/innowacje/materialy` і `/innowacje/region`; старі query-view адреси перенаправляються.
+
+Об'єднана версія: build/lint/typecheck PASS, 79/79 unit PASS (4.21s);
+короткий fixtures/mock HTTP smoke на production build PASS (пошук/cache,
+план/edit/preview, idea/grant/share/revision notification, queue). Production GET:
+health/ready/home/catalog/materials/region/new idea —200; `seniorzy bankomat`
+→ Merkury у UI і API(total1); education API total7; anonymous analytics403,
+anonymous conversations307. Нових production private records/live AI не створено.
+Повний E2E/PG не повторювали. Нових schema migrations немає; штатні migration
+та corpus jobs workflow завершилися успішно. Агентів зупинено за проханням
+власника; фінальне узгодження, перевірки та deploy завершено самостійно.
+
 ## Функціональні доробки M1–M7 — 2026-10-04, 09:20, локально
 
 За новим запитом власника виконано швидку ітерацію коду для всіх семи модулів.

@@ -1,5 +1,21 @@
 # Перевірки — 2026-10-03, поточна ітерація та історія
 
+## Production release d16ed07 — 2026-10-04, 09:33
+
+- Поєднано функціональні правки з новішим master redesign `6127baa`/`f100695`.
+- Після узгодження: typecheck/lint/build PASS; 79/79 unit, 13files,4.21s PASS.
+- Короткий `tmp/functional-smoke.mjs` на зібраній локальній production версії:
+  M1 search/cache; M3 idea/grant/preview/share; M5 queue/revision message;
+  M7 constraints edit/reopen/preview — PASS. Тільки synthetic fixtures/mock.
+- Backup Job `backup-functional-20261004` Complete до push/rollout.
+- Actions37185993820 SUCCESS (build1m13s,deploy38s). Точний mount
+  `d16ed07e00795e1ce5dd7a3f8a69abdbcce12f06-37185993820-1`, rollout SUCCESS.
+- `https://pomocnypunkt.pl`: health/ready200 ok; home/catalog/materials/region/
+  new idea200; UI `seniorzy bankomat` містить Merkury, API total1; education API
+  total7; anonymous analytics403 та conversations307 — очікуваний захист.
+- Production перевірка цього релізу — read-only. Повторних live AI викликів,
+  створення приватних записів або повного E2E/PG suite не було.
+
 ## Швидка функціональна ітерація M1–M7 — 2026-10-04, 09:20
 
 - `npm run typecheck` — PASS; `npm run lint` — PASS. Використано штатний npm-cli
