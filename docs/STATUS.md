@@ -1,6 +1,20 @@
 # Стан — 2026-10-04
 
-## Каталог live PASS; повний перегляд адаптації локально — 04:08
+## Регіональний діагноз локально; printable plan deployed — 04:06
+
+9c9aa1b / Actions 37169557540 SUCCESS. Printable adaptation preview розгорнутий;
+ручний preview був перевірений локально, live owner journey ще не повторено.
+
+За актуальним конкурентним оглядом Wici/Rozmach доповнено M2 у grant editor:
+4 реальні показники Obserwator ROPS × 22 повіти, вибір території, таблиця,
+роки/первинні джерела, explicit append до diagnosis. Власний collector напряму
+прочитав ROPS; походження й оновлення — DATA.md. Без runtime зовнішнього запиту.
+Manual fixtures/mock create → grant → miasto Kraków → 19,89% (65+, 2024) →
+append → save → reload PASS; 22 rows, overflow false. Lint/build PASS.
+Дані не оцінюють ефективність рішення або потребу конкретної людини.
+Live цього пакета ще очікує rollout. Нових тестів/міграцій/залежностей немає.
+
+## Каталог live PASS; повний перегляд адаптації локально — 03:58
 
 6399a26 / Actions 37169305927 SUCCESS. Production catalog: «seniorzy bankomat»,
 «bankomatu seniorów» та точне «Merkury» дають одну релевантну картку PASS.

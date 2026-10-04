@@ -1,6 +1,18 @@
 # Перевірки — 2026-10-03, поточна ітерація та історія
 
-## Catalog live / plan preview local — 2026-10-04, 04:08
+## Regional diagnosis local — 2026-10-04, 04:06
+
+- Collector directly fetched ROPS: IDs 285/17/215/25, кожен 22 унікальні повіти;
+  latest selected years 2024/2024/2021/2024, усі значення числові 0–100,
+  спільний набір територій. Дані source names/title/year з першоджерела.
+- Manual local fixtures/mock: synthetic idea → grant → miasto Kraków →
+  senior share 19,89% / 2024 → append → save → reopen diagnosis PASS.
+  Початковий текст збережено, повтор source URL disabled. 22 table rows,
+  page overflow false. Lint/build PASS; live rollout ще очікує.
+- 9c9aa1b / Actions 37169557540 SUCCESS (printable adaptation); локальний
+  повний preview PASS записаний раніше, production owner flow ще не повторено.
+
+## Catalog live / plan preview local — 2026-10-04, 03:58
 
 - 6399a26 / Actions 37169305927 SUCCESS. Ручний production query:
   seniorzy bankomat → Merkury (1); bankomatu seniorów → Merkury (1);

@@ -3300,6 +3300,9 @@ html:is(
 .idea-preview {
   overflow-wrap: anywhere;
 }
+.regional-table-scroll { overflow-x: auto; }
+.regional-table-scroll table { width: 100%; border-collapse: collapse; }
+.regional-table-scroll th, .regional-table-scroll td { padding: .65rem; border-bottom: 1px solid currentColor; text-align: left; min-width: 8rem; }
 @media print {
   body:has(.idea-preview) {
     background: white !important;

@@ -1,5 +1,20 @@
 # Дані й походження
 
+## Показники повітів ROPS — 2026-10-04
+
+`data/rops/regional-indicators.json`: 4 показники × 22 повіти, без персональних
+даних. Values, рік, назви територій і первинне джерело завантажено безпосередньо
+з `https://obserwator.rops.krakow.pl/differenceanalysis/{id}`. IDs 285/17/215/25
+виявлено завдяки Wici: https://github.com/JohnnyArachnid/hackyeah-2026-hubmi/blob/main/data/wskazniki.yaml.
+Імпортер написано у нас за принципом читання chart arrays; чужий код не запускали.
+`node scripts/collect-regional-indicators.mjs` перевіряє 22 унікальні території,
+спільний набір повітів, валідний рік і діапазон процентних значень. Snapshot
+статичний і датований; оновлення файла потребує review та звичайного deploy.
+Роки: seniorzy/pomoc społeczna/bezrobocie — 2024; niepełnosprawność — 2021.
+Це значення для повітів, без вигаданого «середнього по воєводству», без
+індивідуальних висновків, причинності чи автоматичного призначення послуг.
+UI дає explicit append у diagnosis; автор уточнює застосовність.
+
 Актуально після імпорту ROPS: 114 інновацій і 69 матеріалів, включно з описом та
 посиланням на Social Innovation Canvas (`rops-knowledge-7b2381c3ed665c63`). M3 використовує
 цей запис за умови публікації в каталозі. Повного інтерактивного Canvas немає.

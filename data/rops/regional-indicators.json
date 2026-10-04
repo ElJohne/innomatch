@@ -1,0 +1,409 @@
+{
+  "retrievedAt": "2026-10-04T02:00:32.635Z",
+  "items": [
+    {
+      "id": 285,
+      "key": "seniors",
+      "unit": "%",
+      "denominator": "mieszkańców",
+      "label": "Mieszkańcy w wieku 65+",
+      "year": 2024,
+      "sourceTitle": "Ludność w wieku 65+/ Współczynnik starości demograficznej",
+      "source": "Główny Urząd Statystyczny (Bank Danych Lokalnych).",
+      "sourceUrl": "https://obserwator.rops.krakow.pl/differenceanalysis/285",
+      "values": [
+        {
+          "county": "bocheński",
+          "value": 17.66
+        },
+        {
+          "county": "brzeski",
+          "value": 17.86
+        },
+        {
+          "county": "chrzanowski",
+          "value": 23.09
+        },
+        {
+          "county": "dąbrowski",
+          "value": 18.17
+        },
+        {
+          "county": "gorlicki",
+          "value": 19.34
+        },
+        {
+          "county": "krakowski",
+          "value": 17.39
+        },
+        {
+          "county": "limanowski",
+          "value": 15.07
+        },
+        {
+          "county": "m. Kraków",
+          "value": 19.89
+        },
+        {
+          "county": "m. Nowy Sącz",
+          "value": 21.12
+        },
+        {
+          "county": "m. Tarnów",
+          "value": 24.83
+        },
+        {
+          "county": "miechowski",
+          "value": 23.51
+        },
+        {
+          "county": "myślenicki",
+          "value": 16.27
+        },
+        {
+          "county": "nowosądecki",
+          "value": 15.12
+        },
+        {
+          "county": "nowotarski",
+          "value": 17.16
+        },
+        {
+          "county": "olkuski",
+          "value": 23.56
+        },
+        {
+          "county": "oświęcimski",
+          "value": 21.44
+        },
+        {
+          "county": "proszowicki",
+          "value": 20.79
+        },
+        {
+          "county": "suski",
+          "value": 18.02
+        },
+        {
+          "county": "tarnowski",
+          "value": 17.39
+        },
+        {
+          "county": "tatrzański",
+          "value": 19.39
+        },
+        {
+          "county": "wadowicki",
+          "value": 18.23
+        },
+        {
+          "county": "wielicki",
+          "value": 15.58
+        }
+      ]
+    },
+    {
+      "id": 17,
+      "key": "social-support",
+      "unit": "%",
+      "denominator": "mieszkańców",
+      "label": "Korzystający z pomocy społecznej",
+      "year": 2024,
+      "sourceTitle": "Beneficjenci pomocy społecznej",
+      "source": "Dane dla Polski – Sprawozdanie MRiPS-03 (wcześniej MRPiPS-03), dane dla Małopolski – Sprawozdanie:  MRPiPS-03 (do 2014 r.), OZPS (od 2015 r.); GUS (BDL). Dane dot. ludności za lata 2010 - 2021 bazują na wynikach Narodowego Spisu Powszechnego Ludności i Mieszkań 2011.",
+      "sourceUrl": "https://obserwator.rops.krakow.pl/differenceanalysis/17",
+      "values": [
+        {
+          "county": "bocheński",
+          "value": 2.35
+        },
+        {
+          "county": "brzeski",
+          "value": 2.88
+        },
+        {
+          "county": "chrzanowski",
+          "value": 3.18
+        },
+        {
+          "county": "dąbrowski",
+          "value": 5.2
+        },
+        {
+          "county": "gorlicki",
+          "value": 6.03
+        },
+        {
+          "county": "krakowski",
+          "value": 1.51
+        },
+        {
+          "county": "limanowski",
+          "value": 5.21
+        },
+        {
+          "county": "m. Kraków",
+          "value": 1.81
+        },
+        {
+          "county": "m. Nowy Sącz",
+          "value": 3.14
+        },
+        {
+          "county": "m. Tarnów",
+          "value": 3.16
+        },
+        {
+          "county": "miechowski",
+          "value": 2.74
+        },
+        {
+          "county": "myślenicki",
+          "value": 2.22
+        },
+        {
+          "county": "nowosądecki",
+          "value": 5.48
+        },
+        {
+          "county": "nowotarski",
+          "value": 2.19
+        },
+        {
+          "county": "olkuski",
+          "value": 2.64
+        },
+        {
+          "county": "oświęcimski",
+          "value": 2.02
+        },
+        {
+          "county": "proszowicki",
+          "value": 3.29
+        },
+        {
+          "county": "suski",
+          "value": 3.42
+        },
+        {
+          "county": "tarnowski",
+          "value": 3.37
+        },
+        {
+          "county": "tatrzański",
+          "value": 2.41
+        },
+        {
+          "county": "wadowicki",
+          "value": 2.03
+        },
+        {
+          "county": "wielicki",
+          "value": 1.56
+        }
+      ]
+    },
+    {
+      "id": 215,
+      "key": "disability",
+      "unit": "%",
+      "denominator": "mieszkańców",
+      "label": "Osoby z niepełnosprawnością",
+      "year": 2021,
+      "sourceTitle": "Odsetek osób niepełnosprawnych ogółem",
+      "source": "Główny Urząd Statystyczny (Narodowy Spis Powszechny Ludności i Mieszkań 2011 i 2021)",
+      "sourceUrl": "https://obserwator.rops.krakow.pl/differenceanalysis/215",
+      "values": [
+        {
+          "county": "bocheński",
+          "value": 13.82
+        },
+        {
+          "county": "brzeski",
+          "value": 13.94
+        },
+        {
+          "county": "chrzanowski",
+          "value": 14.55
+        },
+        {
+          "county": "dąbrowski",
+          "value": 13.36
+        },
+        {
+          "county": "gorlicki",
+          "value": 18.65
+        },
+        {
+          "county": "krakowski",
+          "value": 12.99
+        },
+        {
+          "county": "limanowski",
+          "value": 12
+        },
+        {
+          "county": "m. Kraków",
+          "value": 13.87
+        },
+        {
+          "county": "m. Nowy Sącz",
+          "value": 13.27
+        },
+        {
+          "county": "m. Tarnów",
+          "value": 18.68
+        },
+        {
+          "county": "miechowski",
+          "value": 20.72
+        },
+        {
+          "county": "myślenicki",
+          "value": 12.92
+        },
+        {
+          "county": "nowosądecki",
+          "value": 11.93
+        },
+        {
+          "county": "nowotarski",
+          "value": 12.13
+        },
+        {
+          "county": "olkuski",
+          "value": 14.74
+        },
+        {
+          "county": "oświęcimski",
+          "value": 12.94
+        },
+        {
+          "county": "proszowicki",
+          "value": 18.15
+        },
+        {
+          "county": "suski",
+          "value": 12.85
+        },
+        {
+          "county": "tarnowski",
+          "value": 14.45
+        },
+        {
+          "county": "tatrzański",
+          "value": 12.63
+        },
+        {
+          "county": "wadowicki",
+          "value": 13.43
+        },
+        {
+          "county": "wielicki",
+          "value": 11.81
+        }
+      ]
+    },
+    {
+      "id": 25,
+      "key": "unemployment",
+      "unit": "%",
+      "denominator": "aktywnych zawodowo",
+      "label": "Stopa bezrobocia rejestrowanego",
+      "year": 2024,
+      "sourceTitle": "Stopa bezrobocia",
+      "source": "Główny Urząd Statystyczny (Bank Danych Lokalnych)",
+      "sourceUrl": "https://obserwator.rops.krakow.pl/differenceanalysis/25",
+      "values": [
+        {
+          "county": "bocheński",
+          "value": 2.4
+        },
+        {
+          "county": "brzeski",
+          "value": 5
+        },
+        {
+          "county": "chrzanowski",
+          "value": 6.3
+        },
+        {
+          "county": "dąbrowski",
+          "value": 11.4
+        },
+        {
+          "county": "gorlicki",
+          "value": 6.3
+        },
+        {
+          "county": "krakowski",
+          "value": 4.3
+        },
+        {
+          "county": "limanowski",
+          "value": 7.1
+        },
+        {
+          "county": "m. Kraków",
+          "value": 2
+        },
+        {
+          "county": "m. Nowy Sącz",
+          "value": 3.5
+        },
+        {
+          "county": "m. Tarnów",
+          "value": 4.2
+        },
+        {
+          "county": "miechowski",
+          "value": 5.2
+        },
+        {
+          "county": "myślenicki",
+          "value": 3.1
+        },
+        {
+          "county": "nowosądecki",
+          "value": 7.8
+        },
+        {
+          "county": "nowotarski",
+          "value": 4.8
+        },
+        {
+          "county": "olkuski",
+          "value": 6.7
+        },
+        {
+          "county": "oświęcimski",
+          "value": 4.7
+        },
+        {
+          "county": "proszowicki",
+          "value": 5.5
+        },
+        {
+          "county": "suski",
+          "value": 4.4
+        },
+        {
+          "county": "tarnowski",
+          "value": 6.7
+        },
+        {
+          "county": "tatrzański",
+          "value": 8
+        },
+        {
+          "county": "wadowicki",
+          "value": 5.6
+        },
+        {
+          "county": "wielicki",
+          "value": 3.5
+        }
+      ]
+    }
+  ]
+}

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import type { Idea } from "@/lib/contracts/idea";
 import type { KnowledgeResource } from "@/lib/contracts";
 import { GrantResources } from "./grant-resources";
+import { RegionalDiagnosis } from "./regional-diagnosis";
 import {
   costPhases,
   formatPLN,
@@ -90,6 +91,20 @@ export function GrantEditor({
         i === index ? { ...cost, ...value } : cost,
       ),
     });
+  }
+  function appendDiagnosis(note: string) {
+    change({
+      ...draft,
+      sections: {
+        ...draft.sections,
+        diagnosis: [draft.sections.diagnosis.trim(), note]
+          .filter(Boolean)
+          .join("\n\n"),
+      },
+    });
+    setMessage(
+      "Dodano materiał do pola diagnozy. Uzupełnij jego związek z pomysłem i zapisz szkic.",
+    );
   }
   return (
     <div className="stack">
@@ -177,20 +192,11 @@ export function GrantEditor({
           <GrantResources
             items={resources}
             diagnosis={draft.sections.diagnosis}
-            onAppend={(note) => {
-              change({
-                ...draft,
-                sections: {
-                  ...draft.sections,
-                  diagnosis: [draft.sections.diagnosis.trim(), note]
-                    .filter(Boolean)
-                    .join("\n\n"),
-                },
-              });
-              setMessage(
-                "Dodano odnośnik do pola diagnozy. Uzupełnij jego związek z pomysłem i zapisz szkic.",
-              );
-            }}
+            onAppend={appendDiagnosis}
+          />
+          <RegionalDiagnosis
+            diagnosis={draft.sections.diagnosis}
+            onAppend={appendDiagnosis}
           />
           <details className="canvas-section">
             <summary>Plan kosztów i wnioskowana kwota</summary>
