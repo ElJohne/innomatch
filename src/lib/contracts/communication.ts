@@ -1,5 +1,5 @@
 import { z } from "zod";
-import type { ContactPurpose } from "@/lib/contact-purpose";
+import { contactPurpose, type ContactPurpose } from "@/lib/contact-purpose";
 
 export const loginInput = z
   .object({
@@ -15,6 +15,7 @@ export const messageInput = z
   .strict();
 export const threadInput = messageInput
   .extend({
+    supportPurpose: contactPurpose.optional(),
     needId: z.string().uuid().optional(),
     adaptationId: z.string().uuid().optional(),
     adaptationRevision: z.number().int().positive().optional(),
@@ -28,7 +29,9 @@ export const threadInput = messageInput
   })
   .refine(
     (v) =>
-      [v.needId, v.innovationId, v.adaptationId].filter(Boolean).length === 1,
+      [v.needId, v.innovationId, v.adaptationId, v.supportPurpose].filter(
+        Boolean,
+      ).length === 1,
     {
       message: "Wybierz jeden kontekst rozmowy.",
     },

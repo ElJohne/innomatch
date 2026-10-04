@@ -7,6 +7,7 @@ import { listThreads } from "@/server/services/communication";
 import { MessageForm } from "@/components/communication-forms";
 import { getPlan } from "@/server/services/adaptations";
 import { firstStepFor } from "@/lib/contracts/adaptation";
+import { contactPurpose } from "@/lib/contact-purpose";
 export default async function NewThread({
   searchParams,
 }: {
@@ -14,11 +15,16 @@ export default async function NewThread({
     needId?: string;
     innovationId?: string;
     adaptationId?: string;
+    purpose?: string;
   }>;
 }) {
-  const { needId, innovationId, adaptationId } = await searchParams;
-  if ([needId, innovationId, adaptationId].filter(Boolean).length !== 1)
-    notFound();
+  const { needId, innovationId, adaptationId, purpose } = await searchParams;
+  const parsedPurpose = contactPurpose.safeParse(purpose);
+  if (purpose && !parsedPurpose.success) notFound();
+  const initialPurpose = parsedPurpose.success ? parsedPurpose.data : undefined;
+  const contexts = [needId, innovationId, adaptationId].filter(Boolean).length;
+  const standalone = contexts === 0 && Boolean(initialPurpose);
+  if (contexts !== 1 && !standalone) notFound();
   const s = await session();
   const a = s.ownerId ? await actor() : null;
   if (a?.staff)
@@ -42,19 +48,26 @@ export default async function NewThread({
     ? (await listInnovations()).find((i) => i.id === innovationId)
     : null;
   if ((needId && !need) || (innovationId && !innovation)) notFound();
-  const existing = a
-    ? (await listThreads(a)).find((t) =>
-        adaptationId
-          ? t.adaptationId === adaptationId
-          : needId
-            ? t.needId === needId && !t.adaptationId
-            : t.innovationId === innovationId,
-      )
-    : null;
+  const existing =
+    a && !standalone
+      ? (await listThreads(a)).find((t) =>
+          adaptationId
+            ? t.adaptationId === adaptationId
+            : needId
+              ? t.needId === needId && !t.adaptationId
+              : t.innovationId === innovationId,
+        )
+      : null;
   return (
     <section className="narrow">
       <p className="eyebrow">Wsparcie i współpraca</p>
-      <h1>Zapytaj koordynatora</h1>
+      <h1>
+        {initialPurpose === "MENTORSHIP"
+          ? "Poproś o wsparcie mentora"
+          : initialPurpose === "PARTNERSHIP"
+            ? "Poproś o pomoc w znalezieniu partnera"
+            : "Napisz do koordynatora"}
+      </h1>
       {plan && (
         <p className="lead">
           Dotyczy szkicu adaptacji, wersja {plan.revision}.{" "}
@@ -85,6 +98,9 @@ export default async function NewThread({
         </Link>
       ) : (
         <MessageForm
+          key={`${initialPurpose ?? "CONSULTATION"}:${needId ?? innovationId ?? adaptationId ?? "support"}`}
+          initialPurpose={initialPurpose}
+          standalone={standalone}
           needId={needId}
           innovationId={innovationId}
           adaptationId={adaptationId}

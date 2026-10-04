@@ -27,15 +27,33 @@
   font-weight: 700;
 }
 .detailLayout {
+  overflow-wrap: anywhere;
   display: grid;
   grid-template-columns: minmax(0, 1.8fr) minmax(15rem, 1fr);
+  grid-template-areas: "summary actions" "description actions";
   gap: 2rem;
   margin: 2rem 0;
+}
+.summary {
+  grid-area: summary;
+  margin: 0;
+}
+.description {
+  grid-area: description;
+}
+.actionOption {
+  margin-top: 1.25rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--line);
+}
+.actionOption p {
+  margin-bottom: 0;
 }
 .detailLayout > * {
   min-width: 0;
 }
 .section {
+  overflow-wrap: anywhere;
   border-top: 1px solid var(--line);
   padding-top: 1.5rem;
   margin-top: 1.5rem;
@@ -44,6 +62,7 @@
   margin-top: 0;
 }
 .actions {
+  grid-area: actions;
   align-self: start;
   padding: 1.5rem;
   border: 1px solid var(--line);
@@ -52,6 +71,10 @@
 }
 .actions h2 {
   margin-top: 0;
+}
+.actions :global(button),
+.actions :global(.button) {
+  max-width: 100%;
 }
 .actions > a {
   display: block;
@@ -120,6 +143,9 @@
   padding-top: 0.5rem;
 }
 @media (max-width: 600px) {
+  .detailLayout {
+    grid-template-areas: "summary" "actions" "description";
+  }
   .search,
   .extra,
   .detailLayout,

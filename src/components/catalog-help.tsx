@@ -55,7 +55,7 @@ export function CatalogHelp({
   return (
     <div>
       <button type="button" disabled={busy} onClick={requestHelp}>
-        {busy ? "Wysyłam…" : "Zapytaj koordynatora →"}
+        {busy ? "Wysyłam…" : "Wyślij prośbę do koordynatora →"}
       </button>
       <p className="help">Wyślesz prośbę o pomoc z tym rozwiązaniem.</p>
       {error && (

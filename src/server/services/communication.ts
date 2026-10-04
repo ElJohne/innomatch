@@ -13,7 +13,7 @@ import { HttpError } from "@/server/http";
 import { getNeed, listInnovations } from "./repository";
 import { getPlan } from "./adaptations";
 import { getIdea } from "./ideas";
-import { purposeFromMessage } from "@/lib/contact-purpose";
+import { purposeFromMessage, withContactPurpose } from "@/lib/contact-purpose";
 import {
   communicationMemory as memory,
   type ThreadRow,
@@ -168,6 +168,11 @@ export async function createThread(a: Actor, input: ThreadInput) {
       "STAFF_CONTEXT",
       "Otwórz rozmowę ze skrzynki koordynatora.",
     );
+  const body = input.supportPurpose
+    ? withContactPurpose(input.body, input.supportPurpose)
+    : input.body;
+  if (body.length > 4000)
+    throw new HttpError(400, "VALIDATION", "Skróć wiadomość do 3900 znaków.");
   const plan = input.adaptationId
     ? await getPlan(input.adaptationId, a.ownerId)
     : null;
@@ -189,7 +194,9 @@ export async function createThread(a: Actor, input: ThreadInput) {
     ? `adaptation:${input.adaptationId}`
     : needId
       ? `need:${needId}`
-      : `innovation:${input.innovationId}`;
+      : input.innovationId
+        ? `innovation:${input.innovationId}`
+        : `support:${input.supportPurpose}:${input.requestKey}`;
   if (fixtures()) {
     const m = memory();
     const previous = m.threads.find(
@@ -216,7 +223,7 @@ export async function createThread(a: Actor, input: ThreadInput) {
       thread_id: id,
       author_id: a.ownerId,
       author_role: "USER",
-      body: input.body,
+      body,
       request_key: input.requestKey,
       created_at: new Date(),
     });
@@ -236,7 +243,7 @@ export async function createThread(a: Actor, input: ThreadInput) {
       )[0].id;
     const id = rows[0].id;
     await tx`insert into messages (id,thread_id,author_id,author_role,body,request_key)
-      values (${randomUUID()},${id},${a.ownerId},'USER',${input.body},${input.requestKey})`;
+      values (${randomUUID()},${id},${a.ownerId},'USER',${body},${input.requestKey})`;
     return id;
   });
 }

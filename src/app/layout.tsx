@@ -64,6 +64,9 @@ export default function RootLayout({
             </span>
           </Link>
           <MainNavigation />
+          <Link className="urgent-service" href="/pilna-pomoc">
+            Pilna pomoc
+          </Link>
           <Accessibility />
         </header>
         <main id="main">{children}</main>
@@ -71,9 +74,17 @@ export default function RootLayout({
           <div className="footer-bottom">
             <span>© {new Date().getFullYear()} Pomocny Punkt</span>
             <nav aria-label="Stopka">
-              <Link href="/innowacje">Katalog innowacji</Link>
+              <Link href="/innowacje">Wiedza i rozwiązania</Link>
+              <Link href="/wspolpraca">Testowanie i współpraca</Link>
               <Link href="/moje-sprawy">Moje sprawy</Link>
               <Link href="/admin">Strefa personelu</Link>
+              <a
+                href="https://www.malopolska.pl"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Małopolska ↗
+              </a>
             </nav>
           </div>
         </footer>

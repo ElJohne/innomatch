@@ -11,7 +11,7 @@ export function IdeaNav({
 }) {
   const items = [
     ["card", "Karta pomysłu", `/pomysly/${id}`],
-    ["canvas", "Canvas", `/pomysly/${id}/canvas`],
+    ["canvas", "Canvas — plan rozwoju", `/pomysly/${id}/canvas`],
     ["compare", "Podobne rozwiązania", `/pomysly/${id}/porownanie`],
     ["grant", "Szkic grantowy", `/pomysly/${id}/grant`],
   ];

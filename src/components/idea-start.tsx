@@ -85,6 +85,7 @@ export function IdeaStart() {
         minLength={30}
         maxLength={2000}
         required
+        aria-describedby="idea-next idea-privacy"
         disabled={busy || Boolean(saved)}
         value={description}
         placeholder="Chcę zorganizować pomoc w zakupach dla samotnych seniorów w mojej okolicy."
@@ -93,7 +94,13 @@ export function IdeaStart() {
           key.current = "";
         }}
       />
-      <p className="help">Bez nazwisk i danych osobowych.</p>
+      <p id="idea-next" className="help">
+        Z opisu przygotujesz kartę pomysłu. Potem możesz rozwinąć Canvas,
+        porównać rozwiązania i przygotować szkic grantowy.
+      </p>
+      <p id="idea-privacy" className="help">
+        Bez nazwisk i danych osobowych.
+      </p>
       <button disabled={busy}>
         {busy
           ? "Przygotowujemy Twój pomysł…"

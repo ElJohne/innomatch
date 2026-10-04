@@ -120,6 +120,8 @@ export function MessageForm({
   adaptationRevision,
   initialBody = "",
   contactOptions = false,
+  initialPurpose,
+  standalone = false,
 }: {
   threadId?: string;
   needId?: string;
@@ -128,12 +130,14 @@ export function MessageForm({
   adaptationRevision?: number;
   initialBody?: string;
   contactOptions?: boolean;
+  initialPurpose?: ContactPurpose;
+  standalone?: boolean;
 }) {
   const router = useRouter();
   const key = useRef("");
   const [body, setBody] = useState(initialBody);
   const [purpose, setPurpose] = useState<ContactPurpose | "">(
-    threadId ? "" : "CONSULTATION",
+    initialPurpose ?? (threadId ? "" : "CONSULTATION"),
   );
   const showContactOptions = !threadId || contactOptions;
   const [busy, setBusy] = useState(false);
@@ -152,14 +156,22 @@ export function MessageForm({
           const result = await post(
             threadId ? `/api/threads/${threadId}/messages` : "/api/threads",
             {
-              body: withContactPurpose(
-                body,
-                showContactOptions ? purpose : undefined,
-              ),
+              body: standalone
+                ? body
+                : withContactPurpose(
+                    body,
+                    showContactOptions ? purpose : undefined,
+                  ),
               requestKey: key.current,
               ...(threadId
                 ? {}
-                : { needId, innovationId, adaptationId, adaptationRevision }),
+                : {
+                    needId,
+                    innovationId,
+                    adaptationId,
+                    adaptationRevision,
+                    ...(standalone ? { supportPurpose: purpose } : {}),
+                  }),
             },
           );
           setBody("");
@@ -186,7 +198,13 @@ export function MessageForm({
         />
       )}
       <label htmlFor="message-body">
-        {threadId ? "Nowa wiadomość" : "O co chcesz zapytać koordynatora?"}
+        {threadId
+          ? "Nowa wiadomość"
+          : purpose === "PARTNERSHIP"
+            ? "Kogo szukasz i co proponujesz?"
+            : purpose === "MENTORSHIP"
+              ? "W czym potrzebujesz pomocy mentora?"
+              : "O co chcesz zapytać koordynatora?"}
       </label>
       <p className="help" id="message-help">
         Tylko Ty i upoważniony personel. Bez danych osobowych i zdrowotnych.

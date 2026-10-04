@@ -1,5 +1,29 @@
 # Перевірки — 2026-10-03, поточна ітерація та історія
 
+## Перший пріоритет — 2026-10-04, локальний fixtures/mock
+
+- `npm run lint`, `npm run typecheck`, `npm run build`: PASS (npm через локальний `.tools/package/bin/npm-cli.js`).
+- `npm test`: 69/69 PASS; прямі CONSULTATION/MENTORSHIP/PARTNERSHIP,
+  збереження мети, дедуплікація, заборона чужому власнику й персоналу створювати запит.
+- `npm run test:e2e`: 31/31 PASS на фінальній production build.
+  Нові входи → обрана мета → запис → reload; без сесії 401, інша сесія 404;
+  негайна prośba зі сторінки рішення → існуюча розмова. Чинні наскрізні сценарії
+  matching, відповіді координатора, ідеї/Canvas/гранту, адаптації, recovery,
+  тестування та модерації також PASS.
+- Нові сторінки: 1440/390/320 px і текст 200%; axe WCAG 2.1 AA tags без порушень.
+  Дії рішення на телефоні після опису, перед деталями; польська мета партнерства
+  питає кого шукає автор і що пропонує. Головне поле вміщується в перший екран
+  1280×720, 1008×600, 390×844, 320×800. Чинні клавіатурні й contrast тести PASS.
+- Вісім знімків та [галерея макетів](priority-one-layouts.html). Переглянуто
+  desktop співпраці та mobile головної/деталей. Джерельні приклади — synthetic.
+- `npm run test:integration`: 8 skipped, TEST_DATABASE_URL відсутня.
+  Міграцію `0009_support_entry` й PostgreSQL persistence не перевірено наживо.
+  Локальний E2E server на Windows потребував завершення свого процесу після
+  останнього тесту, щоб Playwright завершив teardown; фінальний exit code 0.
+- Перші два прогони знайшли мобільні регресії (поле нижче екрана, довгі заголовки
+  при 200%); їх виправлено, фінальний прогін PASS. Повного WCAG-аудиту та
+  live AI/production QA не виконували; deployment і зміни БД не здійснювались.
+
 ## Seven-module redesign deployed — 2026-10-04
 
 Owner authorized push to master and deployment. Release `6127baa` deployed by

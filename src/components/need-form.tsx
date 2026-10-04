@@ -50,9 +50,7 @@ export function NeedForm() {
       router.push(`/potrzeby/${body.id}`);
     } catch (e) {
       setError(
-        e instanceof Error
-          ? e.message
-          : "Brak połączenia. Spróbuj ponownie.",
+        e instanceof Error ? e.message : "Brak połączenia. Spróbuj ponownie.",
       );
       setBusy(false);
     }
@@ -98,12 +96,16 @@ export function NeedForm() {
               type="button"
               className={draft.audience === "INSTITUTION" ? "" : "secondary"}
               aria-pressed={draft.audience === "INSTITUTION"}
+              aria-describedby="institution-help"
               disabled={busy}
               onClick={() => change({ audience: "INSTITUTION" })}
             >
               Instytucja
             </button>
           </div>
+          <p id="institution-help" className="help">
+            Znajdź rozwiązanie i przygotuj plan dla swojej instytucji.
+          </p>
           <label htmlFor="description">
             {draft.audience === "INSTITUTION"
               ? "Jaki problem chcesz rozwiązać w swojej instytucji?"
@@ -155,9 +157,20 @@ export function NeedForm() {
           </div>
         </form>
       </section>
-      <div className="catalog-invite home-discovery">
-        <Link href="/innowacje">Przeglądaj dostępne rozwiązania →</Link>
-      </div>
+      <nav className="product-entry-grid" aria-label="Poznaj możliwości">
+        <Link href="/innowacje">
+          Poznaj wiedzę i rozwiązania <span aria-hidden="true">→</span>
+        </Link>
+        <Link href="/pomysly/nowy">
+          Rozwiń swój pomysł <span aria-hidden="true">→</span>
+        </Link>
+        <Link href="/wspolpraca#testowanie">
+          Dołącz do testowania <span aria-hidden="true">→</span>
+        </Link>
+        <Link href="/wspolpraca#wsparcie">
+          Znajdź wsparcie lub partnera <span aria-hidden="true">→</span>
+        </Link>
+      </nav>
     </>
   );
 }

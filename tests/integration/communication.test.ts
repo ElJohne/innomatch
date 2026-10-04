@@ -101,6 +101,26 @@ describe.skipIf(!process.env.TEST_DATABASE_URL)(
           sendMessage(id, { ownerId: "another-owner" }, replyInput),
         ).rejects.toMatchObject({ status: 404 });
         expect((await getThread(id, a)).messages).toHaveLength(2);
+        const supportInput = {
+          supportPurpose: "MENTORSHIP" as const,
+          body: "Syntetyczna prośba o wsparcie mentora.",
+          requestKey: randomUUID(),
+        };
+        const [supportId, repeatedSupportId] = await Promise.all([
+          createThread(a, supportInput),
+          createThread(a, supportInput),
+        ]);
+        expect(supportId).toBe(repeatedSupportId);
+        expect((await getThread(supportId, a)).need).toBeNull();
+        expect((await getThread(supportId, coordinator)).messages).toHaveLength(
+          1,
+        );
+        expect(
+          (await listThreads(a)).find((t) => t.id === supportId)?.purpose,
+        ).toBe("MENTORSHIP");
+        await expect(
+          getThread(supportId, { ownerId: "another-owner" }),
+        ).rejects.toMatchObject({ status: 404 });
         await sql`update staff_users set active = false where id = ${staffId}`;
         expect(
           await authenticateStaff("staff@example.test", password),

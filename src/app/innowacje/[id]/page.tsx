@@ -61,8 +61,41 @@ export default async function Detail({
         <p className="help">Przykład syntetyczny — dane demonstracyjne.</p>
       )}
       <div className={styles.detailLayout}>
-        <div>
-          <p className="lead">{r.solution}</p>
+        <p className={`lead ${styles.summary}`}>{r.solution}</p>
+        <aside className={styles.actions}>
+          <h2>Skorzystaj z rozwiązania</h2>
+          {a?.staff ? (
+            <Link className="button" href="/admin">
+              Otwórz skrzynkę koordynatora →
+            </Link>
+          ) : (
+            <CatalogHelp
+              innovationId={id}
+              title={r.title}
+              existingThread={existing?.id}
+            />
+          )}
+          <div className={styles.actionOption}>
+            <Link
+              className="button secondary"
+              href={`/adaptacje/nowa?innovationId=${r.id}`}
+            >
+              Przygotuj plan dla instytucji →
+            </Link>
+            <p className="help">
+              Dostosuj rozwiązanie do warunków swojej instytucji.
+            </p>
+          </div>
+          <div className={styles.actionOption}>
+            <a className="text-link" href="#testowanie">
+              Chcę testować lub dodać opinię ↓
+            </a>
+            <p className="help">
+              Zgłoś udział lub opisz swoje doświadczenie z rozwiązaniem.
+            </p>
+          </div>
+        </aside>
+        <div className={styles.description}>
           <section className={styles.section}>
             <h2>Na jaką potrzebę odpowiada?</h2>
             <p>{r.problem}</p>
@@ -100,24 +133,6 @@ export default async function Detail({
             </ul>
           </section>
         </div>
-        <aside className={styles.actions}>
-          <h2>Skorzystaj z rozwiązania</h2>
-          {a?.staff ? (
-            <Link className="button" href="/admin">
-              Otwórz skrzynkę koordynatora →
-            </Link>
-          ) : (
-            <CatalogHelp
-              innovationId={id}
-              title={r.title}
-              existingThread={existing?.id}
-            />
-          )}
-          <Link href={`/adaptacje/nowa?innovationId=${r.id}`}>
-            Dostosuj do mojej instytucji →
-          </Link>
-          <a href="#testowanie">Testowanie i opinia ↓</a>
-        </aside>
       </div>
       <section
         id="testowanie"

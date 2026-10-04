@@ -15,7 +15,9 @@ test("idea editor saves, applies mock assistance explicitly, reloads and submits
   await page.getByRole("button", { name: "Przygotuj kartę" }).click();
   await expect(page).toHaveURL(/\/pomysly\/[a-f0-9-]{36}$/);
   const id = new URL(page.url()).pathname.split("/").at(-1)!;
-  await page.getByRole("link", { name: "Canvas", exact: true }).click();
+  await page
+    .getByRole("link", { name: "Canvas — plan rozwoju", exact: true })
+    .click();
   const canvasNote =
     "Syntetyczny przykład: spotkania co tydzień dla małej grupy seniorów z jednej okolicy.";
   await page.getByLabel("Skala i częstotliwość problemu").fill(canvasNote);

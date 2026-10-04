@@ -55,6 +55,48 @@ describe("staff password storage", () => {
   });
 });
 describe("private communication", () => {
+  it("opens support requests without fabricated need records, preserving purpose, ownership and retry safety", async () => {
+    const a = user(),
+      b = user();
+    for (const supportPurpose of [
+      "CONSULTATION",
+      "MENTORSHIP",
+      "PARTNERSHIP",
+    ] as const) {
+      const input = threadInput.parse({
+        supportPurpose,
+        body: "Syntetyczne pytanie o wsparcie.",
+        requestKey: randomUUID(),
+      });
+      const id = await createThread(a, input);
+      expect(await createThread(a, input)).toBe(id);
+      const thread = await getThread(id, a);
+      expect(thread.need).toBeNull();
+      expect(thread.messages).toHaveLength(1);
+      expect((await listThreads(a)).find((t) => t.id === id)?.purpose).toBe(
+        supportPurpose,
+      );
+      await expect(getThread(id, b)).rejects.toMatchObject({ status: 404 });
+      await expect(createThread(staff, input)).rejects.toMatchObject({
+        status: 403,
+      });
+    }
+    expect(
+      threadInput.safeParse({
+        supportPurpose: "MENTORSHIP",
+        needId: randomUUID(),
+        body: "Pytanie",
+        requestKey: randomUUID(),
+      }).success,
+    ).toBe(false);
+    expect(
+      threadInput.safeParse({
+        supportPurpose: "INVALID",
+        body: "Pytanie",
+        requestKey: randomUUID(),
+      }).success,
+    ).toBe(false);
+  });
   it("rejects client roles, blank messages and ambiguous context", () => {
     expect(
       messageInput.safeParse({ body: " ", requestKey: randomUUID() }).success,

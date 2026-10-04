@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="pl">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pomocny Punkt — makiety pierwszego priorytetu</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; color: #17354b; background: #f4f8fb; font: 17px/1.5 system-ui,sans-serif; }
+  main { max-width: 1500px; margin: auto; padding: 32px; }
+  h1 { margin: 0 0 12px; font-size: clamp(1.6rem,4vw,2.4rem); }
+  nav { display: flex; flex-wrap: wrap; gap: 16px; margin: 24px 0; }
+  a { color: #12567b; text-underline-offset: 4px; }
+  a:focus-visible { outline: 3px solid #12567b; outline-offset: 4px; }
+  section { margin: 40px 0; scroll-margin-top: 20px; }
+  .pair { display: grid; grid-template-columns: minmax(0,1fr) 300px; gap: 24px; align-items: start; }
+  figure { margin: 0; min-width: 0; }
+  figcaption { font-weight: 700; margin-bottom: 10px; }
+  img { display: block; width: 100%; height: auto; border: 1px solid #cbdce5; border-radius: 12px; background: white; }
+  @media(max-width:800px) { main { padding: 20px; } .pair { grid-template-columns: 1fr; } .mobile { max-width: 390px; } }
+</style>
+<main>
+  <h1>Pomocny Punkt — pierwszy priorytet</h1>
+  <p>Makiety działającego interfejsu: komputer 1440 px i telefon 390 px. Zrzuty z lokalnej wersji demonstracyjnej (fixtures / mock).</p>
+  <nav aria-label="Wybierz ekran"><a href="#home">Znajdź pomoc</a><a href="#cooperation">Testowanie i współpraca</a><a href="#idea">Mam pomysł</a><a href="#solution">Rozwiązanie</a></nav>
+  <section id="home"><h2>Znajdź pomoc</h2><p>Jedna forma opisu potrzeby i cztery krótkie wejścia do pozostałych możliwości.</p><div class="pair">
+    <figure><figcaption>Komputer · 1440 px</figcaption><a href="screenshots/priority-one-home-1440.png"><img src="screenshots/priority-one-home-1440.png" alt="Strona główna na komputerze"></a></figure>
+    <figure class="mobile"><figcaption>Telefon · 390 px</figcaption><a href="screenshots/priority-one-home-390.png"><img src="screenshots/priority-one-home-390.png" alt="Strona główna na telefonie"></a></figure>
+  </div></section>
+  <section id="cooperation"><h2>Testowanie i współpraca</h2><p>Widoczne wejścia do testowania, konsultacji, mentoringu i poszukiwania partnera przez koordynatora.</p><div class="pair">
+    <figure><figcaption>Komputer · 1440 px</figcaption><a href="screenshots/priority-one-cooperation-1440.png"><img loading="lazy" src="screenshots/priority-one-cooperation-1440.png" alt="Testowanie i współpraca na komputerze"></a></figure>
+    <figure class="mobile"><figcaption>Telefon · 390 px</figcaption><a href="screenshots/priority-one-cooperation-390.png"><img loading="lazy" src="screenshots/priority-one-cooperation-390.png" alt="Testowanie i współpraca na telefonie"></a></figure>
+  </div></section>
+  <section id="idea"><h2>Mam pomysł</h2><p>Opis przed rozpoczęciem pokazuje drogę do karty, Canvas, porównania i szkicu grantowego.</p><div class="pair">
+    <figure><figcaption>Komputer · 1440 px</figcaption><a href="screenshots/priority-one-idea-1440.png"><img loading="lazy" src="screenshots/priority-one-idea-1440.png" alt="Kreator pomysłu na komputerze"></a></figure>
+    <figure class="mobile"><figcaption>Telefon · 390 px</figcaption><a href="screenshots/priority-one-idea-390.png"><img loading="lazy" src="screenshots/priority-one-idea-390.png" alt="Kreator pomysłu na telefonie"></a></figure>
+  </div></section>
+  <section id="solution"><h2>Skorzystaj z rozwiązania</h2><p>Trzy czytelne działania. Na telefonie są po opisie, przed długimi materiałami i opiniami.</p><div class="pair">
+    <figure><figcaption>Komputer · 1440 px</figcaption><a href="screenshots/priority-one-solution-1440.png"><img loading="lazy" src="screenshots/priority-one-solution-1440.png" alt="Działania na stronie rozwiązania na komputerze"></a></figure>
+    <figure class="mobile"><figcaption>Telefon · 390 px</figcaption><a href="screenshots/priority-one-solution-390.png"><img loading="lazy" src="screenshots/priority-one-solution-390.png" alt="Działania po opisie rozwiązania na telefonie"></a></figure>
+  </div></section>
+</main>
+</html>
