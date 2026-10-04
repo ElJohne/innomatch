@@ -41,19 +41,16 @@ export function RecoveryPanel({ canIssue }: { canIssue: boolean }) {
     }
   }
   return (
-    <details className="card need-summary">
-      <summary>Zachowaj dostęp lub przywróć swoje sprawy</summary>
+    <section className="card stack">
       <p>
-        Ta przeglądarka pamięta dostęp przez maksymalnie 90 dni od zapisania
-        sesji. Kod pozwala wrócić z innej przeglądarki lub po usunięciu
-        ciasteczek.
+        Kod pozwala otworzyć Twoje sprawy na innym urządzeniu lub po usunięciu
+        ciasteczek. Dostęp w tej przeglądarce trwa do 90 dni.
       </p>
       {canIssue && (
         <>
           <p className="help">
-            Zachowaj kod w bezpiecznym miejscu. Każdy, kto go zna, może otworzyć
-            Twoje potrzeby i rozmowy. Utworzenie nowego kodu unieważnia
-            poprzedni. Kod jest ważny 90 dni i pokażemy go tylko teraz.
+            Kod jest ważny 90 dni. Pokażemy go tylko raz; nowy unieważnia
+            poprzedni. Zachowaj go prywatnie — otwiera Twoje sprawy i rozmowy.
           </p>
           <button
             className="secondary"
@@ -100,8 +97,8 @@ export function RecoveryPanel({ canIssue }: { canIssue: boolean }) {
           minLength={43}
         />
         <p className="help">
-          Przywrócenie otworzy sprawy przypisane do kodu w tej przeglądarce.
-          Jeśli masz tutaj inne sprawy, najpierw zapisz ich kod.
+          Masz tutaj inne sprawy? Najpierw zapisz ich kod, bo przywrócenie
+          zmieni dostęp.
         </p>
         <button disabled={busy}>Przywróć sprawy z kodu</button>
       </form>
@@ -111,6 +108,6 @@ export function RecoveryPanel({ canIssue }: { canIssue: boolean }) {
         </p>
       )}
       {restored && <p role="status">Przywrócono dostęp do Twoich spraw.</p>}
-    </details>
+    </section>
   );
 }

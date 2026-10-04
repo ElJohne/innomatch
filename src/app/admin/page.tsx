@@ -1,13 +1,11 @@
 import { redirect } from "next/navigation";
-import Link from "next/link";
 import { actor } from "@/server/auth/staff";
 import { session } from "@/server/auth/session";
 import { listThreads } from "@/server/services/communication";
 import { ThreadList } from "@/components/thread-list";
-import {
-  LogoutButton,
-  RefreshMessages,
-} from "@/components/communication-forms";
+import { RefreshMessages } from "@/components/communication-forms";
+import { AdminNavigation } from "./admin-navigation";
+import styles from "./admin.module.css";
 export default async function AdminPage() {
   if (!(await session()).ownerId) redirect("/personel/logowanie");
   const a = await actor();
@@ -15,41 +13,25 @@ export default async function AdminPage() {
   const items = await listThreads(a);
   const unread = items.reduce((sum, t) => sum + t.unread, 0);
   return (
-    <section className="narrow">
-      <p className="eyebrow">Panel koordynatora</p>
-      <h1>Skrzynka zgłoszeń</h1>
-      <p className="lead">
-        Wspólna skrzynka upoważnionego personelu. Otwarcie rozmowy oznacza
-        widoczne wiadomości jako przeczytane dla zespołu.
-      </p>
-      <p role="status">
-        Nieprzeczytane wiadomości w wyświetlonych rozmowach:{" "}
-        <strong>{unread}</strong>
-      </p>
-      <p className="help">
-        Do 200 ostatnio aktualizowanych rozmów. Odśwież skrzynkę, aby sprawdzić
-        nowe zgłoszenia.
-      </p>
-      <div className="actions">
-        {a.staff.role === "ADMIN" && (
-          <Link className="button secondary" href="/admin/statystyki">
-            Statystyki potrzeb
-          </Link>
-        )}
-        {a.staff.role === "ADMIN" && (
-          <Link className="button secondary" href="/admin/opinie">
-            Moderacja opinii
-          </Link>
-        )}
-        {a.staff.role === "ADMIN" && (
-          <Link className="button" href="/admin/katalog">
-            Katalog i wiedza
-          </Link>
-        )}
+    <section className={styles.page}>
+      <AdminNavigation active="inbox" isAdmin={a.staff.role === "ADMIN"} />
+      <header className={styles.heading}>
+        <h1>Skrzynka zgłoszeń</h1>
         <RefreshMessages />
-        <LogoutButton />
+      </header>
+      <div className={styles.toolbar}>
+        <p role="status">
+          <strong>{unread}</strong> nieprzeczytanych wiadomości · {items.length}{" "}
+          rozmów
+        </p>
+        <p className="help">
+          Otwarcie rozmowy oznacza ją jako przeczytaną dla zespołu.
+        </p>
       </div>
       <ThreadList items={items} />
+      {items.length === 200 && (
+        <p className="help">Wyświetlono 200 ostatnio aktualizowanych rozmów.</p>
+      )}
     </section>
   );
 }

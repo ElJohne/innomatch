@@ -11,7 +11,6 @@ export default function NewIdea() {
         <div>
           <p className="eyebrow">Mam pomysł</p>
           <h1>Opisz pomysł. Zacznij działać.</h1>
-          <p>Jeden opis wystarczy na początek.</p>
         </div>
       </header>
       <IdeaStart />

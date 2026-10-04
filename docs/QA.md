@@ -1,5 +1,45 @@
 # Перевірки — 2026-10-03, поточна ітерація та історія
 
+## Seven-module design cleanup — 2026-10-04, local worktree
+
+Branch `codex/product-design-cleanup`, base `5728d1b`.
+Primary requirements: original RULES/CRITERIA PDFs; owner explicitly requested
+removal of unnecessary prose instead of more collapsed explanations.
+
+Actual checks:
+- `npm run lint` PASS; `npm run typecheck` PASS.
+- `npm test` PASS: 68 tests, 9 files.
+- Final `npm run build` PASS, Next.js 16.3.8/Turbopack.
+- Final complete `npm run test:e2e` PASS: 28/28, 46.9 s.
+  Chrome selected with MI_E2E_BROWSER_CHANNEL=chrome; isolated fixtures/mock
+  server on port 3300. MI_E2E_PORT allows a different port without stopping
+  unrelated development servers.
+- `npm run test:integration`: 8 skipped in 3 files because TEST_DATABASE_URL
+  was unavailable. PostgreSQL integration is NOT verified; no migration run.
+- `git diff --check` PASS. Source PDFs, LICENSE, dependencies and DB schema unchanged.
+
+Browser coverage: need submission/retry/clarification/no-match/emergency;
+source-based selection and idempotent private request; inbox/reply/unread and
+foreign-session denial; idea/Canvas save, explicit AI preview/apply, grant costs
+125.50 PLN preserved across assistance/save/reload; institution plan edit,
+revisioned snapshot sharing and recovery; catalog/materials/regional navigation;
+testing interest, rating, moderation, publication and re-moderation after edit.
+Accessibility checks cover 320/390/1280 widths, 200% text, four contrast palettes,
+keyboard navigation, speech controls and axe WCAG A/AA checks.
+
+The first broad run exposed a mobile field below the fold and obsolete selectors
+for removed screens. Removed the redundant home intro, updated tests to current
+public actions, and verified the complete suite again. Visual review also removed
+the catalog's decorative heading box and excessive plan spacing/duplicate demo
+labels. The final suite includes these corrections.
+
+Screenshots in ignored `test-results`: redesign-catalog.png,
+redesign-region.png, redesign-testing-mobile.png, quality-first-step.png,
+home-mobile.png and responsive journey captures. Final catalog and plan images
+were visually inspected. Local preview: http://127.0.0.1:3200 (fixtures/mock).
+No live-AI or production validation in this iteration; no push/deploy.
+
+
 ## Final production manual checks — 2026-10-04, 08:23
 
 - f30862b / Actions 37182338134 SUCCESS.

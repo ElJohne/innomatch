@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Innovation, MatchResponse } from "@/lib/contracts";
 import { shortSentence } from "@/lib/short-text";
+import styles from "./matching.module.css";
 export function MatchCard({
   record,
   match,
@@ -31,24 +32,17 @@ export function MatchCard({
       >
         Wybieram <span className="sr-only">— {record.title}</span> →
       </Link>
-      <details className="match-more">
-        <summary>Szczegóły i źródła</summary>
-        <p>{record.solution}</p>
-        <h3>Dlaczego pasuje?</h3>
-        <ul>
-          {match.reasons.map((r) => (
-            <li key={r}>{r}</li>
-          ))}
-        </ul>
-        <h3>{partial ? "Co obejmuje częściowo?" : "Warunki"}</h3>
-        <ul>
-          {match.limitations.map((r) => (
-            <li key={r}>{r}</li>
-          ))}
-        </ul>
-        {match.evidence?.map((e) => (
-          <blockquote key={e.fragmentId}>{e.excerpt}</blockquote>
-        ))}
+      {match.limitations.length > 0 && (
+        <div className={styles.conditions}>
+          <h3>{partial ? "Dopasowanie częściowe" : "Warto wiedzieć"}</h3>
+          <ul>
+            {[...new Set(match.limitations)].map((limitation) => (
+              <li key={limitation}>{limitation}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+      <div className={styles.sources}>
         {sources.map((s) => (
           <p key={s.id}>
             {s.sourceUrl ? (
@@ -61,7 +55,7 @@ export function MatchCard({
           </p>
         ))}
         <Link href={`/innowacje/${record.id}`}>Pełny opis rozwiązania →</Link>
-      </details>
+      </div>
     </article>
   );
 }

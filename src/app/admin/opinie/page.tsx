@@ -3,24 +3,58 @@ import { adminPage } from "@/server/auth/admin-page";
 import { moderationFeedback } from "@/server/services/pilots";
 import { FeedbackReview } from "@/components/pilot-forms";
 import { experienceLabels, feedbackStatusLabels } from "@/lib/contracts/pilot";
-export default async function FeedbackModeration() {
+import { AdminNavigation } from "../admin-navigation";
+import styles from "../admin.module.css";
+export default async function FeedbackModeration({
+  searchParams,
+}: {
+  searchParams: Promise<{ status?: string }>;
+}) {
   const items = await moderationFeedback(await adminPage());
+  const { status } = await searchParams;
+  const selected =
+    status && status in feedbackStatusLabels ? status : "IN_REVIEW";
+  const visible =
+    status === "all" ? items : items.filter((item) => item.status === selected);
   return (
-    <section className="narrow">
-      <Link href="/admin">← Skrzynka zgłoszeń</Link>
-      <p className="eyebrow">Moderacja</p>
-      <h1>Opinie o innowacjach</h1>
-      <p className="lead">
-        Sprawdź treść przed publikacją. Oceny są opiniami użytkowników, a opis
-        użycia jest ich deklaracją.
-      </p>
-      <p className="help">
-        Do 200 ostatnio aktualizowanych opinii. Oczekujących w tym zestawie:{" "}
-        {items.filter((item) => item.status === "IN_REVIEW").length}.
-      </p>
-      {!items.length && <p>Brak opinii do wyświetlenia.</p>}
+    <section className={styles.page}>
+      <AdminNavigation active="feedback" />
+      <header className={styles.heading}>
+        <h1>Opinie o innowacjach</h1>
+      </header>
+      <nav className={styles.tabs} aria-label="Status opinii">
+        <Link
+          href="/admin/opinie"
+          aria-current={
+            status !== "all" && selected === "IN_REVIEW" ? "page" : undefined
+          }
+        >
+          Do sprawdzenia (
+          {items.filter((item) => item.status === "IN_REVIEW").length})
+        </Link>
+        <Link
+          href="/admin/opinie?status=PUBLISHED"
+          aria-current={selected === "PUBLISHED" ? "page" : undefined}
+        >
+          Opublikowane
+        </Link>
+        <Link
+          href="/admin/opinie?status=all"
+          aria-current={status === "all" ? "page" : undefined}
+        >
+          Wszystkie
+        </Link>
+      </nav>
+      <p className="help">Przed publikacją sprawdź treść i dane osobowe.</p>
+      {!visible.length && (
+        <p className={styles.empty}>
+          {selected === "IN_REVIEW" && status !== "all"
+            ? "Nie ma opinii oczekujących na sprawdzenie."
+            : "Brak opinii w tym widoku."}
+        </p>
+      )}
       <div className="stack">
-        {items.map((item) => (
+        {visible.map((item) => (
           <article className="card" key={`${item.id}:${item.revision}`}>
             <h2>
               {item.title ? (
@@ -32,14 +66,11 @@ export default async function FeedbackModeration() {
               )}
             </h2>
             <p>
-              {feedbackStatusLabels[item.status]} · wersja {item.revision} ·
-              ocena {item.rating}/5
+              {feedbackStatusLabels[item.status]} · ocena {item.rating}/5
             </p>
             <p className="help">{experienceLabels[item.experience]}</p>
             {item.origin === "SYNTHETIC" && (
-              <p className="notice">
-                Opinia syntetyczna — dane demonstracyjne.
-              </p>
+              <p className="notice">Dane demonstracyjne</p>
             )}
             <p className="message-body">{item.comment}</p>
             {item.improvements && (
@@ -57,6 +88,11 @@ export default async function FeedbackModeration() {
           </article>
         ))}
       </div>
+      {items.length === 200 && (
+        <p className="help">
+          Widok obejmuje 200 ostatnio aktualizowanych opinii.
+        </p>
+      )}
     </section>
   );
 }

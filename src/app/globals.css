@@ -2135,109 +2135,30 @@ html[style*="200%"] .inclusive-hero .home-form {
   }
 }
 
-/* Shared footer, including the homepage. */
+/* Compact navigation at the end of each task. */
 .site-footer {
   display: block;
   max-width: none;
-  padding: 48px max(28px, calc((100% - 1128px) / 2)) 22px;
-  background: linear-gradient(115deg, #edf6fd, #f2f8f3);
+  padding: 24px max(20px, calc((100% - 1128px) / 2));
+  background: #f2f7f8;
   border-top: 1px solid #dce8ec;
   color: #39546a;
 }
-.footer-main {
-  display: grid;
-  grid-template-columns: 1.5fr 1fr 1fr 1.15fr;
-  gap: 36px;
-}
-.footer-intro .brand {
-  display: inline-flex;
-  gap: 0;
-  font-size: 1.5rem;
-  margin-bottom: 15px;
-}
-.footer-dot {
-  color: #377c65;
-}
-.footer-intro > p {
-  line-height: 1.65;
-}
-.footer-intro .footer-description {
-  margin-top: 10px;
-  max-width: 290px;
-  font-size: 0.82rem;
-}
-.footer-main h2 {
-  font-size: 0.9rem;
-  margin: 0 0 15px;
-  color: #183c55;
-}
-.footer-main nav {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 12px;
-}
-.footer-main nav h2 {
-  margin-bottom: 3px;
-}
-.footer-main a {
-  font-size: 0.82rem;
-  text-decoration: none;
-}
-.footer-main a:hover {
-  text-decoration: underline;
-  text-underline-offset: 4px;
-}
-.footer-region {
-  padding-left: 24px;
-  border-left: 1px solid #d1e2de;
-}
-.footer-region .eyebrow {
-  display: block;
-  margin-bottom: 12px;
-  color: #326b58;
-}
-.footer-region h2 {
-  font-size: 1.1rem;
-  line-height: 1.5;
-}
-.footer-region a {
-  color: #0967a9;
-  font-weight: 650;
-}
-.footer-bottom {
+.footer-bottom,
+.footer-bottom nav {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   flex-wrap: wrap;
   gap: 12px 24px;
-  border-top: 1px solid #d7e5e9;
-  margin-top: 34px;
-  padding-top: 20px;
-  font-size: 0.73rem;
 }
-@media (max-width: 950px) {
-  .footer-main {
-    grid-template-columns: 1fr 1fr;
-    gap: 30px;
-  }
-  .footer-region {
-    padding-left: 0;
-    border-left: 0;
-  }
+.footer-bottom {
+  justify-content: space-between;
+  font-size: 0.85rem;
 }
-@media (max-width: 480px) {
-  .site-footer {
-    padding: 32px 20px 20px;
-  }
-  .footer-main {
-    grid-template-columns: 1fr;
-    gap: 26px;
-  }
-  .footer-bottom {
-    align-items: flex-start;
-    flex-direction: column;
-  }
+.footer-bottom a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
 }
 
 /* Idea workshop: the same calm visual language as the help flow. */
@@ -2508,18 +2429,19 @@ html[style*="200%"] .idea-illustration {
 }
 
 /* Bright catalog, matching the public help flow. */
-.innovation-catalog .catalog-heading {
-  padding: 28px;
-  border: 1px solid #bcdfe9;
-  border-top: 5px solid #159cba;
-  border-radius: 22px;
-  background: linear-gradient(110deg, #e0f5ff, #ecf8ee);
-  box-shadow: 0 10px 30px #175b750d;
+.innovation-catalog.section {
+  padding-top: 24px;
 }
-.innovation-catalog .catalog-heading .eyebrow {
-  display: inline-block;
-  margin-bottom: 16px;
-  color: #275443;
+.innovation-catalog .catalog-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.innovation-catalog .catalog-heading .help {
+  margin: 0;
 }
 .innovation-catalog .catalog-heading h1 {
   font-size: clamp(1.65rem, 2.8vw, 2.3rem);
@@ -2663,9 +2585,6 @@ html[style*="200%"] .idea-illustration {
   }
 }
 @media (max-width: 540px) {
-  .innovation-catalog .catalog-heading {
-    padding: 18px;
-  }
   .innovation-catalog .filters {
     grid-template-columns: minmax(0, 1fr);
     padding: 16px;

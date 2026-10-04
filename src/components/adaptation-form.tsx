@@ -1,6 +1,7 @@
 "use client";
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import styles from "./adaptation.module.css";
 export function AdaptationForm({
   innovationId,
   needs,
@@ -69,7 +70,7 @@ export function AdaptationForm({
       }}
     >
       <fieldset disabled={busy} className="stack">
-        <legend>Plan dla Twojej instytucji</legend>
+        <legend>Twoja instytucja</legend>
         {fixedNeed ? (
           <input type="hidden" name="needId" value={fixedNeed} />
         ) : (
@@ -100,9 +101,13 @@ export function AdaptationForm({
           maxLength={300}
           placeholder="Np. biblioteka lub ośrodek pomocy"
         />
-        <details>
-          <summary>Dodatkowe warunki — opcjonalnie</summary>
-          <div className="stack">
+      </fieldset>
+      <fieldset disabled={busy} className="stack">
+        <legend>
+          Warunki działania <span className="help">— opcjonalnie</span>
+        </legend>
+        <div className={styles.fields}>
+          <div className={styles.field}>
             <label htmlFor="plan-resources">Co macie do dyspozycji?</label>
             <textarea
               id="plan-resources"
@@ -112,23 +117,29 @@ export function AdaptationForm({
               rows={2}
               placeholder="Np. sala i dwie osoby do pomocy"
             />
-            <label htmlFor="plan-scope">
-              Dla kogo? — jeśli chcesz doprecyzować
-            </label>
+          </div>
+          <div className={styles.field}>
+            <label htmlFor="plan-scope">Dla kogo?</label>
             <textarea
               id="plan-scope"
               name="scope"
               minLength={3}
               maxLength={600}
               rows={2}
+              placeholder="Np. 10 seniorów z naszej gminy"
             />
-            <label htmlFor="plan-timeline">Termin — jeśli znany</label>
+          </div>
+          <div className={styles.field}>
+            <label htmlFor="plan-timeline">Termin</label>
             <input id="plan-timeline" name="timeline" maxLength={300} />
-            <label htmlFor="plan-budget">Budżet — jeśli znany</label>
+          </div>
+          <div className={styles.field}>
+            <label htmlFor="plan-budget">Budżet</label>
             <input id="plan-budget" name="budget" maxLength={300} />
           </div>
-        </details>
+        </div>
       </fieldset>
+      <p className="help">Nie podawaj danych osobowych uczestników.</p>
       {error && (
         <p role="alert" className="error">
           {error}

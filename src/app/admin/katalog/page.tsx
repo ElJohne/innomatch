@@ -2,6 +2,8 @@ import Link from "next/link";
 import { adminPage } from "@/server/auth/admin-page";
 import { listCatalog } from "@/server/services/catalog";
 import { publicationLabels, type CatalogKind } from "@/lib/contracts/catalog";
+import { AdminNavigation } from "../admin-navigation";
+import styles from "../admin.module.css";
 export default async function CatalogPage({
   searchParams,
 }: {
@@ -21,95 +23,103 @@ export default async function CatalogPage({
           .includes(query.q.toLocaleLowerCase("pl"))),
   );
   return (
-    <section className="narrow wide">
-      <Link href="/admin">← Skrzynka zgłoszeń</Link>
-      <p className="eyebrow detail-label">Panel administratora</p>
-      <h1>Katalog i wiedza</h1>
-      <p className="lead">
-        Przygotuj wpis, zweryfikuj źródła i zdecyduj, co zobaczą użytkownicy.
-        Szkice i ukryte materiały są dostępne tylko tutaj.
-      </p>
-      <div className="actions">
+    <section className={styles.page}>
+      <AdminNavigation active="catalog" />
+      <header className={styles.heading}>
+        <h1>Katalog i wiedza</h1>
+        <Link className="button" href={`/admin/katalog/${kind}/nowy`}>
+          {kind === "innovation" ? "Dodaj innowację" : "Dodaj materiał"}
+        </Link>
+      </header>
+      <nav className={styles.tabs} aria-label="Rodzaj wpisów">
         <Link
-          className={kind === "innovation" ? "button" : "button secondary"}
+          aria-current={kind === "innovation" ? "page" : undefined}
           href="/admin/katalog?kind=innovation"
         >
           Innowacje
         </Link>
         <Link
-          className={kind === "knowledge" ? "button" : "button secondary"}
+          aria-current={kind === "knowledge" ? "page" : undefined}
           href="/admin/katalog?kind=knowledge"
         >
           Materiały wiedzy
         </Link>
-        <Link className="button secondary" href={`/admin/katalog/${kind}/nowy`}>
-          Dodaj wpis
-        </Link>
-      </div>
-      <form className="form card">
+      </nav>
+      <form className={styles.filters}>
         <input type="hidden" name="kind" value={kind} />
-        <div className="form-row">
-          <div>
-            <label htmlFor="catalog-q">Szukaj tytułu</label>
-            <input
-              id="catalog-q"
-              name="q"
-              defaultValue={query.q ?? ""}
-              maxLength={200}
-            />
-          </div>
-          <div>
-            <label htmlFor="catalog-status">Status</label>
-            <select
-              id="catalog-status"
-              name="status"
-              defaultValue={query.status ?? ""}
-            >
-              <option value="">Wszystkie</option>
-              {Object.entries(publicationLabels).map(([value, label]) => (
-                <option key={value} value={value}>
-                  {label}
-                </option>
-              ))}
-            </select>
-          </div>
+        <div>
+          <label htmlFor="catalog-q">Szukaj tytułu</label>
+          <input
+            id="catalog-q"
+            name="q"
+            defaultValue={query.q ?? ""}
+            maxLength={200}
+          />
+        </div>
+        <div>
+          <label htmlFor="catalog-status">Status</label>
+          <select
+            id="catalog-status"
+            name="status"
+            defaultValue={query.status ?? ""}
+          >
+            <option value="">Wszystkie</option>
+            {Object.entries(publicationLabels).map(([value, label]) => (
+              <option key={value} value={value}>
+                {label}
+              </option>
+            ))}
+          </select>
         </div>
         <button>Filtruj wpisy</button>
       </form>
-      <p className="help">
-        Wyświetlono {items.length} z {all.length} wpisów.
-      </p>
-      <div className="stack">
+      <div className={styles.toolbar}>
+        <p className="help">
+          {items.length} z {all.length} wpisów
+        </p>
+        {(query.q || query.status) && (
+          <Link href={`/admin/katalog?kind=${kind}`}>Wyczyść filtry</Link>
+        )}
+      </div>
+      <div className={styles.rows}>
         {items.map((e) => (
-          <article className="card" key={e.record.id}>
-            <p className="eyebrow">
-              {publicationLabels[e.record.publicationStatus]}
-            </p>
-            <h2>
-              <Link href={`/admin/katalog/${kind}/${e.record.id}`}>
-                {e.record.title}
-              </Link>
-            </h2>
-            {e.managedLocally && (
-              <p className="help">
-                Redagowany tutaj — automatyczny import zachowa te zmiany.
-              </p>
-            )}
-            {e.indexPending && (
-              <p className="notice">
-                Treść czeka na aktualizację wyszukiwania AI.
-              </p>
-            )}
-            {e.reviewedAt && (
-              <p className="help">
-                Weryfikacja:{" "}
-                {new Date(e.reviewedAt).toLocaleDateString("pl-PL")}
-              </p>
-            )}
+          <article className={styles.row} key={e.record.id}>
+            <div>
+              <h2>
+                <Link href={`/admin/katalog/${kind}/${e.record.id}`}>
+                  {e.record.title}
+                </Link>
+              </h2>
+              <div className={styles.metadata}>
+                <span className={styles.badge}>
+                  {publicationLabels[e.record.publicationStatus]}
+                </span>
+                {e.record.origin === "SYNTHETIC" && (
+                  <span>Dane demonstracyjne</span>
+                )}
+                {e.indexPending && (
+                  <span>Do aktualizacji w wyszukiwaniu AI</span>
+                )}
+                {e.reviewedAt && (
+                  <span>
+                    Weryfikacja:{" "}
+                    {new Date(e.reviewedAt).toLocaleDateString("pl-PL")}
+                  </span>
+                )}
+              </div>
+            </div>
+            <Link
+              href={`/admin/katalog/${kind}/${e.record.id}`}
+              aria-label={`Edytuj: ${e.record.title}`}
+            >
+              Edytuj →
+            </Link>
           </article>
         ))}
       </div>
-      {!items.length && <p>Brak wpisów spełniających warunki.</p>}
+      {!items.length && (
+        <p className={styles.empty}>Brak wpisów spełniających warunki.</p>
+      )}
     </section>
   );
 }

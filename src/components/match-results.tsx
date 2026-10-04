@@ -11,6 +11,7 @@ import { UrgentHelp } from "./urgent-help";
 import { ClarifyNeed } from "./clarify-need";
 import { MatchCard } from "./match-card";
 import { QuickHelp } from "./quick-help";
+import styles from "./matching.module.css";
 export function MatchResults({
   id,
   initial,
@@ -65,7 +66,7 @@ export function MatchResults({
         <span className="assistant-symbol" aria-hidden="true">
           ✧
         </span>
-        <h1>Szukamy pomocy…</h1>
+        <h1>Szukamy rozwiązań…</h1>
         <span className="loading-dots" aria-hidden="true">
           ● ● ●
         </span>
@@ -105,12 +106,19 @@ export function MatchResults({
             : result.guidance === "clarify"
               ? "Powiedz nam trochę więcej"
               : result.status === "unavailable"
-                ? "Spróbuj ponownie"
-                : "Poproś o pomoc w Twojej sprawie"}
+                ? "Wyszukiwanie jest chwilowo niedostępne"
+                : "Nie znaleźliśmy pasującego rozwiązania"}
         </h1>
       </div>
       {result.mode.explanation === "mock" && (
         <p className="help">Wynik demonstracyjny</p>
+      )}
+      {result.warnings.length > 0 && (
+        <div className="note" role="status">
+          {[...new Set(result.warnings)].map((warning) => (
+            <p key={warning}>{warning}</p>
+          ))}
+        </div>
       )}
       {!!result.matches.length && (
         <div className="match-list">
@@ -137,52 +145,50 @@ export function MatchResults({
       {!result.matches.length && result.guidance === "clarify" && input && (
         <ClarifyNeed input={input} questions={result.clarifyingQuestions} />
       )}
-      {!result.matches.length && result.guidance !== "clarify" && (
-        <div className="card">
-          <p>
-            W katalogu nie znaleźliśmy odpowiedniej propozycji. Koordynator może
-            pomóc wybrać inne możliwości.
-          </p>
-          <QuickHelp
-            needId={id}
-            solution="pomoc w znalezieniu odpowiedniego wsparcia"
-          />
+      {!result.matches.length &&
+        result.guidance !== "clarify" &&
+        result.status !== "unavailable" && (
+          <div className="card">
+            <p>Koordynator może pomóc znaleźć inne możliwości wsparcia.</p>
+            <QuickHelp needId={id} />
+          </div>
+        )}
+      {!!result.assumptions?.length && (
+        <div className={styles.conditions}>
+          <h2>Przyjęte założenia</h2>
+          <ul>
+            {[...new Set(result.assumptions)].map((assumption) => (
+              <li key={assumption}>{assumption}</li>
+            ))}
+          </ul>
         </div>
       )}
-      {(!!result.warnings.length ||
-        !!result.assumptions?.length ||
-        !!result.relatedResources.length) && (
-        <details className="note">
-          <summary>Więcej informacji</summary>
-          {result.warnings.map((w) => (
-            <p key={w}>{w}</p>
-          ))}
-          {!!result.assumptions?.length && (
-            <ul>
-              {result.assumptions.map((a) => (
-                <li key={a}>{a}</li>
-              ))}
-            </ul>
-          )}
-          {result.relatedResources.map((item) => {
-            const resource = resources.find((r) => r.id === item.resourceId);
-            return resource ? (
-              <div key={resource.id}>
-                <h3>{resource.title}</h3>
-                <p>{item.reason}</p>
-                {resource.sources
-                  .filter((s) => s.sourceUrl)
-                  .map((s) => (
-                    <p key={s.id}>
-                      <a href={s.sourceUrl} target="_blank" rel="noreferrer">
-                        {s.sourceTitle} ↗
-                      </a>
-                    </p>
-                  ))}
-              </div>
-            ) : null;
-          })}
-        </details>
+      {!!result.relatedResources.length && (
+        <section className={styles.resources} aria-label="Powiązane materiały">
+          <h2>Materiały do Twojej sprawy</h2>
+          <ul>
+            {result.relatedResources.map((item) => {
+              const resource = resources.find((r) => r.id === item.resourceId);
+              return resource ? (
+                <li key={resource.id}>
+                  <strong>{resource.title}</strong>
+                  {resource.origin === "SYNTHETIC" && (
+                    <span> · Przykład demonstracyjny</span>
+                  )}
+                  {resource.sources
+                    .filter((s) => s.sourceUrl)
+                    .map((s) => (
+                      <p key={s.id}>
+                        <a href={s.sourceUrl} target="_blank" rel="noreferrer">
+                          {s.sourceTitle} ↗
+                        </a>
+                      </p>
+                    ))}
+                </li>
+              ) : null;
+            })}
+          </ul>
+        </section>
       )}
       {!!result.matches.length && (
         <p>

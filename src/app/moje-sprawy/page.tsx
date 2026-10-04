@@ -4,7 +4,7 @@ import { listNeeds } from "@/server/services/repository";
 import { actor } from "@/server/auth/staff";
 import { listThreads } from "@/server/services/communication";
 import { ThreadList } from "@/components/thread-list";
-import { RecoveryPanel } from "@/components/recovery-panel";
+import styles from "@/components/communication.module.css";
 import { listPlans } from "@/server/services/adaptations";
 import { listIdeas } from "@/server/services/ideas";
 import { listPilotCases } from "@/server/services/pilots";
@@ -22,142 +22,139 @@ export default async function Cases() {
       ? listPilotCases(a.ownerId)
       : { participations: [], feedback: [] },
   ]);
-  const otherThreads = threads.filter(
-    (t) => !t.needId || t.adaptationId || t.ideaId,
-  );
+  const empty =
+    !records.length &&
+    !plans.length &&
+    !ideas.length &&
+    !threads.length &&
+    !pilots.participations.length &&
+    !pilots.feedback.length;
   return (
     <section className="narrow">
-      <h1>Moje sprawy</h1>
-      <p className="lead">Tutaj wrócisz do pomocy i odpowiedzi koordynatora.</p>
+      <div className={styles.heading}>
+        <h1>Moje sprawy</h1>
+        {!a?.staff && (
+          <Link href="/moje-sprawy/dostep">Zachowaj lub przywróć dostęp</Link>
+        )}
+      </div>
       {a?.staff && (
         <p>
           <Link href="/admin">Otwórz skrzynkę personelu →</Link>
         </p>
       )}
-      <div className="stack">
-        {records.map((r) => {
-          const conversation = threads.find(
-            (t) => t.needId === r.id && !t.adaptationId,
-          );
-          return (
-            <article className="card" key={r.id}>
-              <p className="help">
-                {new Date(r.createdAt).toLocaleDateString("pl-PL", {
-                  timeZone: "Europe/Warsaw",
-                })}
-              </p>
-              <h2>
-                {r.description.slice(0, 100)}
-                {r.description.length > 100 ? "…" : ""}
-              </h2>
-              <p>
-                {conversation ? (
-                  conversation.unread > 0 ? (
-                    <strong>Nowa odpowiedź ({conversation.unread})</strong>
-                  ) : (
-                    "Prośba wysłana do koordynatora"
-                  )
-                ) : (
-                  "Możesz wybrać pomoc dla siebie"
-                )}
-              </p>
-              <Link
-                className="button"
-                href={
-                  conversation
-                    ? `/wiadomosci/${conversation.id}`
-                    : `/potrzeby/${r.id}`
-                }
-              >
-                {conversation ? "Otwórz rozmowę →" : "Wybierz pomoc →"}
-              </Link>
-              {conversation && (
-                <p>
-                  <Link href={`/potrzeby/${r.id}`}>
-                    Zobacz znalezione rozwiązania
-                  </Link>
-                </p>
-              )}
-            </article>
-          );
-        })}
-      </div>
-      {!records.length && <p>Nie masz jeszcze zapisanych potrzeb.</p>}
-      <Link className="button detail-label" href="/potrzeby/nowa">
-        Znajdź nową pomoc →
-      </Link>
-      {otherThreads.length > 0 && (
-        <section className="stack detail-label">
-          <h2>Pozostałe rozmowy</h2>
-          <ThreadList items={otherThreads} />
-        </section>
-      )}
-      <details className="card detail-label">
-        <summary>Plany dla instytucji ({plans.length})</summary>
-        {plans.length ? (
-          plans.map((p) => (
-            <p key={p.id}>
-              <Link href={`/adaptacje/${p.id}`}>{p.title}</Link>
-            </p>
-          ))
-        ) : (
-          <p>Nie masz jeszcze dostępnych planów.</p>
-        )}
-      </details>
-      <details className="card detail-label">
-        <summary>Pomysły ({ideas.length})</summary>
-        {ideas.map((i) => (
-          <p key={i.id}>
-            <Link href={`/pomysly/${i.id}`}>{i.title}</Link> —{" "}
-            {i.status === "DRAFT"
-              ? "szkic prywatny"
-              : "przekazany do konsultacji"}
-          </p>
-        ))}
-        <Link className="text-link" href="/pomysly/nowy">
-          Zapisz nowy pomysł →
-        </Link>
-      </details>
-      <details className="card detail-label">
-        <summary>
-          Testowanie i opinie (
-          {pilots.participations.length + pilots.feedback.length})
-        </summary>
-        <h3>Testowanie</h3>
-        {!pilots.participations.length && <p>Nie masz jeszcze zgłoszeń.</p>}
-        {pilots.participations.map((p) => (
-          <p key={p.id}>
-            {p.title ?? "Niedostępna innowacja"}
-            {p.title && (
-              <>
-                {" "}
-                ·{" "}
-                <Link href={`/wiadomosci/${p.threadId}`}>Otwórz rozmowę →</Link>
-              </>
-            )}
-          </p>
-        ))}
-        <h3>Opinie</h3>
-        {!pilots.feedback.length && <p>Nie masz jeszcze opinii.</p>}
-        {pilots.feedback.map((f) => (
-          <p key={f.id}>
-            {f.title ? (
-              <Link href={`/innowacje/${f.innovationId}`}>{f.title}</Link>
-            ) : (
-              "Niedostępna innowacja"
-            )}{" "}
-            —{" "}
-            {f.sourceCurrent
-              ? feedbackStatusLabels[f.status]
-              : "Wymaga aktualizacji materiału"}
-          </p>
-        ))}
-      </details>
-      {!a?.staff && (
-        <div className="detail-label">
-          <RecoveryPanel canIssue={Boolean(s.ownerId)} />
+      {empty && (
+        <div className="card">
+          <h2>Zacznij od potrzeby lub pomysłu</h2>
+          <p>Tutaj znajdziesz zapisane sprawy i odpowiedzi koordynatora.</p>
+          <div className="actions">
+            <Link className="button" href="/potrzeby/nowa">
+              Znajdź pomoc
+            </Link>
+            <Link href="/pomysly/nowy">Zapisz pomysł →</Link>
+          </div>
         </div>
       )}
+      <div className={styles.sections}>
+        {threads.length > 0 && (
+          <section aria-labelledby="conversations">
+            <div className={styles.heading}>
+              <h2 id="conversations">Rozmowy</h2>
+              <span className="help">{threads.length}</span>
+            </div>
+            <ThreadList items={threads} />
+          </section>
+        )}
+        {records.length > 0 && (
+          <section className={styles.section} aria-labelledby="needs">
+            <div className={styles.heading}>
+              <h2 id="needs">Znalezione rozwiązania</h2>
+              <Link href="/potrzeby/nowa">Nowa potrzeba →</Link>
+            </div>
+            <ul className={styles.list}>
+              {records.map((r) => (
+                <li className={styles.row} key={r.id}>
+                  <h3>
+                    <Link href={`/potrzeby/${r.id}`}>
+                      {r.description.slice(0, 100)}
+                      {r.description.length > 100 ? "…" : ""}
+                    </Link>
+                  </h3>
+                  <p className="help">
+                    {new Date(r.createdAt).toLocaleDateString("pl-PL", {
+                      timeZone: "Europe/Warsaw",
+                    })}
+                  </p>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+        {ideas.length > 0 && (
+          <section className={styles.section} aria-labelledby="ideas">
+            <div className={styles.heading}>
+              <h2 id="ideas">Pomysły</h2>
+              <Link href="/pomysly/nowy">Nowy pomysł →</Link>
+            </div>
+            <ul className={styles.links}>
+              {ideas.map((i) => (
+                <li key={i.id}>
+                  <Link href={`/pomysly/${i.id}`}>{i.title}</Link>
+                  <small>
+                    {i.status === "DRAFT"
+                      ? "Szkic prywatny"
+                      : "Przekazany do konsultacji"}
+                  </small>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+        {plans.length > 0 && (
+          <section className={styles.section} aria-labelledby="plans">
+            <h2 id="plans">Plany dla instytucji</h2>
+            <ul className={styles.links}>
+              {plans.map((p) => (
+                <li key={p.id}>
+                  <Link href={`/adaptacje/${p.id}`}>{p.title}</Link>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+        {(pilots.participations.length > 0 || pilots.feedback.length > 0) && (
+          <section className={styles.section} aria-labelledby="pilots">
+            <h2 id="pilots">Testowanie i opinie</h2>
+            <ul className={styles.links}>
+              {pilots.participations.map((p) => (
+                <li key={p.id}>
+                  {p.title ? (
+                    <Link href={`/wiadomosci/${p.threadId}`}>{p.title}</Link>
+                  ) : (
+                    "Niedostępna innowacja"
+                  )}
+                  <small>
+                    Zgłoszenie do testowania · ustal szczegóły w rozmowie
+                  </small>
+                </li>
+              ))}
+              {pilots.feedback.map((f) => (
+                <li key={f.id}>
+                  {f.title ? (
+                    <Link href={`/innowacje/${f.innovationId}`}>{f.title}</Link>
+                  ) : (
+                    "Niedostępna innowacja"
+                  )}
+                  <small>
+                    {f.sourceCurrent
+                      ? feedbackStatusLabels[f.status]
+                      : "Wymaga aktualizacji materiału"}
+                  </small>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+      </div>
     </section>
   );
 }

@@ -19,6 +19,7 @@ import {
   type GrantSuggestion,
 } from "@/lib/contracts/grant";
 import { GrantSource, GrantView } from "./grant-view";
+import { IdeaNav } from "./idea-nav";
 
 async function request(url: string, method: string, body: unknown) {
   const response = await fetch(url, {
@@ -114,10 +115,10 @@ export function GrantEditor({
           Szkic demonstracyjny — dane syntetyczne, zapisywane w pamięci procesu.
         </p>
       )}
+      <IdeaNav id={idea.id} current="grant" disabled={dirty} />
       <GrantSource />
       <p className="help">
-        Uzupełnione pola: {completed}/{Object.keys(grantFields).length}. Możesz
-        zapisać szkic i wrócić później.
+        Uzupełnione pola: {completed}/{Object.keys(grantFields).length}.
       </p>
       <form
         className="form stack"
@@ -144,20 +145,16 @@ export function GrantEditor({
             Szkic merytoryczny formularza IWS 2.0
           </legend>
           {groups.map((group) => (
-            <details className="canvas-section" key={group.title}>
-              <summary>{group.title}</summary>
+            <section className="canvas-section" key={group.title}>
+              <h2>{group.title}</h2>
               <div className="stack">
                 {group.keys.map((key) => (
                   <div key={key}>
                     <label htmlFor={`grant-${key}`}>
                       {grantFields[key].label}
                     </label>
-                    <p className="help" id={`grant-${key}-hint`}>
-                      {grantFields[key].hint}
-                    </p>
                     <textarea
                       id={`grant-${key}`}
-                      aria-describedby={`grant-${key}-hint`}
                       rows={key === "title" ? 2 : 5}
                       maxLength={grantFields[key].maxLength}
                       value={draft.sections[key]}
@@ -174,10 +171,10 @@ export function GrantEditor({
                   </div>
                 ))}
               </div>
-            </details>
+            </section>
           ))}
-          <details className="canvas-section">
-            <summary>Dane i źródła diagnozy</summary>
+          <section className="canvas-section">
+            <h2>Dane i źródła diagnozy</h2>
             <GrantResources
               items={resources}
               diagnosis={draft.sections.diagnosis}
@@ -187,14 +184,11 @@ export function GrantEditor({
               diagnosis={draft.sections.diagnosis}
               onAppend={appendDiagnosis}
             />
-          </details>
-          <details className="canvas-section">
-            <summary>Plan kosztów i wnioskowana kwota</summary>
+          </section>
+          <section className="canvas-section">
+            <h2>Plan kosztów</h2>
             <div className="stack">
-              <p>
-                Dodaj działanie, termin i koszt w PLN. Nieznany koszt pozostaw
-                pusty.
-              </p>
+              <p>Nieznany koszt pozostaw pusty.</p>
               {draft.costs.map((cost, i) => (
                 <div className="note stack" key={i}>
                   <h3>Działanie {i + 1}</h3>
@@ -314,7 +308,7 @@ export function GrantEditor({
                   "Uzupełnij działania, terminy i koszty, aby ustalić pełną kwotę."}
               </p>
             </div>
-          </details>
+          </section>
         </fieldset>
         <button disabled={busy || !dirty}>
           {busy ? "Zapisywanie…" : "Zapisz szkic grantowy"}
@@ -346,11 +340,7 @@ export function GrantEditor({
             {suggestion.mode === "mock" && (
               <p className="help">Propozycja demonstracyjna.</p>
             )}
-            <p>{suggestion.sections.description.split(/(?<=[.!?])\s/)[0]}</p>
-            <details>
-              <summary>Cały proponowany szkic</summary>
-              <GrantView draft={{ ...draft, sections: suggestion.sections }} />
-            </details>
+            <GrantView draft={{ ...draft, sections: suggestion.sections }} />
             <button
               disabled={busy}
               onClick={() => {
@@ -364,26 +354,18 @@ export function GrantEditor({
           </div>
         )}
       </section>
-      {initial.grantDraft && (
+      {idea.grantDraft && !dirty && (
         <Link className="button secondary" href={`/pomysly/${idea.id}/podglad`}>
           Podgląd i druk zapisanej karty ze szkicem
         </Link>
       )}
-      {dirty && (
-        <p className="help">
-          Masz niezapisane zmiany. Podgląd i konsultacja pokazują wyłącznie
-          ostatnią zapisaną wersję.
-        </p>
-      )}
+      {dirty && <p className="help">Zapisz zmiany przed przejściem dalej.</p>}
       {message && <p role="status">{message}</p>}
       {error && (
         <p className="error" role="alert">
           {error}
         </p>
       )}
-      <Link href={`/pomysly/${idea.id}`}>
-        Wróć do karty i konsultacji pomysłu
-      </Link>
     </div>
   );
 }

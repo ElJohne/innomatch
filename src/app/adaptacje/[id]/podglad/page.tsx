@@ -30,9 +30,7 @@ export default async function PlanPreview({
         <h1>{innovation.title}</h1>
         <p>Wersja {plan.revision} · zapisana wersja autora</p>
         <p className="help">
-          Materiał roboczy do rozmowy o wdrożeniu. Nie potwierdza dostępności
-          usługi ani zatwierdzenia przez ROPS. W rozmowie koordynator może mieć
-          wcześniejszą udostępnioną wersję.
+          Propozycja do weryfikacji, bez zatwierdzenia ROPS.
         </p>
       </header>
       <section className="card">

@@ -43,14 +43,9 @@ export function GrantResources({
         a.title.localeCompare(b.title, "pl"),
     );
   return (
-    <details className="canvas-section">
-      <summary>Znajdź źródła do diagnozy problemu</summary>
+    <section className="canvas-section">
+      <h3>Znajdź źródła do diagnozy</h3>
       <div className="stack">
-        <p>
-          Sprawdź Mapę Wyzwań Społecznych i opisy raportów ROPS. Otwórz
-          dokument, wybierz odpowiedni rok i obszar, a następnie opisz, jak jego
-          ustalenia odnoszą się do Twoich odbiorców.
-        </p>
         <div>
           <label htmlFor="grant-resource-query">Temat materiału</label>
           <input
@@ -80,10 +75,11 @@ export function GrantResources({
           </select>
         </div>
         <p className="help" role="status">
-          Znaleziono: {results.length}. Materiały z opublikowanego katalogu; sam
-          odnośnik nie uzasadnia lokalnej diagnozy.
+          {query.trim() || type
+            ? `Znaleziono: ${results.length}.`
+            : "Wpisz temat lub wybierz rodzaj źródła."}
         </p>
-        {results.slice(0, limit).map((r) => {
+        {(query.trim() || type ? results.slice(0, limit) : []).map((r) => {
           const sources = r.sources.filter((s) => s.sourceUrl);
           const note = `Materiał do sprawdzenia: ${r.title}\n${sources.map((s) => `${s.sourceRef}${s.sourceDate ? ` (${s.sourceDate})` : ""}\n${s.sourceUrl}`).join("\n")}\nDo uzupełnienia: które ustalenie z materiału dotyczy problemu i odbiorców tego pomysłu?`;
           const alreadyAdded = sources.some((s) =>
@@ -106,10 +102,6 @@ export function GrantResources({
                   Materiał demonstracyjny — dane syntetyczne.
                 </p>
               )}
-              <details>
-                <summary>Przeczytaj opis materiału</summary>
-                <p className="message-body">{r.description}</p>
-              </details>
               <div className="stack">
                 {sources.map((s) => (
                   <a
@@ -143,13 +135,13 @@ export function GrantResources({
             </article>
           );
         })}
-        {!results.length && (
+        {(query.trim() || type) && !results.length && (
           <p>
             Nie znaleziono materiału. Spróbuj krótszego hasła albo innego
             rodzaju źródła.
           </p>
         )}
-        {results.length > limit && (
+        {(query.trim() || type) && results.length > limit && (
           <button
             type="button"
             className="secondary"
@@ -159,6 +151,6 @@ export function GrantResources({
           </button>
         )}
       </div>
-    </details>
+    </section>
   );
 }

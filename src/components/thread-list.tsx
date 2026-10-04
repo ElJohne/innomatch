@@ -1,45 +1,45 @@
 import Link from "next/link";
 import type { ThreadSummary } from "@/lib/contracts/communication";
 import { contactLabels } from "@/lib/contact-purpose";
+import styles from "./communication.module.css";
 export function ThreadList({ items }: { items: ThreadSummary[] }) {
-  return (
-    <div className="stack">
-      {items.length === 0 && <p>Nie ma jeszcze rozmów.</p>}
-      {items.map((t) => (
-        <article className="card" key={t.id}>
-          <p className="help">
-            {new Date(t.updatedAt).toLocaleString("pl-PL", {
-              timeZone: "Europe/Warsaw",
-            })}
-          </p>
-          <h2>
-            <Link href={`/wiadomosci/${t.id}`}>
-              {t.title ||
-                (t.purpose
+  return items.length ? (
+    <ul className={styles.list}>
+      {[...items]
+        .sort(
+          (a, b) =>
+            Number(b.unread > 0) - Number(a.unread > 0) ||
+            b.updatedAt.localeCompare(a.updatedAt),
+        )
+        .map((t) => (
+          <li
+            className={`${styles.row} ${t.unread > 0 ? styles.unread : ""}`}
+            key={t.id}
+          >
+            <div className={styles.rowMeta}>
+              <span>
+                {t.purpose
                   ? contactLabels[t.purpose]
-                  : "Rozmowa z koordynatorem")}
-            </Link>
-          </h2>
-          <p className="help">
-            {t.purpose && <strong>{contactLabels[t.purpose]} · </strong>}
-            {t.ideaId
-              ? "Rozmowa o pomyśle"
-              : t.adaptationId
-                ? "Rozmowa o adaptacji"
-                : t.needId
-                  ? "Rozmowa o potrzebie"
-                  : "Rozmowa o innowacji"}{" "}
-            · {t.id.slice(0, 8)}
-          </p>
-          {t.unread > 0 ? (
-            <p>
-              <strong>Nowe wiadomości: {t.unread}</strong>
-            </p>
-          ) : (
-            <p className="help">Brak nieprzeczytanych wiadomości</p>
-          )}
-        </article>
-      ))}
-    </div>
+                  : "Rozmowa z koordynatorem"}
+              </span>
+              <time dateTime={t.updatedAt}>
+                {new Date(t.updatedAt).toLocaleDateString("pl-PL", {
+                  timeZone: "Europe/Warsaw",
+                })}
+              </time>
+            </div>
+            <h3>
+              <Link href={`/wiadomosci/${t.id}`}>
+                {t.title || "Otwórz rozmowę"}
+              </Link>
+            </h3>
+            {t.unread > 0 && (
+              <p className={styles.badge}>Nowe wiadomości: {t.unread}</p>
+            )}
+          </li>
+        ))}
+    </ul>
+  ) : (
+    <p>Nie masz jeszcze rozmów z koordynatorem.</p>
   );
 }

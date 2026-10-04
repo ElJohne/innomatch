@@ -63,29 +63,22 @@ export default async function NewThread({
       )}
       {innovation && <p className="lead">{innovation.title}</p>}
       {need && (
-        <div className="card">
-          <h2>Twoja potrzeba</h2>
-          <p>{need.description}</p>
-          {need.clarifications?.map((x, i) => (
-            <p key={i}>
-              <strong>{x.question}</strong> {x.answer}
-            </p>
-          ))}
-        </div>
+        <p>
+          <Link href={`/potrzeby/${need.id}`}>
+            Zobacz potrzebę dołączoną do rozmowy →
+          </Link>
+        </p>
       )}
-      <p className="notice">
-        Wysyłając pytanie, udostępniasz personelowi treść rozmowy
-        {need ? " oraz opis i ograniczenia tej potrzeby" : ""}
-        {plan
-          ? `, wersję ${plan.revision} planu adaptacji i warunki instytucji. Późniejsze zmiany pozostają prywatne, dopóki ich nie udostępnisz`
-          : ""}
-        . To zgłoszenie do kontaktu, bez gwarancji partnerstwa lub finansowania.
-      </p>
-      <p className="help">
-        Odpowiedź znajdziesz w „Moje sprawy” w tej samej przeglądarce, w czasie
-        ważności sesji lub po przywróceniu prywatnym kodem dostępu. Zapisz kod w
-        „Moje sprawy”. Nie wysyłamy powiadomień e-mail.
-      </p>
+      {!existing && (
+        <p className="help">
+          Personel otrzyma wiadomość
+          {need ? " oraz opis i ograniczenia potrzeby" : ""}
+          {plan
+            ? ` oraz wersję ${plan.revision} planu z warunkami instytucji. Późniejsze zmiany planu udostępniasz osobno`
+            : ""}
+          . Odpowiedź znajdziesz w Moich sprawach; bez powiadomień e-mail.
+        </p>
+      )}
       {existing ? (
         <Link className="button" href={`/wiadomosci/${existing.id}`}>
           Otwórz istniejącą rozmowę

@@ -61,16 +61,9 @@ export function IdeaComparison({
   const stale = result && result.revision !== idea.revision;
   return (
     <section className="card stack" aria-busy={busy}>
-      <h2>Co już istnieje? Porównaj pomysł</h2>
-      <p>
-        Zobacz do trzech podobnych innowacji z opublikowanego katalogu: co je
-        łączy z Twoim pomysłem, jakie różnice widać w opisach i co warto
-        sprawdzić przed rozwojem.
-      </p>
+      <h2>Porównaj z katalogiem</h2>
       <p className="help">
-        Porównanie obejmuje ten katalog. Nie jest pełnym badaniem rynku ani
-        potwierdzeniem nowości. AI korzysta z zapisanej karty i materiałów
-        źródłowych.
+        Podobieństwa i różnice w opisach nie potwierdzają nowości pomysłu.
       </p>
       {disabled && (
         <p className="help">
@@ -99,7 +92,7 @@ export function IdeaComparison({
         <p role="status">
           {operation === "save"
             ? "Zapisujemy notatki w Twoim szkicu grantowym…"
-            : "Wyszukujemy podobne sposoby działania i przygotowujemy porównanie. Pozostań na stronie."}
+            : "Przygotowujemy porównanie…"}
         </p>
       )}
       {result && (
@@ -108,10 +101,6 @@ export function IdeaComparison({
             {result.mode === "mock"
               ? "Porównanie demonstracyjne — bez AI."
               : "Porównanie AI — propozycja do oceny autora."}{" "}
-            {result.retrieval === "semantic"
-              ? "Wyszukiwanie semantyczne."
-              : "Wyszukiwanie według słów kluczowych."}{" "}
-            Wersja karty: {result.revision}.
           </p>
           {stale && (
             <p className="notice">
@@ -149,8 +138,8 @@ export function IdeaComparison({
                 <h4>Pytanie o wartość dodaną</h4>
                 <p>{c.question}</p>
               </div>
-              <details>
-                <summary>Fragment źródłowy</summary>
+              <section>
+                <h4>Źródła</h4>
                 {c.evidence.map((e) => (
                   <blockquote key={e.fragmentId}>
                     <p>{e.excerpt}</p>
@@ -171,16 +160,11 @@ export function IdeaComparison({
                       </a>
                     </p>
                   ))}
-              </details>
+              </section>
             </article>
           ))}
           {result.comparisons.length > 0 && (
             <div className="stack">
-              <p className="help">
-                Możesz dodać te robocze notatki do pola „Innowacyjność” w szkicu
-                grantowym. Zostaną dopisane do obecnego tekstu; nie zastąpią
-                własnej oceny.
-              </p>
               <button
                 className="secondary"
                 disabled={busy || disabled || Boolean(stale) || attached}
@@ -211,9 +195,7 @@ export function IdeaComparison({
                     onSaved(saved);
                     setResult({ ...result, revision: saved.revision });
                     setAttached(true);
-                    setMessage(
-                      "Dodano notatki do zapisanego szkicu grantowego. Przejrzyj i dopracuj tekst przed użyciem.",
-                    );
+                    setMessage("Dodano notatki do szkicu grantowego.");
                     router.refresh();
                   }, "save")
                 }

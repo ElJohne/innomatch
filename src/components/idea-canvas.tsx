@@ -33,22 +33,18 @@ export function CanvasFields({
         Uzupełnione pola: {completed} z {Object.keys(canvasFields).length}.
       </p>
       {canvasSections.map((section, index) => (
-        <details key={section.title} className="canvas-section">
-          <summary>
+        <section key={section.title} className="canvas-section">
+          <h3>
             {index + 1}. {section.title}
-          </summary>
+          </h3>
           <div className="stack">
             {section.keys.map((key) => (
               <div key={key}>
                 <label htmlFor={`canvas-${key}`}>
                   {canvasFields[key].label}
                 </label>
-                <p id={`canvas-${key}-help`} className="help">
-                  {canvasFields[key].hint}
-                </p>
                 <textarea
                   id={`canvas-${key}`}
-                  aria-describedby={`canvas-${key}-help`}
                   rows={3}
                   maxLength={1000}
                   value={value[key]}
@@ -57,7 +53,7 @@ export function CanvasFields({
               </div>
             ))}
           </div>
-        </details>
+        </section>
       ))}
       <CanvasCredit />
     </section>

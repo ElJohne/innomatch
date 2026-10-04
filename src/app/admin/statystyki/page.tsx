@@ -6,6 +6,8 @@ import {
   searchStatusLabels,
   type AnalyticsBucket,
 } from "@/lib/contracts/analytics";
+import { AdminNavigation } from "../admin-navigation";
+import styles from "../admin.module.css";
 
 function Counts({
   title,
@@ -65,23 +67,18 @@ export default async function Statistics({
     count: item.count,
   }));
   return (
-    <section className="narrow">
-      <Link href="/admin">← Panel koordynatora</Link>
-      <p className="eyebrow">Zgłoszenia na platformie</p>
-      <h1>Statystyki potrzeb</h1>
-      <p className="lead">
-        Zobacz, jak zmienia się liczba zgłoszeń i dla kogo autorzy szukają
-        wsparcia.
-      </p>
+    <section className={styles.page}>
+      <AdminNavigation active="analytics" />
+      <header className={styles.heading}>
+        <h1>Statystyki potrzeb</h1>
+      </header>
       {data.source === "fixtures" ? (
         <p className="notice">
-          <strong>Dane demonstracyjne.</strong> Liczniki dotyczą tymczasowych
-          zgłoszeń w tym uruchomieniu. Znikają po restarcie serwera.
+          <strong>Dane demonstracyjne</strong> — zerowane po restarcie.
         </p>
       ) : (
         <p className="notice">
-          Dane z zapisanych zgłoszeń. Pochodzenie potrzeb nie jest rejestrowane
-          — zestawienie może obejmować także próby demonstracyjne.
+          Zapisane zgłoszenia, w tym ewentualne próby demonstracyjne.
         </p>
       )}
       <form className="filters" method="get">
@@ -98,17 +95,12 @@ export default async function Statistics({
         <button type="submit">Pokaż statystyki</button>
       </form>
       <p>
-        Od {date(data.period.from)} do {date(data.period.through)} · UTC.
-        Ostatni dzień jest niepełny.
+        {date(data.period.from)} – {date(data.period.through)} · UTC · dzisiaj:
+        dane częściowe
       </p>
       <p className="help">
-        Stan na{" "}
-        {new Date(data.generatedAt).toLocaleString("pl-PL", {
-          timeZone: "UTC",
-        })}{" "}
-        UTC. Każde zapisane zgłoszenie liczymy raz; jedna osoba może dodać kilka
-        zgłoszeń. To aktywność na platformie, a nie częstość problemów wśród
-        mieszkańców.
+        Liczymy zgłoszenia na platformie, nie osoby ani skalę problemów w
+        regionie.
       </p>
       <div className="metric-summary">
         <article className="card">
@@ -118,25 +110,19 @@ export default async function Statistics({
         <article className="card">
           <h2>Z podaną gminą</h2>
           <p className="metric-number">{data.withMunicipality}</p>
-          <p className="help">Bez nazw i treści wpisów.</p>
         </article>
       </div>
-      {!data.total && (
-        <p className="note">
-          Brak zgłoszeń w wybranym okresie. Zera oznaczają brak zapisów, nie
-          brak potrzeb w regionie.
-        </p>
-      )}
+      {!data.total && <p className="note">Brak zgłoszeń w wybranym okresie.</p>}
       <div className="stack detail-label">
         <Counts
           title="Dla kogo szukano wsparcia?"
           items={data.audiences}
-          help="Grupy wskazane przez autorów. Jedno zgłoszenie może dotyczyć kilku grup, dlatego suma może przekroczyć liczbę potrzeb. Niestandardowe wpisy zebrano jako „Inne grupy”."
+          help="Jedno zgłoszenie może dotyczyć kilku grup."
         />
         <Counts
           title="Stan wyszukiwania rozwiązań"
           items={statuses}
-          help="Bieżący zapisany wynik dla potrzeb utworzonych w wybranym okresie. Nie jest to miara skuteczności wdrożeń. Wynik może pochodzić z trybu testowego lub dotyczyć zmienionego katalogu; nie oceniamy tu jego aktualności."
+          help="Zapisane wyniki wyszukiwań, także testowych; nie ocena wdrożeń."
         />
         <Counts
           title="Zgłoszenia dzień po dniu"
@@ -144,7 +130,7 @@ export default async function Statistics({
             label: date(`${day.label}T00:00:00Z`),
             count: day.count,
           }))}
-          help="Dni w strefie UTC, wraz z dniami bez zgłoszeń. Dziś pokazujemy liczbę zapisaną do chwili odświeżenia zestawienia."
+          help="Liczba nowych zgłoszeń każdego dnia (UTC)."
         />
       </div>
     </section>

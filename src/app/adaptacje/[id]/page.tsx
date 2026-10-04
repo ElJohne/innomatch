@@ -4,9 +4,9 @@ import { session } from "@/server/auth/session";
 import { getPlan } from "@/server/services/adaptations";
 import { listInnovations } from "@/server/services/repository";
 import { AdaptationView } from "@/components/adaptation-view";
-import { AdaptationEditor } from "@/components/adaptation-editor";
 import { AdaptationHelp } from "@/components/adaptation-help";
 import { listThreads } from "@/server/services/communication";
+import styles from "@/components/adaptation.module.css";
 export default async function PlanPage({
   params,
 }: {
@@ -24,14 +24,36 @@ export default async function PlanPage({
     (thread) => thread.adaptationId === plan.id,
   );
   return (
-    <section className="narrow stack">
+    <section className={`narrow stack ${styles.page}`}>
       <Link href="/moje-sprawy">← Moje sprawy</Link>
-      <header>
-        <p className="eyebrow detail-label">Plan dla instytucji</p>
-        <h1>Możesz zacząć działać</h1>
-        <p className="lead">{innovation.title}</p>
+      <header className={styles.heading}>
+        <p className="eyebrow detail-label">{plan.constraints.institution}</p>
+        <h1>Twój plan działania</h1>
+        <p>
+          {innovation.title} · Wersja {plan.revision}
+        </p>
+        <p className="help">
+          Propozycja do weryfikacji, bez zatwierdzenia ROPS.
+        </p>
+        {innovation.origin === "SYNTHETIC" && (
+          <p className="help">
+            Dane syntetyczne
+            {plan.mode === "mock"
+              ? " · plan demonstracyjny bez wywołania AI"
+              : ""}
+            .
+          </p>
+        )}
       </header>
-      <AdaptationView plan={plan} />
+      <div className="actions">
+        <Link href={`/adaptacje/${plan.id}/edycja`}>Edytuj plan</Link>
+        <Link href={`/adaptacje/${plan.id}/podglad`}>Pełny plan i PDF</Link>
+      </div>
+      <AdaptationView
+        plan={plan}
+        expanded={false}
+        showMode={innovation.origin !== "SYNTHETIC"}
+      />
       <AdaptationHelp
         planId={plan.id}
         revision={plan.revision}
@@ -40,47 +62,7 @@ export default async function PlanPage({
       {conversation && conversation.unread > 0 && (
         <p role="status">Nowe wiadomości: {conversation.unread}</p>
       )}
-      <div className="actions">
-        <Link href={`/adaptacje/${plan.id}/podglad`}>Cały plan i PDF →</Link>
-        <Link href={`/potrzeby/${plan.needId}`}>Wróć do wybranej potrzeby</Link>
-      </div>
-      <details className="card">
-        <summary>Warunki i źródła</summary>
-        {Object.entries({
-          Instytucja: plan.constraints.institution,
-          Zasoby: plan.constraints.resources,
-          Zasięg: plan.constraints.scope,
-          Termin: plan.constraints.timeline,
-          Budżet: plan.constraints.budget,
-        })
-          .filter(([, value]) => value)
-          .map(([label, value]) => (
-            <p key={label}>
-              <strong>{label}:</strong> {value}
-            </p>
-          ))}
-        <h2>Materiały źródłowe</h2>
-        {innovation.origin === "SYNTHETIC" && (
-          <p className="help">Źródła demonstracyjne — dane syntetyczne.</p>
-        )}
-        {innovation.sources
-          .filter((source) => plan.draft.sourceIds.includes(source.id))
-          .map((source) => (
-            <div className="source" key={source.id}>
-              <h3>{source.sourceTitle}</h3>
-              {source.evidenceExcerpt && (
-                <blockquote>{source.evidenceExcerpt}</blockquote>
-              )}
-              <p>{source.sourceRef}</p>
-              {source.sourceUrl && (
-                <a href={source.sourceUrl} target="_blank" rel="noreferrer">
-                  Otwórz źródło ↗
-                </a>
-              )}
-            </div>
-          ))}
-      </details>
-      <AdaptationEditor initial={plan} sources={innovation.sources} />
+      <Link href={`/potrzeby/${plan.needId}`}>Wróć do potrzeby</Link>
     </section>
   );
 }

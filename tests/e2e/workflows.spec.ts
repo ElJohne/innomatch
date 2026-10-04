@@ -7,35 +7,21 @@ test("idea editor saves, applies mock assistance explicitly, reloads and submits
   baseURL,
 }) => {
   await page.goto("/pomysly/nowy");
-  await page.getByLabel("Tytuł pomysłu").fill("Syntetyczny klub sąsiedzki");
   await page
-    .getByLabel("Jaki problem chcesz rozwiązać?")
-    .fill("Syntetyczny przykład: seniorzy potrzebują regularnych spotkań.");
-  await page
-    .getByLabel("Na czym polega pomysł?")
+    .getByLabel("Co chcesz zrobić i komu pomóc?")
     .fill(
-      "Dobrowolne spotkania w świetlicy z udziałem lokalnych wolontariuszy.",
+      "Syntetyczny przykład: chcę organizować regularne spotkania samotnych seniorów w świetlicy z wolontariuszami.",
     );
-  await page
-    .getByLabel("Zasoby i ograniczenia")
-    .fill("Świetlica i wolontariusze.");
-  await page
-    .getByLabel("Jak można sprawdzić pomysł w małej skali?")
-    .fill("Mała dobrowolna próba i anonimowe uwagi.");
-  await page.getByLabel("Dla kogo? Jedna grupa w wierszu").fill("Seniorzy");
-  await page.getByRole("button", { name: "Zapisz prywatny szkic" }).click();
+  await page.getByRole("button", { name: "Przygotuj kartę" }).click();
   await expect(page).toHaveURL(/\/pomysly\/[a-f0-9-]{36}$/);
   const id = new URL(page.url()).pathname.split("/").at(-1)!;
-  await page.getByRole("button", { name: "Rozwiń w Canvas" }).click();
+  await page.getByRole("link", { name: "Canvas", exact: true }).click();
   const canvasNote =
     "Syntetyczny przykład: spotkania co tydzień dla małej grupy seniorów z jednej okolicy.";
   await page.getByLabel("Skala i częstotliwość problemu").fill(canvasNote);
   await page
     .getByLabel("Koszty stałe", { exact: true })
     .fill("Sala do uzgodnienia z biblioteką; koszt nie jest jeszcze znany.");
-  await page
-    .getByText("3. Dotarcie, partnerzy i wpływ", { exact: true })
-    .click();
   await page
     .getByLabel("Wpływ i sposób sprawdzenia")
     .fill(
@@ -51,25 +37,18 @@ test("idea editor saves, applies mock assistance explicitly, reloads and submits
   );
   const before = await (await page.request.get(`/api/ideas/${id}`)).json();
   await page
-    .getByRole("button", { name: "Poproś o propozycję rozwoju" })
+    .getByRole("button", { name: "Poproś AI o propozycję rozwoju" })
     .click();
-  await expect(
-    page.getByText("Przykład demonstracyjny — bez wywołania AI."),
-  ).toBeVisible();
+  await expect(page.getByText("Propozycja demonstracyjna.")).toBeVisible();
   expect(await (await page.request.get(`/api/ideas/${id}`)).json()).toEqual(
     before,
   );
-  await page
-    .getByRole("button", { name: "Zastosuj propozycję w formularzu" })
-    .click();
+  await page.getByRole("button", { name: "Zastosuj propozycję" }).click();
   await page.getByRole("button", { name: "Zapisz zmiany karty" }).click();
   await expect(
     page.getByRole("button", { name: "Zapisz zmiany karty" }),
   ).toBeDisabled();
   await page.reload();
-  await expect(
-    page.getByLabel("Jak można sprawdzić pomysł w małej skali?"),
-  ).toHaveValue(/Propozycja demonstracyjna/);
   await expect(page.getByLabel("Skala i częstotliwość problemu")).toHaveValue(
     canvasNote,
   );
@@ -80,9 +59,7 @@ test("idea editor saves, applies mock assistance explicitly, reloads and submits
         .analyze()
     ).violations,
   ).toEqual([]);
-  await page
-    .getByRole("link", { name: "Podgląd i druk zapisanej karty" })
-    .click();
+  await page.getByRole("link", { name: "Podgląd i druk" }).click();
   await expect(
     page.getByRole("heading", { name: "Canvas pomysłu", exact: true }),
   ).toBeVisible();
@@ -104,7 +81,41 @@ test("idea editor saves, applies mock assistance explicitly, reloads and submits
   await expect(page.locator(".header")).toBeHidden();
   await expect(page.getByText(canvasNote, { exact: true })).toBeVisible();
   await page.emulateMedia({ media: "screen" });
-  await page.getByRole("link", { name: "Wróć do edycji" }).click();
+  await page.goto(`/pomysly/${id}/grant`);
+  await expect(page.locator("main details")).toHaveCount(0);
+  await page.getByLabel("Całkowity koszt w PLN — działanie 1").fill("125.50");
+  await page
+    .getByRole("button", { name: "Zapisz szkic grantowy", exact: true })
+    .click();
+  await expect(
+    page.getByRole("button", { name: "Zapisz szkic grantowy", exact: true }),
+  ).toBeDisabled();
+  const savedGrant = await (await page.request.get(`/api/ideas/${id}`)).json();
+  await page
+    .getByRole("button", { name: "Zaproponuj tekst szkicu", exact: true })
+    .click();
+  await expect(
+    page.getByText("Propozycja demonstracyjna.", { exact: true }),
+  ).toBeVisible();
+  expect(await (await page.request.get(`/api/ideas/${id}`)).json()).toEqual(
+    savedGrant,
+  );
+  await page
+    .getByRole("button", { name: "Wstaw propozycję do formularza" })
+    .click();
+  await page
+    .getByRole("button", { name: "Zapisz szkic grantowy", exact: true })
+    .click();
+  await expect(
+    page.getByRole("button", { name: "Zapisz szkic grantowy", exact: true }),
+  ).toBeDisabled();
+  await page.reload();
+  await expect(
+    page.getByLabel("Całkowity koszt w PLN — działanie 1"),
+  ).toHaveValue("125.5");
+  const finalGrant = await (await page.request.get(`/api/ideas/${id}`)).json();
+  expect(finalGrant.grantDraft.costs[0].amountPLN).toBe(125.5);
+  await page.goto(`/pomysly/${id}`);
   const other = await browser.newContext();
   try {
     expect(
@@ -129,8 +140,10 @@ test("idea editor saves, applies mock assistance explicitly, reloads and submits
     await expect(page).toHaveURL(/\/wiadomosci\/[a-f0-9-]{36}$/);
     const saved = await (await page.request.get(`/api/ideas/${id}`)).json();
     expect(saved.status).toBe("SUBMITTED");
-    await page.getByText(/Pomysł udostępniony koordynatorowi — wersja/).click();
-    await expect(page.getByText(canvasNote, { exact: true })).toBeVisible();
+    const shared = await (
+      await page.request.get(`/api/threads/${saved.threadId}`)
+    ).json();
+    expect(JSON.stringify(shared)).toContain(canvasNote);
     expect(
       (
         await other.request.get(`${baseURL}/api/threads/${saved.threadId}`)
@@ -160,19 +173,17 @@ test("adaptation form persists a plan and recovery restores only the author's ac
     `/adaptacje/nowa?innovationId=demo-sasiedzki-stol&needId=${need.id}`,
   );
   await page
-    .getByLabel("Typ instytucji i jej rola")
+    .getByLabel("Jaka instytucja będzie działać?")
     .fill("Syntetyczny ośrodek kultury");
   await page
-    .getByLabel("Dostępne zasoby i ograniczenia")
+    .getByLabel("Co macie do dyspozycji?")
     .fill("Świetlica i wolontariusze");
-  await page
-    .getByLabel("Dla kogo i jaki zasięg usługi?")
-    .fill("Mała dobrowolna grupa seniorów");
+  await page.getByLabel("Dla kogo?").fill("Mała dobrowolna grupa seniorów");
   const savedResponse = page.waitForResponse(
     (r) =>
       r.url().endsWith("/api/adaptations") && r.request().method() === "POST",
   );
-  await page.getByRole("button", { name: "Przygotuj szkic adaptacji" }).click();
+  await page.getByRole("button", { name: "Przygotuj plan →" }).click();
   const saved = await savedResponse;
   expect(saved.status()).toBe(200);
   const savedPlan = await saved.json();
@@ -180,13 +191,13 @@ test("adaptation form persists a plan and recovery restores only the author's ac
     (await page.request.get(`/api/adaptations/${savedPlan.id}`)).status(),
   ).toBe(200);
   await expect(
-    page.getByRole("heading", { name: "Twój szkic usługi" }),
+    page.getByRole("heading", { name: "Twój plan działania" }),
   ).toBeVisible();
   const url = page.url();
   const id = new URL(url).pathname.split("/").at(-1)!;
   await page.reload();
   await expect(
-    page.getByRole("heading", { name: "Twój szkic usługi" }),
+    page.getByRole("heading", { name: "Twój plan działania" }),
   ).toBeVisible();
   expect(
     (
@@ -229,7 +240,7 @@ test("adaptation form persists a plan and recovery restores only the author's ac
     const restored = await other.newPage();
     await restored.goto(url);
     await expect(
-      restored.getByRole("heading", { name: "Twój szkic usługi" }),
+      restored.getByRole("heading", { name: "Twój plan działania" }),
     ).toBeVisible();
   } finally {
     await other.close();

@@ -1,13 +1,14 @@
 import { test, expect, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 
-async function createNeed(page: Page, baseURL: string) {
+async function createNeed(page: Page, baseURL: string, audience = "PRIVATE") {
   const response = await page.request.post("/api/needs", {
     headers: {
       origin: new URL(baseURL).origin,
       "idempotency-key": crypto.randomUUID(),
     },
     data: {
+      audience,
       description:
         "Seniorzy mieszkający samotnie potrzebują spotkań w świetlicy z wolontariuszami.",
     },
@@ -59,11 +60,11 @@ test("unavailable search offers a retry for the same saved need, not a false no-
   await page.goto(`/potrzeby/${need.id}`);
   await expect(
     page.getByRole("heading", {
-      name: "Nie udało się teraz sprawdzić dopasowania",
+      name: "Wyszukiwanie jest chwilowo niedostępne",
     }),
   ).toBeVisible();
   await expect(
-    page.getByText("Nie znaleźliśmy wystarczającego dopasowania", {
+    page.getByText("Nie znaleźliśmy pasującego rozwiązania", {
       exact: true,
     }),
   ).toHaveCount(0);
@@ -90,10 +91,13 @@ test("evidence cards stay readable with keyboard, contrast, narrow viewport and 
   await expect(
     card.getByRole("heading", { name: "Sąsiedzki stół" }),
   ).toBeVisible();
-  await expect(card.locator("blockquote")).toContainText(
-    "Regularne spotkania seniorów",
-  );
-  const primary = card.getByRole("link", { name: /Zaplanuj pierwszy krok/ });
+  await expect(
+    card.getByRole("heading", { name: "Dopasowanie częściowe" }),
+  ).toBeVisible();
+  await expect(
+    card.getByRole("link", { name: "Pełny opis rozwiązania →" }),
+  ).toBeVisible();
+  const primary = card.getByRole("link", { name: /Wybieram/ });
   await primary.focus();
   await expect(primary).toBeFocused();
   for (const name of [
@@ -133,32 +137,37 @@ test("evidence → saved editable first step → explicit sharing → coordinato
   baseURL,
 }) => {
   const origin = new URL(baseURL!).origin;
-  const need = await createNeed(page, baseURL!);
+  const need = await createNeed(page, baseURL!, "INSTITUTION");
   await page.goto(`/potrzeby/${need.id}`);
   await page
     .locator(".match-card")
     .first()
-    .getByRole("link", { name: /Zaplanuj pierwszy krok/ })
+    .getByRole("link", { name: /Wybieram/ })
     .click();
   await page
-    .getByLabel("Typ instytucji i jej rola")
+    .getByRole("link", { name: "Przygotuj plan dla instytucji →" })
+    .click();
+  await page
+    .getByLabel("Jaka instytucja będzie działać?")
     .fill("Syntetyczna świetlica");
   await page
-    .getByLabel("Dostępne zasoby i ograniczenia")
+    .getByLabel("Co macie do dyspozycji?")
     .fill("Sala i wolontariusze — do potwierdzenia");
-  await page
-    .getByLabel("Dla kogo i jaki zasięg usługi?")
-    .fill("Dobrowolna grupa seniorów");
-  await page.getByRole("button", { name: "Przygotuj szkic adaptacji" }).click();
+  await page.getByLabel("Dla kogo?").fill("Dobrowolna grupa seniorów");
+  await page.getByRole("button", { name: "Przygotuj plan →" }).click();
   await expect(
     page.getByRole("heading", { name: "Twój pierwszy krok" }),
   ).toBeVisible();
   const planURL = page.url();
   const planId = planURL.split("/").at(-1)!;
+  await page.goto(`/adaptacje/${planId}/podglad`);
   await expect(
-    page.getByText("Nieustalony — przed działaniem trzeba oszacować koszty."),
+    page.getByText(
+      "Budżet podany przez autora: nieustalony; koszty trzeba oszacować.",
+    ),
   ).toBeVisible();
-  await page.getByText("Edytuj szkic", { exact: true }).click();
+  await page.goto(planURL);
+  await page.getByRole("link", { name: "Edytuj plan", exact: true }).click();
   await page
     .getByLabel("Kto odpowiada?", { exact: true })
     .fill("Rola koordynatora świetlicy — do uzgodnienia");
@@ -168,9 +177,10 @@ test("evidence → saved editable first step → explicit sharing → coordinato
   await page.getByRole("button", { name: "Zapisz zmiany planu" }).click();
   await expect(page.getByRole("status")).toContainText("Zapisano nową wersję");
   await page.reload();
-  await expect(page.locator(".first-step-grid")).toContainText(
-    "Rola koordynatora świetlicy — do uzgodnienia",
-  );
+  await page.goto(planURL);
+  await expect(
+    page.getByRole("region", { name: "Pierwszy krok planu" }),
+  ).toContainText("Rola koordynatora świetlicy — do uzgodnienia");
   const plan = await (
     await page.request.get(`/api/adaptations/${planId}`)
   ).json();
@@ -188,23 +198,14 @@ test("evidence → saved editable first step → explicit sharing → coordinato
     ),
   ).toBe(true);
   await page.setViewportSize({ width: 1280, height: 720 });
-  await page
-    .getByRole("link", { name: "Zapytaj koordynatora", exact: true })
-    .click();
-  await expect(
-    page.getByLabel("O co chcesz zapytać koordynatora?"),
-  ).toHaveValue(/wersja 2/);
   const before = await page.request.get("/api/threads");
   expect((await before.json()).items).toEqual([]);
   await page
-    .getByLabel("O co chcesz zapytać koordynatora?")
-    .fill(
-      "Syntetyczna konsultacja: proszę o ocenę pierwszego kroku i zasobów.",
-    );
-  await page.getByRole("button", { name: "Wyślij do koordynatora" }).click();
-  await expect(page).toHaveURL(/\/wiadomosci\/[a-f0-9-]{36}$/);
+    .getByRole("button", { name: "Poproś koordynatora o pomoc →" })
+    .click();
+  await expect(page).toHaveURL(/\/wiadomosci\/[a-f0-9-]{36}/);
   const threadURL = page.url(),
-    threadId = threadURL.split("/").at(-1)!;
+    threadId = new URL(threadURL).pathname.split("/").at(-1)!;
   const stranger = await browser.newContext();
   const staff = await browser.newContext();
   try {
@@ -297,7 +298,7 @@ test("evidence → saved editable first step → explicit sharing → coordinato
     ).toBeVisible();
     await page.goto(planURL);
     await expect(page.getByRole("status")).toContainText("Nowe wiadomości: 1");
-    await page.getByRole("link", { name: "Wróć do rozmowy" }).click();
+    await page.getByRole("button", { name: "Otwórz rozmowę →" }).click();
     await expect(
       page.getByText(
         "Syntetyczna odpowiedź: ustalmy dostępność sali przed pierwszym spotkaniem.",
