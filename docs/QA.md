@@ -1,5 +1,21 @@
 # Перевірки — 2026-10-03, поточна ітерація та історія
 
+## Seven-module redesign deployed — 2026-10-04
+
+Owner authorized push to master and deployment. Release `6127baa` deployed by
+[Actions 37184858152](https://github.com/ElJohne/innomatch/actions/runs/37184858152):
+build SUCCESS, deploy SUCCESS. Existing migration/corpus/rollout/readiness pipeline
+completed; this change adds no schema migration.
+
+Post-deploy read-only HTTPS checks on https://pomocnypunkt.pl: `/api/health`,
+`/api/ready`, `/`, `/innowacje`, `/innowacje/region`, `/innowacje/materialy`,
+`/pomysly/nowy`, `/moje-sprawy`, `/personel/logowanie` all HTTP 200 with expected
+content. New regional/material pages confirm the deployed design. No production
+private records or live AI requests were created for these smoke checks.
+Local pre-release validation remains 68 unit and 28 E2E PASS; PostgreSQL integration
+suite was skipped without TEST_DATABASE_URL, as recorded below.
+
+
 ## Seven-module design cleanup — 2026-10-04, local worktree
 
 Branch `codex/product-design-cleanup`, base `5728d1b`.
