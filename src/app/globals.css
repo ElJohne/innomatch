@@ -3374,3 +3374,10 @@ html:is(
 .next-action .stack {
   gap: 8px;
 }
+.plan-page .flow-heading {
+  padding: 18px 24px;
+  margin: 20px 0;
+}
+.plan-page .flow-heading h1 {
+  margin: 0;
+}

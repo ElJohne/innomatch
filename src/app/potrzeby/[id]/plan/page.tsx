@@ -32,6 +32,9 @@ export default async function PlanPage({
   const match = result.matches.find((m) => m.innovationId === innovationId),
     innovation = records.find((r) => r.id === innovationId);
   if (!match || !innovation) notFound();
+  const material = innovation.sources.find(
+    (source) => match.sourceIds.includes(source.id) && source.sourceUrl,
+  );
   const existingThread = (await listThreads({ ownerId: s.ownerId })).find(
     (t) => t.needId === need.id,
   )?.id;
@@ -53,6 +56,18 @@ export default async function PlanPage({
         {(result.mode.explanation === "mock" ||
           innovation.origin === "SYNTHETIC") && (
           <p className="help">Przykład demonstracyjny</p>
+        )}
+        {material?.sourceUrl && (
+          <p>
+            <a
+              className="button secondary"
+              href={material.sourceUrl}
+              target="_blank"
+              rel="noreferrer"
+            >
+              Zobacz rozwiązanie ↗
+            </a>
+          </p>
         )}
         <QuickHelp
           needId={need.id}

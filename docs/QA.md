@@ -1,5 +1,27 @@
 # Перевірки — 2026-10-03, поточна ітерація та історія
 
+## Integrated minimal journeys — 2026-10-04, 08:16
+
+- 3683bc5 / Actions 37181883691 SUCCESS. Production manual OpenAI:
+  bankomat → Merkury (one sentence) → one next step → real private thread PASS;
+  shopping help → Zakupy bez barier (one sentence) → one next step PASS.
+  No confirmation, budget or institutional form in resident path.
+- Main mock journey including sent screen with reply collapsed PASS.
+- Three agents in separate managed worktrees: catalog search/detail/request/reopen
+  same thread PASS; institutional one-field create/edit/revision2/fullpreview/shared
+  snapshot2 PASS; idea one-description/create/assist/save/edit + 13 Canvas fields,
+  grant apply/author costs/save/reload/print175,50 PLN/consultation PASS.
+- Combined final root lint/typecheck/Turbopack production build and 68 existing
+  unit PASS. No new test suite. Agent build used --webpack locally because a shared
+  node_modules junction is outside Turbopack's root; production config unchanged.
+- Preserved server ownership/publication checks, explicit source references and
+  synthetic/mock labels. Sources and full content remain reachable in details.
+- Full legacy E2E not run: it expects removed confirmation/organization journey.
+  PostgreSQL integration not run: no schema migration. Shared deployment pending.
+- Own synthetic proof: live-minimal-next-step-20261004.png,
+  local-minimal-institution-20261004.jpg, local-institution-sent-20261004.jpg,
+  local-simple-idea-20261004.png.
+
 ## Minimal resident journey — 2026-10-04, 08:08
 
 - Local fixtures/mock, visibly synthetic: single textarea + two persona buttons,
