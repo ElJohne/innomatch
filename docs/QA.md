@@ -1,5 +1,45 @@
 # Перевірки — 2026-10-03, поточна ітерація та історія
 
+## Швидка функціональна ітерація M1–M7 — 2026-10-04, 09:20
+
+- `npm run typecheck` — PASS; `npm run lint` — PASS. Використано штатний npm-cli
+  через Node через несправний глобальний launcher. Початковий lint prefer-const
+  виправлено; наведені результати — після виправлення й форматування.
+- `npm test -- --reporter=dot` — 79/79 PASS, 13 files, 2.79s.
+  Нові regressions: cache/catalog/model + material-only; 205 conversations та
+  moderation + 51 feedback; M7 constraints/snapshot/recovery; M3 title/form/
+  private applicant excluded from AI/revision notification.
+- `git diff --check` — PASS.
+- Окремий локальний Next dev 3101, fixtures/mock: головна/каталог/матеріали/
+  регіон/API/нова ідея — HTTP200; anonymous admin/threads — redirect;
+  adaptation без innovationId — очікуваний404, з валідним context —200.
+- `node tmp/functional-smoke.mjs` — PASS. Реальні HTTP create need → matching
+  → повтор без нового runId → page; plan create → budget PATCH → page/preview;
+  feedback read; private thread → paginated queue/unread; idea → grant/preview
+  → submit → edit → рівно очікувана revision message. Усі приклади синтетичні,
+  лише локальна process memory, повідомлень реальним координаторам немає.
+- Повні E2E/build/PostgreSQL integration не повторювали за запитом власника
+  не запускати довгі перевірки. Ці результати не успадковуються від попереднього
+  аудиту. Runtime нових SQL pagination/import/notification лишається неперевіреним.
+- Live AI/production/спільна БД не змінені. Повний результат —
+  [FIX-RESULTS](audit-2026-10-04/FIX-RESULTS.md).
+
+## Аудит M1–M7 — 2026-10-04, checkout 5728d1b
+
+Повний свіжий журнал: [audit-2026-10-04/QA.md](audit-2026-10-04/QA.md).
+Lint/typecheck/build PASS, 68 unit PASS, corpus 114/69 valid. На окремій
+PostgreSQL 17.11: 7 PASS / 1 FAIL (Canvas assist expectation); контейнер прибрано.
+Default E2E не мав Chromium executable; повтор Chrome: 11 завершених PASS,
+15 завершених FAIL (переважно старі UI селектори). Після 26 результатів teardown
+не закінчився, runner перервано; JSON reporter не записаний. Геометричний failure
+320×800 і суперечливий unavailable/no-match UI підтверджені окремими snapshots.
+
+Production перевірено read-only; HTTP/UI catalog search mismatch підтверджено,
+health/ready 200, anonymous analytics 403. Нових live AI-запитів/production
+записів не було. Local mock M3: відтворено title bug «Np.»; контрольний create →
+grant save/reload PASS. PDF звірено, 7 агентських звітів готові; application code
+не змінений. Попередні production/live докази нижче залишаються історичними.
+
 ## Final production manual checks — 2026-10-04, 08:23
 
 - f30862b / Actions 37182338134 SUCCESS.

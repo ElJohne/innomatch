@@ -1,14 +1,17 @@
 "use client";
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import type { AdaptationInput } from "@/lib/contracts/adaptation";
 export function AdaptationForm({
   innovationId,
   needs,
   selectedNeedId,
+  initialConstraints,
 }: {
   innovationId: string;
   needs: { id: string; description: string }[];
   selectedNeedId?: string;
+  initialConstraints?: AdaptationInput["constraints"];
 }) {
   const router = useRouter(),
     key = useRef("");
@@ -99,6 +102,7 @@ export function AdaptationForm({
           minLength={3}
           maxLength={300}
           placeholder="Np. biblioteka lub ośrodek pomocy"
+          defaultValue={initialConstraints?.institution}
         />
         <details>
           <summary>Dodatkowe warunki — opcjonalnie</summary>
@@ -111,6 +115,7 @@ export function AdaptationForm({
               maxLength={1500}
               rows={2}
               placeholder="Np. sala i dwie osoby do pomocy"
+              defaultValue={initialConstraints?.resources}
             />
             <label htmlFor="plan-scope">
               Dla kogo? — jeśli chcesz doprecyzować
@@ -121,11 +126,22 @@ export function AdaptationForm({
               minLength={3}
               maxLength={600}
               rows={2}
+              defaultValue={initialConstraints?.scope}
             />
             <label htmlFor="plan-timeline">Termin — jeśli znany</label>
-            <input id="plan-timeline" name="timeline" maxLength={300} />
+            <input
+              id="plan-timeline"
+              name="timeline"
+              maxLength={300}
+              defaultValue={initialConstraints?.timeline}
+            />
             <label htmlFor="plan-budget">Budżet — jeśli znany</label>
-            <input id="plan-budget" name="budget" maxLength={300} />
+            <input
+              id="plan-budget"
+              name="budget"
+              maxLength={300}
+              defaultValue={initialConstraints?.budget}
+            />
           </div>
         </details>
       </fieldset>

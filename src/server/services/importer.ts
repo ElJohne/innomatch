@@ -4,6 +4,8 @@ import { sql } from "drizzle-orm";
 import { innovationSchema, knowledgeSchema } from "@/lib/contracts";
 import { db } from "@/server/db/client";
 import { innovations, knowledge } from "@/server/db/schema";
+import { contentHash } from "@/server/search/ranking";
+import { knowledgeHash } from "@/server/search/knowledge";
 export function validateImport(input: unknown, allowSynthetic = false) {
   const records = z.array(innovationSchema).min(1).max(5000).parse(input);
   const ids = new Set<string>();
@@ -46,21 +48,40 @@ export async function importRecords(
               : sql`${innovations.record} IS DISTINCT FROM ${JSON.stringify(record)}::jsonb`
           })`,
         })
-        .returning({ id: innovations.id });
+        .returning({ record: innovations.record });
       upserted += rows.length;
+      for (const row of rows) {
+        const current = innovationSchema.parse(row.record);
+        await tx.execute(
+          sql`delete from embeddings where record_id=${current.id}`,
+        );
+        await tx.execute(sql`insert into catalog_controls
+          (record_type,record_id,managed_locally,content_hash,index_pending,updated_by)
+          values ('innovation',${current.id},false,${contentHash(current)},${current.publicationStatus === "PUBLISHED"},'source-import')
+          on conflict (record_type,record_id) do update set content_hash=excluded.content_hash,
+          index_pending=excluded.index_pending,updated_at=now(),updated_by=excluded.updated_by
+          where not catalog_controls.managed_locally`);
+      }
     }
   });
   return { validated: records.length, upserted };
 }
 export async function importKnowledge(input: unknown) {
   const records = z.array(knowledgeSchema).min(1).max(5000).parse(input);
-  if (records.some((r) => r.origin !== "PUBLIC_SOURCE"))
-    throw new Error("PUBLIC_SOURCES_REQUIRED");
+  if (
+    records.some(
+      (r) => r.origin !== "PUBLIC_SOURCE" && r.origin !== "ORGANIZER",
+    )
+  )
+    throw new Error("SOURCE_BACKED_REQUIRED");
   if (new Set(records.map((r) => r.id)).size !== records.length)
     throw new Error("DUPLICATE_IMPORT_ID");
   if (
     records.some((r) =>
-      r.sources.some((s) => !s.evidenceExcerpt || !s.sourceUrl),
+      r.sources.some(
+        (s) =>
+          !s.evidenceExcerpt || (r.origin === "PUBLIC_SOURCE" && !s.sourceUrl),
+      ),
     )
   )
     throw new Error("MISSING_EVIDENCE");
@@ -69,7 +90,7 @@ export async function importKnowledge(input: unknown) {
       await tx.execute(
         sql`select pg_advisory_xact_lock(hashtextextended(${`knowledge:${record.id}`}, 0))`,
       );
-      await tx
+      const rows = await tx
         .insert(knowledge)
         .values({ id: record.id, record })
         .onConflictDoUpdate({
@@ -79,7 +100,20 @@ export async function importKnowledge(input: unknown) {
             updatedAt: new Date(),
           },
           setWhere: sql`not exists (select 1 from catalog_controls where record_type='knowledge' and record_id=${record.id} and managed_locally) and ${knowledge.record} IS DISTINCT FROM jsonb_set(${JSON.stringify(record)}::jsonb, '{publicationStatus}', ${knowledge.record}->'publicationStatus')`,
-        });
+        })
+        .returning({ record: knowledge.record });
+      for (const row of rows) {
+        const current = knowledgeSchema.parse(row.record);
+        await tx.execute(
+          sql`delete from knowledge_embeddings where record_id=${current.id}`,
+        );
+        await tx.execute(sql`insert into catalog_controls
+          (record_type,record_id,managed_locally,content_hash,index_pending,updated_by)
+          values ('knowledge',${current.id},false,${knowledgeHash(current)},${current.publicationStatus === "PUBLISHED" && current.coverage !== "DIRECTORY"},'source-import')
+          on conflict (record_type,record_id) do update set content_hash=excluded.content_hash,
+          index_pending=excluded.index_pending,updated_at=now(),updated_by=excluded.updated_by
+          where not catalog_controls.managed_locally`);
+      }
     }
   });
   return { validated: records.length };

@@ -1,8 +1,7 @@
 import { z } from "zod";
 import type { IdeaCard } from "./idea";
 
-// Substantive questions 1 and 3–11 of the published IWS 2.0 form.
-// Applicant identifiers and legal declarations remain in the organizer's form.
+// Archival form. Optional applicant data is entered by its author, never AI.
 export const grantTemplate = {
   id: "iws-2024",
   version: "iws-2024-public-form-v1",
@@ -92,12 +91,116 @@ export const grantCost = z
     amountPLN: z.number().finite().min(0).max(10000000).nullable(),
   })
   .strict();
+export const applicantFields = {
+  firstName: "Imię",
+  lastName: "Nazwisko",
+  name: "Nazwa podmiotu",
+  krs: "KRS (jeśli dotyczy)",
+  regon: "REGON (jeśli dotyczy)",
+  nip: "NIP (jeśli dotyczy)",
+  address: "Ulica, numer budynku i lokalu",
+  postalCode: "Kod pocztowy",
+  city: "Miejscowość",
+  phone: "Telefon",
+  email: "E-mail",
+  representativeRole: "Funkcja osoby upoważnionej",
+  representativeName: "Imię i nazwisko osoby upoważnionej",
+  representativePhone: "Telefon osoby upoważnionej",
+  representativeEmail: "E-mail osoby upoważnionej",
+  contactRole: "Funkcja osoby do kontaktów roboczych",
+  contactName: "Imię i nazwisko osoby do kontaktów roboczych",
+  contactPhone: "Telefon do kontaktów roboczych",
+  contactEmail: "E-mail do kontaktów roboczych",
+} as const;
+export type ApplicantField = keyof typeof applicantFields;
+const applicantParty = z
+  .object({
+    kind: z.enum(["PERSON", "ENTITY"]),
+    fields: z.partialRecord(
+      z.enum(
+        Object.keys(applicantFields) as [ApplicantField, ...ApplicantField[]],
+      ),
+      z.string().trim().max(500),
+    ),
+  })
+  .strict();
+export const grantApplicant = z
+  .object({
+    kind: z.enum(["PERSON", "ENTITY", "GROUP"]),
+    parties: z.array(applicantParty).min(1).max(5),
+    groupContactName: z.string().trim().max(200),
+    groupContactPhone: z.string().trim().max(100),
+    groupContactEmail: z.string().trim().max(200),
+  })
+  .strict()
+  .superRefine((applicant, ctx) => {
+    // A group can be saved with one partner while its draft is incomplete.
+    // Readiness, rather than draft persistence, requires the second partner.
+    if (
+      applicant.kind !== "GROUP" &&
+      (applicant.parties.length !== 1 ||
+        applicant.parties[0]?.kind !== applicant.kind)
+    ) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["parties"],
+        message:
+          "Osoba fizyczna lub podmiot wymaga dokładnie jednego pomysłodawcy zgodnego rodzaju.",
+      });
+    }
+  });
+export type GrantApplicant = z.infer<typeof grantApplicant>;
+export const declarationChecks = {
+  eligibility: "Warunki podmiotowe i brak wykluczeń (część 12A lub 12B)",
+  conflicts: "Powiązania i bezstronność wobec ROPS / INNOAGH",
+  funding:
+    "Brak równoległego finansowania, powielania wsparcia i limit dwóch aplikacji",
+  testing:
+    "Bezpłatne testowanie i charakter innowacyjny, nie wyłącznie wdrożeniowy",
+  equality: "Równość szans, dostępność i zasada DNSH",
+  procedures:
+    "Procedury naboru, prawdziwość danych i zasady udostępnienia oceniającym",
+  privacy:
+    "Klauzule informacyjne ROPS / IZ i obowiązki wobec osób, których dane podano",
+} as const;
+export type DeclarationKey = keyof typeof declarationChecks;
+export function emptyApplicant(
+  kind: GrantApplicant["kind"] = "PERSON",
+): GrantApplicant {
+  return {
+    kind,
+    parties: [{ kind: kind === "ENTITY" ? "ENTITY" : "PERSON", fields: {} }],
+    groupContactName: "",
+    groupContactPhone: "",
+    groupContactEmail: "",
+  };
+}
 export const grantDraft = z
   .object({
     callId: z.literal(grantTemplate.id),
     templateVersion: z.literal(grantTemplate.version),
     sections: grantSections,
     costs: z.array(grantCost).min(1).max(20),
+    schedule: z
+      .object({
+        preparationMonths: z.number().int().min(1).max(3).nullable(),
+        testingMonths: z.number().int().min(1).max(9).nullable(),
+        testers: z.number().int().min(1).max(1000000).nullable(),
+      })
+      .strict()
+      .optional(),
+    applicant: grantApplicant.optional(),
+    declarationReview: z
+      .partialRecord(
+        z.enum(
+          Object.keys(declarationChecks) as [
+            DeclarationKey,
+            ...DeclarationKey[],
+          ],
+        ),
+        z.boolean(),
+      )
+      .optional(),
   })
   .strict();
 export const grantEdit = z
@@ -147,8 +250,110 @@ export function grantBudget(costs: GrantCost[]) {
     100;
   return {
     total,
-    complete: costs.every((c) => c.action && c.timing && c.amountPLN !== null),
+    complete:
+      Object.keys(costPhases).every((phase) =>
+        costs.some((c) => c.phase === phase),
+      ) &&
+      costs.every(
+        (c) => c.action.trim() && c.timing.trim() && c.amountPLN !== null,
+      ),
   };
+}
+export function partyFields(kind: "PERSON" | "ENTITY"): ApplicantField[] {
+  return kind === "PERSON"
+    ? [
+        "firstName",
+        "lastName",
+        "address",
+        "postalCode",
+        "city",
+        "phone",
+        "email",
+      ]
+    : [
+        "name",
+        "krs",
+        "regon",
+        "nip",
+        "address",
+        "postalCode",
+        "city",
+        "phone",
+        "email",
+        "representativeRole",
+        "representativeName",
+        "representativePhone",
+        "representativeEmail",
+        "contactRole",
+        "contactName",
+        "contactPhone",
+        "contactEmail",
+      ];
+}
+export function grantReadiness(draft: GrantDraft): string[] {
+  const missing: string[] = [];
+  for (const [key, field] of Object.entries(grantFields)) {
+    const value = draft.sections[key as GrantKey].trim();
+    if (
+      !value ||
+      /^(do (ustalenia|uzupełnienia)(?:\s|[.!]|$)|brak[.!]?$|nie wiem[.!]?$)/i.test(
+        value,
+      )
+    )
+      missing.push(field.label);
+  }
+  if (!grantBudget(draft.costs).complete)
+    missing.push(
+      "9–10. Działania, terminy i koszty przygotowania oraz obu faz testu",
+    );
+  if (
+    !draft.schedule?.preparationMonths ||
+    !draft.schedule.testingMonths ||
+    !draft.schedule.testers
+  )
+    missing.push(
+      "9. Czas przygotowania (do 3 miesięcy), testowania (do 9 miesięcy) i liczba testerów",
+    );
+  const applicant = draft.applicant;
+  if (!applicant) missing.push("2. Dane pomysłodawcy");
+  else {
+    if (applicant.kind === "GROUP" && applicant.parties.length < 2)
+      missing.push("2. Co najmniej dwóch partnerów grupy");
+    applicant.parties.forEach((party, index) => {
+      if (
+        partyFields(party.kind)
+          .filter((key) => !["krs", "regon", "nip"].includes(key))
+          .some((key) => !party.fields[key]?.trim())
+      )
+        missing.push(`2. Dane pomysłodawcy / partnera ${index + 1}`);
+      if (
+        partyFields(party.kind)
+          .filter((key) => key.toLowerCase().endsWith("email"))
+          .some(
+            (key) =>
+              party.fields[key] &&
+              !z.email().safeParse(party.fields[key]).success,
+          )
+      )
+        missing.push(`2. Poprawne adresy e-mail partnera ${index + 1}`);
+    });
+    if (
+      applicant.kind === "GROUP" &&
+      (!applicant.groupContactName ||
+        !applicant.groupContactPhone ||
+        !z.email().safeParse(applicant.groupContactEmail).success)
+    )
+      missing.push("2. Kontakt do reprezentanta grupy");
+  }
+  if (
+    Object.keys(declarationChecks).some(
+      (key) => !draft.declarationReview?.[key as DeclarationKey],
+    )
+  )
+    missing.push(
+      "12. Przegląd oświadczeń w oryginalnym formularzu przez autora",
+    );
+  return missing;
 }
 export const formatPLN = (amount: number) =>
   new Intl.NumberFormat("pl-PL", { style: "currency", currency: "PLN" }).format(

@@ -2,6 +2,13 @@ import { z } from "zod";
 import { ideaCanvas } from "./canvas";
 import type { GrantDraft } from "./grant";
 import { contactPurpose } from "@/lib/contact-purpose";
+export function initialIdeaTitle(description: string) {
+  const text = description.trim().replace(/\s+/g, " ");
+  const sentence = text.split(/[.!?]/)[0].trim();
+  return (
+    sentence.length >= 3 ? sentence : text.length >= 3 ? text : "Nowy pomysł"
+  ).slice(0, 180);
+}
 export const ideaCard = z
   .object({
     title: z.string().trim().min(3).max(200),

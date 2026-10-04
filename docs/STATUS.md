@@ -1,5 +1,61 @@
 # Стан — 2026-10-04
 
+## Функціональні доробки M1–M7 — 2026-10-04, 09:20, локально
+
+За новим запитом власника виконано швидку ітерацію коду для всіх семи модулів.
+План, виконане, критерії та залишки: [FIX-PLAN](audit-2026-10-04/FIX-PLAN.md)
+і [FIX-RESULTS](audit-2026-10-04/FIX-RESULTS.md). Презентації не готувалися.
+
+M1: outage окремо від no-match, cache key каталогу/моделі, явне оновлення зі
+свіжими server props, матеріали без innovation match. M2: звіти/освіта/теми,
+пагінація та дані повітів у наявному каталозі, спільний пошук UI/API.
+M3: Np./1. title, поля заявника й checklist оригінальних декларацій, 3/9 місяців,
+повнота фаз/бюджету, друк і revision notification після sharing.
+M4/M5: повні paginated queues/counters/unread/status, власний список розмов.
+M6: ORGANIZER knowledge, інвалідація embeddings/pending при import, фактична
+перевірка індексу й фільтр pending. M7: редаговані constraints/revision,
+owner-only recovery із перенесенням умов та незмінними publication guards.
+
+PASS: typecheck; lint; 79 unit tests (13 files, 2.79s); diff check.
+Короткий локальний HTTP fixtures/mock: search/cache → plan/edit/preview →
+thread/queue та idea/grant/preview → submit/edit/revision notification PASS.
+Повний build/E2E/PG і live AI не запускали за вказівкою швидких перевірок.
+Нові SQL-запити review пройшли, runtime PostgreSQL цієї версії ще не підтверджено.
+Production, shared DB, dependencies та lockfile не змінені; deploy/push немає.
+
+Залишки функціонального розвитку: керовані актуальні набори/версії форм,
+календарна перевірка фаз, grant-AI idempotency, призначення виконавців/статуси
+справ, provenance аналітики, геокарта, незалежне приймання якості AI.
+Ці речі не оголошені завершеними; наступність описана у FIX-RESULTS.
+
+## Аудит 7 агентами — 2026-10-04, поточний checkout 5728d1b
+
+Виконано запит власника на аудит усіх M1–M7, доданого 16-сторінкового IWS
+формуляра та конкурентів. Зведення й план: [audit-2026-10-04/REPORT.md](audit-2026-10-04/REPORT.md).
+У папці — окремі M1–M7, QA і свіжий COMPETITORS. Application code, LICENSE,
+source PDFs, production, shared DB та lockfile не змінені; push/deploy/submit не було.
+
+Свіжі результати: lint/typecheck/build PASS; 68/68 unit PASS; corpus 114/69 valid.
+Ізольована PostgreSQL 17.11: 7 PASS, 1 FAIL — старе очікування незмінного Canvas
+після assist. Тимчасовий container зупинений. E2E: default browser відсутній;
+повтор на встановленому Chrome завершив 26 test attempts: 11 PASS, 15 FAIL.
+Переважно застарілі селектори/шляхи; також реальна mobile above-fold регресія
+(815.953px при 320×800) і snapshot false no-match для unavailable. Після всіх
+test results runner завис у teardown; перервано, JSON не отримано. Деталі — audit QA.
+Фінальний typecheck після прибирання тимчасової config.ts PASS.
+
+Production read-only: home/health/ready 200; 114 innovations, 69 knowledge;
+anonymous analytics 403; підтверджено UI/API search mismatch для «seniorzy bankomat».
+Ручний локальний mock M3: «Np.» блокує title; контрольний опис → картка → grant
+save/reload PASS. Нових production записів, повідомлень або live AI-викликів немає.
+
+Висновок: серверні дії є в усіх 7 модулях; M2/M3 часткові, M4/M6/M7 мають
+сильне ядро MVP. Доробити outage UX, title, актуальні E2E, cache invalidation,
+черги понад 200, правила повторного sharing ідей/грантів та редагування constraints.
+Фінальних PDF/MP4 і docs/submission у цьому checkout не знайдено; COSTS лишається
+початковим. Наступна дія: формальний пакет і вузькі дефекти, потім приймання
+короткого наскрізного шляху. Жодне заплановане виправлення тут не оголошене виконаним.
+
 ## Спрощені сценарії на production — 2026-10-04, 08:23
 
 f30862b / Actions 37182338134 SUCCESS: усі три агентські пакети та основний

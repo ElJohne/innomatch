@@ -1,6 +1,11 @@
 import { z } from "zod";
 import type { ContactPurpose } from "@/lib/contact-purpose";
 
+export const queueQuery = z.object({
+  page: z.coerce.number().int().min(1).max(1000000).default(1),
+  unread: z.enum(["0", "1"]).default("0"),
+});
+
 export const loginInput = z
   .object({
     login: z.string().trim().toLowerCase().email().max(200),

@@ -311,9 +311,9 @@ export function CatalogEditor({
               onChange={(e) => change("origin", e.target.value)}
             >
               <option value="PUBLIC_SOURCE">Źródło publiczne</option>
+              <option value="ORGANIZER">Materiał organizatora</option>
               {entry.kind === "innovation" && (
                 <>
-                  <option value="ORGANIZER">Materiał organizatora</option>
                   <option value="USER_SUBMISSION">
                     Zgłoszenie użytkownika
                   </option>

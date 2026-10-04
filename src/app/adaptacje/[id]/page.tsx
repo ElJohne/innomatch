@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { session } from "@/server/auth/session";
-import { getPlan } from "@/server/services/adaptations";
+import { getPlan, getPlanRecovery } from "@/server/services/adaptations";
+import { AdaptationRecovery } from "@/components/adaptation-recovery";
 import { listInnovations } from "@/server/services/repository";
 import { AdaptationView } from "@/components/adaptation-view";
 import { AdaptationEditor } from "@/components/adaptation-editor";
@@ -14,8 +15,13 @@ export default async function PlanPage({
 }) {
   const owner = await session();
   if (!owner.ownerId) notFound();
-  const plan = await getPlan((await params).id, owner.ownerId);
-  if (!plan) notFound();
+  const { id } = await params;
+  const plan = await getPlan(id, owner.ownerId);
+  if (!plan) {
+    const recovery = await getPlanRecovery(id, owner.ownerId);
+    if (!recovery) notFound();
+    return <AdaptationRecovery recovery={recovery} />;
+  }
   const innovation = (await listInnovations()).find(
     (record) => record.id === plan.innovationId,
   );

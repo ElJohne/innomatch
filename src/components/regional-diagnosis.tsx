@@ -8,11 +8,11 @@ const countyLabel = (county: string) =>
   county.startsWith("m. ") ? `miasto ${county.slice(3)}` : `powiat ${county}`;
 
 export function RegionalDiagnosis({
-  diagnosis,
+  diagnosis = "",
   onAppend,
 }: {
-  diagnosis: string;
-  onAppend: (note: string) => void;
+  diagnosis?: string;
+  onAppend?: (note: string) => void;
 }) {
   const [county, setCounty] = useState("");
   const counties = indicators.items[0].values.map((v) => v.county);
@@ -71,17 +71,19 @@ export function RegionalDiagnosis({
                   <a href={item.sourceUrl} target="_blank" rel="noreferrer">
                     Sprawdź wskaźnik w Obserwatorze ROPS ↗
                   </a>
-                  <button
-                    type="button"
-                    className="secondary"
-                    disabled={added || tooLong}
-                    onClick={() => onAppend(note)}
-                  >
-                    {added
-                      ? "Wskaźnik jest już w diagnozie"
-                      : "Dodaj dane do diagnozy"}
-                  </button>
-                  {tooLong && !added && (
+                  {onAppend && (
+                    <button
+                      type="button"
+                      className="secondary"
+                      disabled={added || tooLong}
+                      onClick={() => onAppend(note)}
+                    >
+                      {added
+                        ? "Wskaźnik jest już w diagnozie"
+                        : "Dodaj dane do diagnozy"}
+                    </button>
+                  )}
+                  {onAppend && tooLong && !added && (
                     <p className="help">
                       Skróć diagnozę, aby dodać dane w limicie{" "}
                       {grantFields.diagnosis.maxLength} znaków.
@@ -95,7 +97,7 @@ export function RegionalDiagnosis({
         <p className="help">
           Dane pobrano z ROPS {indicators.retrievedAt.slice(0, 10)}. Opis nie
           dowodzi przyczyn problemu, skuteczności rozwiązania ani potrzeb
-          pojedynczej osoby. Zapisz szkic po dodaniu danych.
+          pojedynczej osoby. {onAppend && "Zapisz szkic po dodaniu danych."}
         </p>
         <details>
           <summary>Tabela wszystkich 22 powiatów</summary>

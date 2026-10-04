@@ -29,6 +29,11 @@ export default async function Cases() {
     <section className="narrow">
       <h1>Moje sprawy</h1>
       <p className="lead">Tutaj wrócisz do pomocy i odpowiedzi koordynatora.</p>
+      {a && !a.staff && (
+        <p>
+          <Link href="/wiadomosci">Wszystkie moje rozmowy →</Link>
+        </p>
+      )}
       {a?.staff && (
         <p>
           <Link href="/admin">Otwórz skrzynkę personelu →</Link>

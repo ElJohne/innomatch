@@ -268,8 +268,23 @@ export async function saveFeedback(
 export async function publicFeedback(
   innovationId: string,
 ): Promise<PublicFeedback[]> {
+  return (await publicFeedbackPage(innovationId)).items;
+}
+export async function publicFeedbackPage(innovationId: string, page = 1) {
+  page = Math.max(1, Math.floor(page));
+  const pageSize = 50,
+    offset = (page - 1) * pageSize;
   const r = await innovation(innovationId),
     version = catalogVersion(r);
+  let total = 0;
+  if (!fixtures()) {
+    const [count] = await sqlClient()<
+      { total: number }[]
+    >`select count(*)::int as total from innovation_feedback where innovation_id=${innovationId}
+      and record->>'status'='PUBLISHED' and record->>'sourceVersion'=${version}
+      and (${config().DEMO_DATA_ENABLED === "true"} or record->>'origin'<>'SYNTHETIC')`;
+    total = count.total;
+  }
   const rows: Owned<Feedback>[] = fixtures()
     ? [...feedback().values()].filter(
         (f) => f.record.innovationId === innovationId,
@@ -279,33 +294,54 @@ export async function publicFeedback(
       >`select record from innovation_feedback where innovation_id=${innovationId}
         and record->>'status'='PUBLISHED' and record->>'sourceVersion'=${version}
         and (${config().DEMO_DATA_ENABLED === "true"} or record->>'origin'<>'SYNTHETIC')
-        order by updated_at desc limit 50`;
-  return rows
+        order by updated_at desc, id desc limit ${pageSize} offset ${offset}`;
+  const visible = rows
     .filter(
       ({ record: f }) =>
         f.status === "PUBLISHED" &&
         f.sourceVersion === version &&
         (f.origin !== "SYNTHETIC" || config().DEMO_DATA_ENABLED === "true"),
     )
-    .sort((a, b) => b.record.updatedAt.localeCompare(a.record.updatedAt))
-    .slice(0, 50)
-    .map(({ record: f }) => ({
-      id: f.id,
-      rating: f.rating,
-      comment: f.comment,
-      improvements: f.improvements,
-      experience: f.experience,
-      origin: f.origin,
-      updatedAt: f.updatedAt,
-    }));
+    .sort(
+      (a, b) =>
+        b.record.updatedAt.localeCompare(a.record.updatedAt) ||
+        b.record.id.localeCompare(a.record.id),
+    );
+  if (fixtures()) total = visible.length;
+  const items: PublicFeedback[] = (
+    fixtures() ? visible.slice(offset, offset + pageSize) : visible
+  ).map(({ record: f }) => ({
+    id: f.id,
+    rating: f.rating,
+    comment: f.comment,
+    improvements: f.improvements,
+    experience: f.experience,
+    origin: f.origin,
+    updatedAt: f.updatedAt,
+  }));
+  return { items, total, page, pageSize, hasNext: page * pageSize < total };
 }
-export async function moderationFeedback(a: Actor) {
+export async function moderationFeedback(
+  a: Actor,
+  options: { page?: number; status?: "ALL" | Feedback["status"] } = {},
+) {
   admin(a);
+  const page = Math.max(1, Math.floor(options.page ?? 1)),
+    pageSize = 50,
+    offset = (page - 1) * pageSize;
+  const status = options.status ?? "ALL";
   const rows: Owned<Feedback>[] = fixtures()
     ? [...feedback().values()]
+        .filter((f) => status === "ALL" || f.record.status === status)
+        .sort(
+          (a, b) =>
+            b.record.updatedAt.localeCompare(a.record.updatedAt) ||
+            b.record.id.localeCompare(a.record.id),
+        )
+        .slice(offset, offset + pageSize)
     : await sqlClient()<
         Owned<Feedback>[]
-      >`select record from innovation_feedback order by updated_at desc limit 200`;
+      >`select record from innovation_feedback where (${status === "ALL"} or record->>'status'=${status}) order by updated_at desc, id desc limit ${pageSize} offset ${offset}`;
   const records = await listInnovations();
   return rows.map(({ record: f }) => {
     const r = records.find((r) => r.id === f.innovationId);
@@ -315,6 +351,38 @@ export async function moderationFeedback(a: Actor) {
       sourceCurrent: Boolean(r && catalogVersion(r) === f.sourceVersion),
     };
   });
+}
+export async function moderationFeedbackQueue(
+  a: Actor,
+  options: { page?: number; status?: "ALL" | Feedback["status"] } = {},
+) {
+  admin(a);
+  const page = Math.max(1, Math.floor(options.page ?? 1));
+  const status = options.status ?? "ALL";
+  let total: number, pending: number;
+  if (fixtures()) {
+    const rows = [...feedback().values()];
+    total = rows.filter(
+      (f) => status === "ALL" || f.record.status === status,
+    ).length;
+    pending = rows.filter((f) => f.record.status === "IN_REVIEW").length;
+  } else {
+    const [counts] = await sqlClient()<
+      { total: number; pending: number }[]
+    >`select
+      count(*) filter (where ${status === "ALL"} or record->>'status'=${status})::int as total,
+      count(*) filter (where record->>'status'='IN_REVIEW')::int as pending from innovation_feedback`;
+    total = counts.total;
+    pending = counts.pending;
+  }
+  return {
+    items: await moderationFeedback(a, { ...options, page }),
+    total,
+    pending,
+    page,
+    pageSize: 50,
+    hasNext: page * 50 < total,
+  };
 }
 export async function reviewFeedback(a: Actor, id: string, value: unknown) {
   admin(a);

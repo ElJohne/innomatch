@@ -51,13 +51,26 @@ async function accessibleThread(id: string, a: Actor) {
   if (!row || !canReadThread(a, row.owner_id)) throw missing();
   return row;
 }
-export async function listThreads(a: Actor): Promise<ThreadSummary[]> {
+export async function listThreads(
+  a: Actor,
+  options: { page?: number; pageSize?: number; unread?: boolean } = {},
+): Promise<ThreadSummary[]> {
+  const page = Math.max(1, Math.floor(options.page ?? 1));
+  const pageSize = Math.min(
+    200,
+    Math.max(1, Math.floor(options.pageSize ?? 200)),
+  );
+  const offset = (page - 1) * pageSize;
   const titles = new Map((await listInnovations()).map((i) => [i.id, i.title]));
   if (fixtures()) {
-    return Promise.all(
+    const items = await Promise.all(
       memory()
         .threads.filter((t) => canReadThread(a, t.owner_id))
-        .sort((x, y) => y.updated_at.getTime() - x.updated_at.getTime())
+        .sort(
+          (x, y) =>
+            y.updated_at.getTime() - x.updated_at.getTime() ||
+            y.id.localeCompare(x.id),
+        )
         .map(async (t) => ({
           title: t.idea_id
             ? (await getIdea(t.idea_id, t.owner_id))?.card.title
@@ -88,6 +101,9 @@ export async function listThreads(a: Actor): Promise<ThreadSummary[]> {
           ).length,
         })),
     );
+    return items
+      .filter((t) => !options.unread || t.unread > 0)
+      .slice(offset, offset + pageSize);
   }
   const rows = await sqlClient()<
     (ThreadRow & {
@@ -106,7 +122,11 @@ export async function listThreads(a: Actor): Promise<ThreadSummary[]> {
     from threads t
     left join ideas i on i.id=t.idea_id and i.owner_id=t.owner_id
     left join adaptations p on p.id=t.adaptation_id and p.owner_id=t.owner_id
-    where (${Boolean(a.staff)} or t.owner_id = ${a.ownerId}) order by t.updated_at desc limit 200`;
+    where (${Boolean(a.staff)} or t.owner_id = ${a.ownerId})
+      and (${!options.unread} or exists (select 1 from messages m where m.thread_id=t.id
+        and m.author_role=${a.staff ? "USER" : "STAFF"}
+        and m.sequence > case when ${Boolean(a.staff)} then t.staff_read else t.user_read end))
+    order by t.updated_at desc, t.id desc limit ${pageSize} offset ${offset}`;
   return rows.map((t) => ({
     title: t.idea_title ?? titles.get(t.context_innovation_id ?? ""),
     purpose: purposeFromMessage(t.purpose_message ?? ""),
@@ -118,6 +138,47 @@ export async function listThreads(a: Actor): Promise<ThreadSummary[]> {
     updatedAt: t.updated_at.toISOString(),
     unread: t.unread,
   }));
+}
+export async function threadQueue(
+  a: Actor,
+  options: { page?: number; unread?: boolean } = {},
+) {
+  const page = Math.max(1, Math.floor(options.page ?? 1));
+  const pageSize = 50;
+  let total: number, unreadMessages: number;
+  if (fixtures()) {
+    const rows = memory()
+      .threads.filter((t) => canReadThread(a, t.owner_id))
+      .map((t) => ({
+        unread: memory().messages.filter(
+          (m) =>
+            m.thread_id === t.id &&
+            m.author_role === (a.staff ? "USER" : "STAFF") &&
+            m.sequence > (a.staff ? t.staff_read : t.user_read),
+        ).length,
+      }));
+    total = rows.filter((r) => !options.unread || r.unread > 0).length;
+    unreadMessages = rows.reduce((sum, r) => sum + r.unread, 0);
+  } else {
+    const [counts] = await sqlClient()<{ total: number; unread: number }[]>`
+      with counts as (
+        select (select count(*)::int from messages m where m.thread_id=t.id
+          and m.author_role=${a.staff ? "USER" : "STAFF"}
+          and m.sequence > case when ${Boolean(a.staff)} then t.staff_read else t.user_read end) as unread
+        from threads t where (${Boolean(a.staff)} or t.owner_id=${a.ownerId})
+      ) select count(*) filter (where ${!options.unread} or unread > 0)::int as total,
+        coalesce(sum(unread),0)::int as unread from counts`;
+    total = counts.total;
+    unreadMessages = counts.unread;
+  }
+  return {
+    items: await listThreads(a, { ...options, page, pageSize }),
+    total,
+    unreadMessages,
+    page,
+    pageSize,
+    hasNext: page * pageSize < total,
+  };
 }
 export async function getThread(id: string, a: Actor) {
   const row = await accessibleThread(id, a);

@@ -125,7 +125,9 @@ export function IdeaEditor({
         <section className="note stack">
           <h2>Skonsultuj pomysł</h2>
           <p className="help">
-            Koordynator otrzyma zapisaną kartę i odpowie w prywatnej rozmowie.
+            Koordynator otrzyma zapisaną kartę, szkic grantowy z wpisanymi
+            danymi autora oraz kolejne zapisane aktualizacje. Odpowie w
+            prywatnej rozmowie.
           </p>
           <button
             disabled={busy || dirty}
@@ -408,6 +410,12 @@ export function IdeaEditor({
             onSaved={setIdea}
           />
         </details>
+      )}
+      {idea?.threadId && (
+        <p className="help">
+          Personel widzi bieżącą zapisaną kartę i szkic grantowy. Każde zapisane
+          uaktualnienie pojawi się jako nowa wiadomość w konsultacji.
+        </p>
       )}
       {idea?.threadId && (
         <Link className="button" href={`/wiadomosci/${idea.threadId}`}>

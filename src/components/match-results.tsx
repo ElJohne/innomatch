@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import type {
   Innovation,
   KnowledgeResource,
@@ -24,6 +25,7 @@ export function MatchResults({
   resources?: KnowledgeResource[];
   input?: NeedInput;
 }) {
+  const router = useRouter();
   const [result, setResult] = useState(initial),
     [error, setError] = useState(""),
     [busy, setBusy] = useState(!initial);
@@ -45,6 +47,7 @@ export function MatchResults({
       const data = await r.json();
       if (!r.ok) throw new Error(data.message);
       setResult(data);
+      router.refresh();
     } catch (e) {
       setError(
         e instanceof Error ? e.message : "Nie udało się wyszukać rozwiązań.",
@@ -130,25 +133,39 @@ export function MatchResults({
       )}
       {result.status === "unavailable" && (
         <div className="card">
-          <p>Twój opis jest zapisany.</p>
-          <button onClick={search}>Ponów wyszukiwanie</button>
-        </div>
-      )}
-      {!result.matches.length && result.guidance === "clarify" && input && (
-        <ClarifyNeed input={input} questions={result.clarifyingQuestions} />
-      )}
-      {!result.matches.length && result.guidance !== "clarify" && (
-        <div className="card">
           <p>
-            W katalogu nie znaleźliśmy odpowiedniej propozycji. Koordynator może
-            pomóc wybrać inne możliwości.
+            Nie udało się teraz sprawdzić dopasowania. Twój opis jest zapisany.
           </p>
+          <button onClick={search}>Ponów wyszukiwanie</button>
           <QuickHelp
             needId={id}
             solution="pomoc w znalezieniu odpowiedniego wsparcia"
           />
         </div>
       )}
+      {result.refreshAvailable && result.status !== "unavailable" && (
+        <div className="note">
+          <p>Katalog lub sposób wyszukiwania został zaktualizowany.</p>
+          <button onClick={search}>Sprawdź aktualne propozycje</button>
+        </div>
+      )}
+      {!result.matches.length && result.guidance === "clarify" && input && (
+        <ClarifyNeed input={input} questions={result.clarifyingQuestions} />
+      )}
+      {!result.matches.length &&
+        result.guidance !== "clarify" &&
+        result.status !== "unavailable" && (
+          <div className="card">
+            <p>
+              W katalogu nie znaleźliśmy odpowiedniej propozycji. Koordynator
+              może pomóc wybrać inne możliwości.
+            </p>
+            <QuickHelp
+              needId={id}
+              solution="pomoc w znalezieniu odpowiedniego wsparcia"
+            />
+          </div>
+        )}
       {(!!result.warnings.length ||
         !!result.assumptions?.length ||
         !!result.relatedResources.length) && (

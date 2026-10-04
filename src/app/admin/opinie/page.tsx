@@ -1,10 +1,24 @@
 import Link from "next/link";
 import { adminPage } from "@/server/auth/admin-page";
-import { moderationFeedback } from "@/server/services/pilots";
+import { moderationFeedbackQueue } from "@/server/services/pilots";
 import { FeedbackReview } from "@/components/pilot-forms";
-import { experienceLabels, feedbackStatusLabels } from "@/lib/contracts/pilot";
-export default async function FeedbackModeration() {
-  const items = await moderationFeedback(await adminPage());
+import {
+  experienceLabels,
+  feedbackStatusLabels,
+  feedbackQueueQuery,
+} from "@/lib/contracts/pilot";
+export default async function FeedbackModeration({
+  searchParams,
+}: {
+  searchParams: Promise<{ page?: string; status?: string }>;
+}) {
+  const a = await adminPage();
+  const parsed = feedbackQueueQuery.safeParse(await searchParams);
+  const query = parsed.success
+    ? parsed.data
+    : { page: 1, status: "ALL" as const };
+  const result = await moderationFeedbackQueue(a, query);
+  const { items } = result;
   return (
     <section className="narrow">
       <Link href="/admin">← Skrzynka zgłoszeń</Link>
@@ -15,9 +29,26 @@ export default async function FeedbackModeration() {
         użycia jest ich deklaracją.
       </p>
       <p className="help">
-        Do 200 ostatnio aktualizowanych opinii. Oczekujących w tym zestawie:{" "}
-        {items.filter((item) => item.status === "IN_REVIEW").length}.
+        Oczekujących na moderację: {result.pending}. Opinie w wybranym filtrze:{" "}
+        {result.total}. Strona {result.page}.
       </p>
+      <nav className="actions" aria-label="Filtr opinii">
+        <Link
+          href="/admin/opinie"
+          aria-current={query.status === "ALL" ? "page" : undefined}
+        >
+          Wszystkie
+        </Link>
+        {Object.entries(feedbackStatusLabels).map(([status, label]) => (
+          <Link
+            key={status}
+            href={`/admin/opinie?status=${status}`}
+            aria-current={query.status === status ? "page" : undefined}
+          >
+            {label}
+          </Link>
+        ))}
+      </nav>
       {!items.length && <p>Brak opinii do wyświetlenia.</p>}
       <div className="stack">
         {items.map((item) => (
@@ -57,6 +88,22 @@ export default async function FeedbackModeration() {
           </article>
         ))}
       </div>
+      <nav className="actions" aria-label="Strony opinii">
+        {result.page > 1 && (
+          <Link
+            href={`/admin/opinie?page=${result.page - 1}&status=${query.status}`}
+          >
+            ← Poprzednia strona
+          </Link>
+        )}
+        {result.hasNext && (
+          <Link
+            href={`/admin/opinie?page=${result.page + 1}&status=${query.status}`}
+          >
+            Następna strona →
+          </Link>
+        )}
+      </nav>
     </section>
   );
 }
