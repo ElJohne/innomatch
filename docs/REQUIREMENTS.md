@@ -1,94 +1,22 @@
-# Покриття вимог
+# Mapa modułów
 
-Після аудиту виконано локальні функціональні доробки всіх семи модулів:
-[поточний результат і залишки](audit-2026-10-04/FIX-RESULTS.md).
-Нові поля заявника, 3/9 місяців і checklist допомагають підготувати IWS-чернетку,
-але не замінюють підпис або офіційне подання. Деталі нижче — історія до цих змін.
+| Moduł | Ekrany | Implementacja | Testy |
+| --- | --- | --- | --- |
+| M1 — Matchmaking | `/`, `/potrzeby/[id]`, następny krok | services/matching, server/search | core, evidence, clarification-policy, catalog-matching-refresh; E2E flow i search-guidance |
+| M2 — Wiedza | `/innowacje`, `/innowacje/materialy`, `/innowacje/region` | catalog-search, knowledge, regional-diagnosis | catalog-matching-refresh; E2E navigation |
+| M3 — Pomysły | Karta, edytor, Canvas, porównanie, grant, podgląd | services/ideas, idea-comparison; kontrakty idea/canvas/grant | grant-functional, workflows; E2E workflows |
+| M4 — Testowanie | Szczegóły innowacji, `/admin/opinie` | services/pilots, kontrakt pilot | communication-pagination, workflows; E2E workflows |
+| M5 — Komunikacja | `/wiadomosci`, rozmowa, `/moje-sprawy` | services/communication, auth/recovery | communication, communication-pagination; E2E communication |
+| M6 — Administracja | `/admin`, katalog, opinie, statystyki | auth/staff, services/catalog, importer, analytics | staff, communication, workflows; E2E communication |
+| M7 — Adaptacja | Nowy plan, edycja i podgląd | services/adaptations, kontrakt adaptation | adaptation-recovery, workflows; E2E quality-journey |
 
-Актуальний детальний зріз 04.10.2026 для checkout `5728d1b`:
-[аудит семи модулів і план](audit-2026-10-04/REPORT.md),
-[фактичні перевірки](audit-2026-10-04/QA.md). Таблиці та записи нижче зберігають
-історію розвитку; для поточної оцінки використовувати нову матрицю та M1–M7.
-Новий IWS PDF покрито як змістовну чернетку, не повну офіційну заявку.
+Usługi znajdują się w `src/server/`, komponenty w `src/components/`, a kontrakty w `src/lib/contracts/`. Nazwy testów odpowiadają plikom w `tests/unit/`, `tests/integration/` i `tests/e2e/`. Wyniki: [QA](QA.md).
 
-2026-10-04, 03:24: grant draft 3193da5 уже на production; live create/save/
-OpenAI preview/apply/reload/print preview/submit/thread grant PASS на одному
-синтетичному кейсі. Це уточнює попередній запис про очікування deployment.
-Активного набору та admin-реєстру нових шаблонів немає; архівний IWS 2.0
-використовується як підготовчий матеріал, без подання чи декларацій.
-Локальне порівняння власної ідеї з каталогом + дописування нотаток у novelty
-пройшло manual mock; live compare ще очікує.
+## Granice funkcji
 
-Актуалізація 2026-10-04, 03:09: bc82c12 розгорнуто; ручний live M1 → M7 → M5
-PASS із редагованою revision 2 та переданим snapshot. Додано локальний M3
-grant draft за реально прочитаним офіційним формуляром IWS 2.0: питання 1,
-3–11, ручний бюджет/сума, prefill із картки/Canvas, AI preview/apply, збереження,
-preview/друк, показ у консультації. Локальний manual fixtures/mock PASS;
-live/deploy цього доповнення ще очікує. Набір закритий, активний не вигадано;
-admin-реєстр майбутніх наборів відсутній. Частини 2/12 залишені оригінальному
-формуляру. Це уточнює історичні рядки «генератор відсутній» нижче, без заяви
-про повну реалізацію формального подання. Деталі — GRANTS.md, QA.md.
-
-Оновлення 2026-10-04 (локальний пакет, ще не deployed): M3 тепер має редагований
-Canvas: 13 текстових полів, три тематичні блоки за ROPS/InnoAGH v1.0 05.05.2026,
-AI-пропозиції, збереження, preview/браузерний друк, передавання в консультації.
-Повторне використання problem/solution/audience/stage з картки; це спрощений аркуш,
-а не повне інтерактивне відтворення всіх шкал оригіналу. Chrome mock E2E,
-PostgreSQL integration та live OpenAI create/assist/edit/read PASS. Грантова частина
-M3 залишається незавершеною: перевіреного активного набору з шаблоном немає.
-M1/M7/M5: доказові картки, retry, редагований перший крок, shared snapshot і явне
-оновлення плану пройшли наскрізний E2E; фактичні числа live matching — QA.md.
-Історичні рядки таблиці нижче читаються з цим уточненням.
-
-Production уточнення 2026-10-03: a2f5c64 розгорнуто успішно (Actions 37144087261).
-Live M1 → M7 → M5, M3 assist/submit, M4 запис, recovery та ADMIN analytics пройшли
-на синтетичних справах із реальною БД/OpenAI; тестові записи прибрані. Деталі й
-no_match на загальному запиті — QA.md. Це знімає попередні позначки про
-неперевірений live M3/M7; незалежна оцінка якості та комплект подання ще потрібні.
-
-Актуалізація 2026-10-03, 20:19: локальна стабілізація підтвердила 8 SQL-тестів
-на PostgreSQL 17.11 та 4 браузерні сценарії з PostgreSQL/mock; fixtures E2E — 14.
-Перевірені M3-картка/консультація, M4-записи/модерація, M5-діалоги/відповіді,
-M6-права/агрегати/приховування, M7-збереження/редагування/доступ, recovery між
-сесіями та міграції 0001–0007. Виявлену несумісність спільного ORM/raw SQL
-client виправлено локально; її rollout ще не виконано. Попередній production
-workflow 37139928817 підтверджено успішним. Таблиця нижче зберігає історію
-початкового покриття; твердження про неперевірені SQL/recovery уточнює QA.md.
-Live M3/M7, оцінка якості пошуку, повна M2, грантова M3 та пакет подання
-залишаються незавершеними.
-
-Оновлено 2026-10-03: production корпус/AI підтверджені попередньою ітерацією.
-Staff auth, діалоги й редактор каталогу перевірені локально на fixtures, ще не deployed.
-Першоджерела повторно звірено: CRITERIA с. 1–8, RULES с. 1–7.
-Це оцінка відповідності документованому завданню, не підтверджене партнерами приймання продукту.
-
-| Вимога | Реалізація | Перевірка | Стан |
-|---|---|---|---|
-| M1 потреба → результати → джерела | app/potrzeby, server/services/matching, contracts | unit + browser flow + попередній live smoke | Реалізовано; незалежна retrieval evaluation ще відсутня |
-| M1 no-match, власник, повторне відкриття | ranking, auth/session, API | unit / E2E | Реалізовано, див. QA |
-| M1 семантика й пояснення | ai/provider, embeddings, data:index | попередній production smoke | OpenAI працює; Azure адаптер збережено |
-| M1 схожі випадки / матеріали | search/knowledge, relatedResources | попередній source-backed smoke | Реалізовано, незалежної оцінки якості ще немає |
-| M2 каталог, фільтри, деталі | app/innowacje | E2E + production import | 114 source-backed інновацій у попередньому rollout |
-| M2 карта, звіти, освіта, адмін-аналітика | /wiedza, KnowledgeResource, /admin/statystyki | import validation, production smoke; локальний aggregate flow | PARTIAL: 69 ресурсів і локальні агрегати потреб; повні звіти/інтерактивна карта відсутні |
-| M3 картка, AI, Canwy, гранти | /pomysly, services/ideas, 0006, GrantCall schema, опублікований Canvas resource | lint/typecheck/build, ручний mock create/assist/apply/save/submit/staff read | PARTIAL: картка й консультація реалізовані локально; посилання на Canvas, без інтерактивного відтворення; грантовий генератор відсутній |
-| M4 тестування/відгуки | Секції /innowacje/:id, services/pilots, /admin/opinie, 0007 | lint/typecheck/build; ручні fixtures interest/review/publish/edit | Реалізовано локально за SPEC §5.3; PostgreSQL, concurrency й cross-owner runtime не перевірені; ще не deployed |
-| M5 приватний діалог/відповідь/партнерство | app/wiadomosci, api/threads, services/communication | попередні E2E; поточні ручні сценарії M3/M7 | PARTIAL: контексти потреби/інновації/плану/ідеї, відповіді, unread; нові контексти лише локально |
-| M6 staff auth / inbox | auth/staff, /admin, /api/admin/threads | unit + login/logout E2E | Реалізовано локально; production provisioning очікує |
-| M6 модерація/оновлення | /admin/katalog, services/catalog, 0004 | static/build і ручний browser flow на fixtures | Реалізовано локально; PostgreSQL/import/reindex ще не перевірені |
-| M6 агрегована аналітика | /admin/statystyki, /api/admin/analytics, services/analytics | lint/typecheck/build; fixtures 0 → 2 потреби, точні підсумки; anonymous API 403 | Реалізовано локально; SQL aggregation ще не перевірена на PostgreSQL; без вільних текстів і регіональних статистичних тверджень |
-| Повторний доступ автора | 90-денна сесія, приватний код | Статичні перевірки; cross-browser не виконано | Реалізовано локально; гостьовий доступ, не акаунт |
-| M7 адаптація | /adaptacje, services/adaptations, contracts/adaptation, 0005 | lint/typecheck/build, ручний mock flow create/edit/reload/share/staff reply | Реалізовано локально; live AI, PostgreSQL і незалежна оцінка планів ще не перевірені |
-| Польський UI | Усі реалізовані екрани | E2E / огляд | Реалізовано |
-| WCAG 2.1 AA | labels, focus, skip, responsive | axe + частковий keyboard | PARTIAL, не сертифікація |
-| Постійна БД | PostgreSQL repository, міграції 0001–0007 | 0001/0002 production; 0003–0007 не виконані | Ядро підтверджено раніше, нові таблиці ще не перевірені на БД |
-| PDF ≤10 слайдів + MP4 ≤3 хв | Не створено на етапі A/B | Немає | NOT IMPLEMENTED |
-| Demo URL / команда / кошторис | URL у DEPLOYMENT, COSTS з припущеннями | попередній HTTPS smoke | PARTIAL: остаточні матеріали/team ID/кошторис відсутні |
-
-## Доповнення: локальний дизайн 2026-10-03
-
-- 4-кроковий сценарій за зразком власника: реалізовано та перевірено E2E.
-- M1: джерела / пояснення перенесено на екран наступних кроків, доступні також у каталозі.
-- Синтетичний вибір організації не є реалізацією M5; текст повідомлення лише копіюється.
-- Загальні наступні кроки самі по собі не є M7; окремий модуль `/adaptacje` містить збережений план та AI-консультацію, його стан наведено в таблиці вище.
-- Дизайн об'єднано з модулями M3–M7; їх фактичне покриття та межі наведено в таблиці вище.
-- Доступність: додано розмір тексту/контраст/читання; фактичні перевірки й межі у QA.md.
+- M2 prezentuje wskaźniki w tabelach powiatów oraz opisy i odnośniki do raportów.
+- M3 korzysta z formularza IWS 2.0 z 2024 roku. Rejestr kolejnych naborów i oficjalne składanie wniosków pozostają poza obecną implementacją.
+- M4 obsługuje zainteresowanie testowaniem i opinie; organizację pilotażu uzgadnia koordynator.
+- M5 obsługuje prośby o mentoring i partnerstwo przez rozmowę. Powiadomienia są dostępne wewnątrz aplikacji.
+- M6 pokazuje aktywność platformy za 7, 30 lub 90 dni.
+- M7 przechowuje plan i jego wersje; realizacja planu jest prowadzona przez instytucję.

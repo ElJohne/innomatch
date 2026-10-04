@@ -10,3 +10,12 @@ coverage/
 *.tsbuildinfo
 data/import/*
 !data/import/.gitkeep
+
+# Local reports and operating-system files
+docs/dependencies.json
+tests/search-quality/*.json
+!tests/search-quality/*cases.json
+!tests/search-quality/quality-holdout.json
+*.log
+.DS_Store
+Thumbs.db

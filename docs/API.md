@@ -1,177 +1,73 @@
-# API — поточна реалізація
+# API
 
-## Прямі входи підтримки — 2026-10-04 (локально)
+Kontrakty Zod: `src/lib/contracts/`. Handlery: `src/app/api/`. Logika: `src/server/services/`.
 
-`POST /api/threads` також приймає `{supportPurpose, body, requestKey}` без
-штучної потреби або інновації. `supportPurpose`: `CONSULTATION`, `MENTORSHIP`,
-`PARTNERSHIP`; його не можна поєднувати з іншими контекстами. Сервер додає
-польську назву мети до повідомлення. Повтор із тим самим purpose/requestKey
-повертає ту саму приватну розмову; новий ключ створює нову справу.
-Власність, персонал, origin guard та денний ліміт залишаються чинними.
-Прямий вхід: `/wiadomosci/nowa?purpose=MENTORSHIP` (аналогічно для інших цілей).
-Перед запуском цього пакета в PostgreSQL потрібна `0009_support_entry`;
-readiness перевіряє саме її. Міграцію в production у цій ітерації не застосовано.
+Odpowiedzi JSON mają `Cache-Control: private, no-store`. Błędy używają formatu `{code, message, requestId}`. Operacje zapisu wymagają `Origin` zgodnego z `APP_URL` i `Content-Type: application/json`.
 
-## Пакет якості 2026-10-04 (локально)
+## Potrzeby i katalog
 
-- MatchResponse v4 додає `runId`, `status: unavailable` та перевірені `evidence`.
-  POST matches приймає `{}` або `{retryOf: UUID}`. Повтор дозволений для конкретного
-  недоступного результату / partial-template; reload та replay старого runId
-  повертають збережений результат. Зміна публікації враховується до перевірки retry.
-- POST `/api/threads` для плану вимагає `adaptationId` і `adaptationRevision`.
-  Невідповідність поточній версії → 409; сервер зберігає snapshot, не клієнтський текст плану.
-- POST `/api/threads/:id/plan`: `{expectedRevision, requestKey}` явно передає нову
-  версію у власну наявну розмову, атомарно додаючи повідомлення. Повтор дедуплікований,
-  чужа сесія/персонал не можуть поділитися планом від імені власника. Зміна джерела
-  або приховування робить snapshot недоступним. Персонал не отримує приватні редакції.
-- Readiness вимагає `0008_shared_plan_snapshot`. Пакет ще не розгорнутий.
+| Metoda | Trasa | Działanie |
+| --- | --- | --- |
+| POST / GET | `/api/needs` | Utworzenie potrzeby / lista własnych potrzeb. |
+| GET | `/api/needs/:id` | Własna potrzeba i zapisany wynik. |
+| POST | `/api/needs/:id/matches` | Wyszukiwanie lub odczyt cache; opcjonalne `retryOf`. |
+| GET | `/api/innovations` | Opublikowane innowacje; filtry i paginacja. |
+| GET | `/api/innovations/:id` | Szczegóły opublikowanej innowacji. |
+| GET | `/api/knowledge` | Opublikowane materiały; filtry i paginacja. |
+| POST | `/api/innovations/:id/test-interest` | Jedno zgłoszenie udziału na autora i innowację. |
+| POST / GET | `/api/innovations/:id/feedback` | Zapis własnej opinii / stronicowana lista opublikowanych opinii. |
 
-Попередня документація нижче описує історичні версії контрактів.
+Tworzenie potrzeby wymaga nagłówka `Idempotency-Key`. Opis ma 3–4000 znaków. Doprecyzowanie zachowuje pierwotny opis; odpowiedź lub `skipClarification` kończy rundę pytań.
 
-Zod DTO: `src/lib/contracts/index.ts`. Всі JSON-відповіді — Cache-Control: private, no-store.
-Помилки: `{code,message,requestId}` без приватних даних або помилок SDK.
+Wynik dopasowania zawiera status, propozycje, materiały, źródła, tryb działania i `runId`. Ukryte lub zmienione źródła są sprawdzane także przy odczycie zapisanego wyniku.
 
-| Метод | Маршрут | Результат / доступ |
-|---|---|---|
-| POST | /api/needs | NeedInput → `{id,createdAt}`; створює HttpOnly гостьову сесію |
-| GET | /api/needs | Лише власні `{id,description,createdAt}` |
-| GET | /api/needs/:id | Власна потреба й збережений MatchResponse; іншим 404 |
-| POST | /api/needs/:id/matches | MatchResponse; власник, повторне читання без AI |
-| GET | /api/innovations | `{items,total,page}`, по 12; q/group/category/stage/page |
-| GET | /api/innovations/:id | Опублікований Innovation; прихований/невідомий → 404 |
-| POST | /api/innovations/:id/test-interest | Одна Participation на owner/innovation; атомарно додає повідомлення до розмови; staff заборонено |
-| POST | /api/innovations/:id/feedback | rating/comment/improvements/experience/consentToPublish/expectedRevision → власний Feedback; зміна → IN_REVIEW |
-| GET | /api/innovations/:id/feedback | До 50 опублікованих відгуків із поточною sourceVersion; без owner_id, revision і sourceVersion у відповіді |
-| PATCH | /api/admin/feedback/:id | ADMIN; status=PUBLISHED/ARCHIVED, expectedRevision, reviewed; публікація потребує перевірки та актуального джерела |
-| GET | /api/knowledge | Опубліковані матеріали, фільтри q/type |
-| POST | /api/ideas | `{card,requestKey}` → приватний DRAFT; створює owner session, 20 спроб/день |
-| GET | /api/ideas | Власні `{items}`, до 100 у PostgreSQL |
-| GET | /api/ideas/:id | Власна картка; чужа → 404 |
-| PATCH | /api/ideas/:id | `{card,expectedRevision}`; optimistic update, conflict → 409 |
-| POST | /api/ideas/assist | `{id,expectedRevision}` → `{card,questions,mode}` без зміни картки; 10 спроб/день |
-| POST | /api/ideas/:id/submit | `{expectedRevision}` → SUBMITTED і одна розмова; лише автор без staff ролі |
-| POST | /api/adaptations | `{needId,innovationId,constraints,requestKey}`; власна потреба, опублікована інновація → приватний план |
-| GET | /api/adaptations | `{items}`; лише власні доступні плани, до 100 у PostgreSQL |
-| GET | /api/adaptations/:id | Власник; змінене/приховане джерело або чужий owner → 404 |
-| PATCH | /api/adaptations/:id | `{draft,expectedRevision}`; власник, optimistic conflict → 409; без AI |
-| POST | /api/auth/login | `{login,password}`; активний ADMIN/EXPERT, сесія персоналу |
-| POST | /api/auth/logout | Видаляє staff identity, зберігає власні гостьові справи |
-| GET | /api/threads | `{items}`; власні або спільна скринька персоналу; до 200 у PostgreSQL |
-| POST | /api/threads | `{needId або innovationId або adaptationId,body,requestKey}` → `{id}`; один дозволений контекст |
-| GET | /api/threads/:id | Повідомлення й дозволений контекст; автор / активний персонал |
-| POST | /api/threads/:id/messages | `{body,requestKey}`; лише автор розмови / персонал |
-| POST | /api/threads/:id/read | `{through}` — sequence побаченого повідомлення; лише автор / персонал |
-| GET | /api/admin/threads | Спільна скринька ADMIN/EXPERT; стороннім 403 |
-| GET | /api/admin/analytics?days=7\|30\|90 | Лише ADMIN; період (default 30), total, withMunicipality, daily, audiences, searchStatuses, source, generatedAt; агрегати без приватного тексту |
-| GET | /api/admin/catalog/:kind | ADMIN; kind=innovation/knowledge; усі статуси, версія, стан індексації |
-| PUT | /api/admin/catalog/:kind/:id | ADMIN; `{kind,record,expectedVersion,reviewed}`; конфлікт версії → 409 |
-| POST | /api/admin/catalog/:kind/:id/index | ADMIN; явна live AI індексація; 30/годину на staff |
-| POST | /api/session/recovery | Гостьовий власник; новий секретний код, 10/добу |
-| POST | /api/session/restore | `{token}`; відновлює owner і знімає staff права; 30 спроб/хв глобально |
-| GET | /api/health | `{status:"ok"}` — стан процесу, не proof доступності залежностей |
-| GET | /api/ready | Стан БД/міграції та наявності AI конфігурації; 503 при недоступності, без live AI-запиту |
-| * | решта /api/admin/* | 403; невідомі адміністративні маршрути закриті |
+## Pomysły i plany
 
-POST/PUT/PATCH вимагають Origin=APP_URL і Content-Type: application/json. Створення потреби також
-Idempotency-Key (16–80 ASCII літер/цифр/дефісів); ключ належить гостьовій сесії.
-Тіло до 20 KB (редактор каталогу до 160 KB, PATCH плану до 100 KB); description 3–4000 символів після trim; constraints потреби до 1500.
-30 спроб створення/день і 20 запусків пошуку/день на сесію. Це ще не повний anti-abuse:
-ліміт за IP ще не реалізовано; staff accounts зберігаються у PostgreSQL.
+| Metoda | Trasa | Działanie |
+| --- | --- | --- |
+| POST / GET | `/api/ideas` | Utworzenie karty / własne pomysły. |
+| GET / PATCH | `/api/ideas/:id` | Odczyt / edycja karty i Canvas. |
+| POST | `/api/ideas/assist` | Propozycja rozwinięcia pomysłu. |
+| POST | `/api/ideas/:id/compare` | Porównanie z opublikowanym katalogiem. |
+| PATCH | `/api/ideas/:id/grant` | Zapis szkicu wniosku; odczyt razem z kartą pomysłu. |
+| POST | `/api/ideas/:id/grant/assist` | Propozycja treści wniosku. |
+| POST | `/api/ideas/:id/submit` | Przekazanie do konsultacji i utworzenie rozmowy. |
+| POST / GET | `/api/adaptations` | Utworzenie planu / własne plany. |
+| GET / PATCH | `/api/adaptations/:id` | Odczyt / edycja planu i warunków. |
 
-NeedInput також приймає optional `clarifications`: до 6 об'єктів `{question,answer}`,
-кожне поле 1–500 символів. Вони зберігаються в JSON input без нової міграції.
-Уточнення створює нову власну потребу через той самий POST/idempotency key,
-з незміненим description і попередніми відповідями. GET власної потреби повертає
-clarifications; чужій сесії 404. До координатора уточнення потрапляють лише
-разом із явно відкритою автором розмовою; вони також доступні AI-адаптації.
+Prywatne API wymaga właściciela. Edycje używają `expectedRevision`; konflikt wersji zwraca 409. Propozycje tekstu są stosowane przez autora.
 
-NeedInput v3 додатково приймає optional `skipClarification:boolean` (GET повертає
-false за відсутності). Один раунд / одне питання дозволені лише до першої відповіді;
-після будь-якої clarification або skip сервер переходить до результату без нових
-питань. До 6 старих відповідей залишаються сумісними. Короткий опис сам по собі
-не є причиною уточнення; завершений пошук, no_match і збій AI не додають питань.
+Personel odczytuje udostępnione materiały przez rozmowę. Plan jest przekazywany jako snapshot konkretnej wersji. W pomysłach i wnioskach zapisane zmiany po konsultacji są widoczne dla personelu.
 
-MatchResponse v4: `matchingVersion:4`, optional `assumptions:string[]` (до 3 × 300
-символів, видимі як припущення), optional `guidance: emergency|support|clarify`,
-optional allowlisted `contacts:[112,999]` (рядки), retrieval додатково `none`,
-explanation додатково `rules`. Термінове скерування не містить інновацій/матеріалів.
-Сильні сигнали перевіряються до AI-квоти/слотів після ownership guard; додаткове
-LLM-розпізнавання не є гарантією тріажу. Контакти й сторінка /pilna-pomoc
-працюють незалежно від AI. Власна стара версія кешу оновлюється через штатний
-matching POST із лімітом/lock; успішна v2 повторно не генерується при refresh.
-AI intаke бачить тільки власний опис, ресурси й відповіді, без каталогу. Після
-нормалізації запиту: semantic top-6 з cutoff 0,35 + до 2 додаткових lexical;
-нижчий cutoff лише для кандидатів, які перевіряє reranker. Related resources
-перевіряються AI та серверним allowlist. При відмові reranking — явне попередження
-й уточнення без неперевірених рекомендацій. Глобальна квота провайдера збережена.
+## Rozmowy i dostęp
 
-M4 контракти: `src/lib/contracts/pilot.ts`. Оцінка 1–5, текст 20–2000 символів,
-пропозиції до 1500, experience=DESCRIPTION/USED (заява автора, не перевірений факт).
-consentToPublish=true обов'язкове. Нова думка має expectedRevision=null; зміна —
-поточну revision. Незмінений повтор не скидає рішення модерації. Ліміти: 20 нових
-заявок і 30 спроб збереження відгуку/добу на owner. Повторна заявка повертає наявну.
-UI власних записів читає серверні getParticipation/getOwnFeedback/listPilotCases;
-модерація — moderationFeedback після ADMIN guard. Список адміністратора — до 200
-останньо змінених відгуків. SQL-аудит зберігає тільки метадані рішення, не текст.
+| Metoda | Trasa | Działanie |
+| --- | --- | --- |
+| GET / POST | `/api/threads` | Kolejka rozmów / nowa rozmowa. |
+| GET | `/api/threads/:id` | Wiadomości i udostępniony kontekst. |
+| POST | `/api/threads/:id/messages` | Wiadomość z `requestKey`. |
+| POST | `/api/threads/:id/read` | Oznaczenie odczytu do sekwencji `through`. |
+| POST | `/api/threads/:id/plan` | Udostępnienie kolejnej wersji planu. |
+| POST | `/api/auth/login` | Logowanie personelu. |
+| POST | `/api/auth/logout` | Zakończenie sesji personelu. |
+| POST | `/api/session/recovery` | Utworzenie nowego kodu odzyskiwania. |
+| POST | `/api/session/restore` | Odzyskanie spraw autora. |
 
-Аналітика: `src/lib/contracts/analytics.ts`. Дні UTC: від 00:00 першого дня періоду
-до generatedAt включно; сьогодні неповний. Підраховуються потреби за created_at,
-а status — їхній поточний збережений результат. Це не актуальна оцінка каталогу
-і не число AI-запитів чи унікальних людей. Нестандартні аудиторії зведено до Other,
-порожні — Unspecified; по одній появі кожної нормалізованої групи на потребу.
-Невідомі параметри/недозволений days → 400, сторонній/EXPERT → 403.
-PostgreSQL використовує один aggregate statement, без fallback у fixtures.
+Listy rozmów obsługują `page` i filtr `unread=1`. Powtórzony klucz wiadomości nie tworzy duplikatu. Odczyt GET nie zmienia stanu nieprzeczytanych wiadomości.
 
-Приватні результати повторно перевіряють статус публікації та catalogVersions перед видачею.
-Старі результати без версій відкидають записи, які адміністратор уже змінив.
-`MatchResponse.mode.explanation`: `openai`, `azure`, `template` або `mock`.
-OpenAI повертає strict structured output; ID додатково перевіряються за переданими кандидатами.
-У PostgreSQL advisory lock серіалізує запуск пошуку однієї потреби між процесами.
-Нові PostgreSQL M1-запуски обмежено двома на процес, щоб lock-транзакції залишали
-з'єднання для вкладених запитів. Перевищення → 429 BUSY, без списання добової квоти.
-Перший результат також повторно перевіряє доступність і версії джерел після генерації.
-Контракти комунікації: `src/lib/contracts/communication.ts`. body 1–4000 символів,
-requestKey — UUID; невідомі поля/передані клієнтом ролі відхиляються.
-Одна розмова на автора/контекст; повторне створення повертає її без нового повідомлення.
-Повторна відповідь із тим самим requestKey не дублюється.
-Ліміти: 30 створень розмов/добу на сесію, 200 повідомлень/добу на автора;
-логін — 30/хв глобально та 10/15 хв на хеш нормалізованого login.
-Активність, роль і auth_version персоналу перечитуються з БД на кожному запиті.
-Unread обчислюється за persisted messages і user_read/staff_read; staff_read спільний для команди.
-GET не змінює unread: браузер POST-ить sequence побаченого повідомлення.
-Публікація інновації повторно перевіряється при читанні контексту розмови.
-Гостьова сесія — до 90 днів, staff права — до 8 годин. Recovery code має 256 біт
-випадковості й строк 90 днів; зберігається SHA-256, новий код відкликає попередній.
-Код не передається через URL. Втрата всіх сесій і коду означає втрату доступу;
-відкликання коду не закриває вже відкритих сесій.
-Adaptation DTO: contracts/adaptation.ts. constraints містить institution/resources/scope/timeline/budget.
-10 спроб генерації/день на власника плюс глобальний AI quota. requestKey UUID прив'язаний
-до власника й хешу вводу; повтор ready повертає збережений план, інший ввід → 409.
-Генерація в процесі → 409; failed можна повторити, завислу reservation — після 5 хвилин.
-Attempt ID захищає збереження від старого worker; транзакція не утримується під час AI.
-Це не exactly-once billing при аварії після відповіді провайдера до запису в БД.
-sourceIds — лише з обраної інновації. sourceVersion перевіряється на create/read/edit;
-зміна/приховування джерела виключає старий план із видачі. Живий збій не дає mock fallback.
-Персонал бачить план лише через авторизовану розмову з adaptationId; прямий API залишається
-тільки для власника. Надсилання явно відкриває також майбутні збережені версії плану.
-Idea DTO: contracts/idea.ts; поля title/problem/essence/targetGroups/stage/resources/pilotOutline.
-POST/PATCH картки — до 60 KB. Збереження не публікує й не передає картку персоналу.
-Статуси DRAFT/SUBMITTED; PUBLIC catalog moderation — окремий workflow, ідеї туди не додаються.
-Подання у PostgreSQL в одній транзакції з row lock створює Thread з idea_id, перше повідомлення
-й оновлює картку. Повтор повертає існуючу розмову. Пізніші записані правки доступні персоналу.
-Прямий GET/PATCH лише для власника, персонал читає ідею через дозволений GET thread.
-AI suggestion кешується за idea/revision, має reservation/attempt ID, failed retry і timeout 5 хв.
-Вона не змінює збережену картку; стадія примусово зберігає авторське значення.
-GrantCall — тільки контракт даних (строки, версія полів, джерело), без налаштованих наборів/API.
-Pilots поки залишаються цільовими маршрутами зі SPEC.
-# Canvas картки помислу — локальний пакет 2026-10-04
+## Administracja
 
-`POST /api/ideas` і `PATCH /api/ideas/:id` приймають необов'язковий `card.canvas`
-(null або object із 13 текстовими полями, кожне ≤1000 символів; порожні дозволені).
-Ключі: problemContext, supporters, barriers, accessibility, fixedCosts, variableCosts,
-payer, emotionalValue, practicalValue, funding, channels, partners, impact.
-Старі картки без canvas залишаються валідними. Revision/ownership/submit контракти
-ті самі. AI suggestion має required nullable canvas для OpenAI strict schema;
-пропозиція не зберігається автоматично. `/pomysly/:id/podglad` — приватний серверний
-перегляд останньої збереженої картки з browser print. Canvas потрапляє в консультацію
-разом із карткою та наступними збереженими редагуваннями (чинний M3-контракт).
+| Metoda | Trasa | Dostęp i działanie |
+| --- | --- | --- |
+| GET | `/api/admin/threads` | ADMIN / EXPERT: wspólna kolejka. |
+| GET | `/api/admin/analytics` | ADMIN: agregaty za `days=7\|30\|90`. |
+| GET | `/api/admin/catalog/:kind` | ADMIN: rekordy i stan indeksowania. |
+| PUT | `/api/admin/catalog/:kind/:id` | ADMIN: zapis z `expectedVersion` i potwierdzeniem publikacji. |
+| POST | `/api/admin/catalog/:kind/:id/index` | ADMIN: indeksowanie rekordu. |
+| PATCH | `/api/admin/feedback/:id` | ADMIN: publikacja lub ukrycie opinii. |
+| GET | `/api/health` | Publiczny status procesu. |
+| GET | `/api/ready` | Publiczny status gotowości; 503 przy niedostępności. |
+
+`kind` przyjmuje `innovation` albo `knowledge`. Role i aktywność konta są sprawdzane na serwerze. Statystyki zawierają agregaty, bez prywatnych opisów potrzeb. Nieznane trasy administracyjne są zamknięte.
+
+POST /api/threads przyjmuje również supportPurpose: CONSULTATION, MENTORSHIP lub PARTNERSHIP bez innego kontekstu. Powtórzenie tego samego requestKey i celu zwraca istniejącą rozmowę. Wymagana migracja 0009_support_entry.

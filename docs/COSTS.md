@@ -1,18 +1,23 @@
-# Вартість — початкові припущення
+# Utrzymanie
 
-Хостинг і PostgreSQL — на наявному dev-k3s; вартість сервера не надана.
-Власник обрав OpenAI API: gpt-6-luna + text-embedding-3-small. Тарифи й підсумкову
-місячну оцінку в цій ітерації не перевіряли.
-Статті: сервер; PostgreSQL + backup; OpenAI responses/embeddings; підтримка; модерація.
-Приклади навантаження для подальшого розрахунку: 100 / 1000 / 10000 пошуків на місяць.
-На пошук максимум один embedding і одне пояснення, повтори SDK окремо; refresh без нового AI.
+Aplikacja działa jako jeden serwer Node.js z PostgreSQL. Konfiguracja wdrożenia wykorzystuje istniejący klaster k3s, dysk bazy 5 GiB oraz osobne wolumeny na wydania i kopie zapasowe.
 
-AI = (input_tokens × input_rate + output_tokens × output_rate + embedding_tokens × embedding_rate) / rate_unit.
-Початкова індексація рахується окремо. rate_unit і тарифи потребують джерела й дати.
-В OpenAI-ітерації виконано дві успішні діагностичні операції: Responses і embeddings.
-Вимірів реального трафіку та місячної вартості немає. Пізніша ROPS-ітерація імпортувала
-114 інновацій і 69 матеріалів; початкова індексація — 166 векторів у 11 embedding-запитах.
-Діагностика --live робить дві короткі синтетичні операції, не враховані в application ai_usage.
-Після підключення успішні операції записуються в ai_usage без сирих текстів.
-Людська підтримка = години × ставка; модерація = кількість записів × час перевірки × ставка.
-Потрібні ставка, очікуване навантаження, SLA, тарифи хостингу/БД та deployment.
+| Pozycja | Sposób kalkulacji |
+| --- | --- |
+| Serwer | Miesięczna stawka infrastruktury, transfer i przestrzeń dyskowa. |
+| Baza i kopie | Przestrzeń danych, retencja kopii i przechowywanie poza serwerem. |
+| OpenAI / Azure OpenAI | Zużycie tokenów według wybranych modeli i taryfy konta. |
+| Obsługa techniczna | Godziny utrzymania × stawka. |
+| Moderacja i konsultacje | Liczba spraw × średni czas obsługi × stawka. |
+
+Koszt AI:
+
+```text
+(input_tokens × input_rate
+ + output_tokens × output_rate
+ + embedding_tokens × embedding_rate) / rate_unit
+```
+
+Jednostka rozliczenia wynika z taryfy modelu. Indeksowanie katalogu rozlicza się oddzielnie od obsługi potrzeb, pomysłów i planów. Niezmienione rekordy nie są ponownie indeksowane; zapisane wyniki wyszukiwania korzystają z cache. Użycie operacji aplikacji jest rejestrowane w `ai_usage`.
+
+Do kalkulacji miesięcznej służą scenariusze: 100, 1000 i 10 000 wyszukiwań, uzupełnione o liczbę pomysłów, planów i godzin obsługi. Konkretna kwota zależy od stawek infrastruktury, modeli i zespołu.

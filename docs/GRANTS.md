@@ -1,27 +1,20 @@
-# Грантова чернетка IWS 2.0
+# Formularz IWS 2.0
 
-Джерела перевірено 2026-10-04 (Europe/Warsaw):
+Edytor `/pomysly/[id]/grant` korzysta z [formularza ROPS — Załącznik nr 3](https://rops.krakow.pl/pliki-do-pobrania/artykul,wzor-formularza-aplikacyjnego,1049) dla naboru IWS 2.0 z 13 listopada – 13 grudnia 2024 roku. W aplikacji jest to **formularz archiwalny**.
 
-- [Офіційний формуляр ROPS, Załącznik nr 3](https://rops.krakow.pl/pliki-do-pobrania/artykul,wzor-formularza-aplikacyjnego,1049): PDF, 16 сторінок. Змістовні питання 1, 3–11 прочитано; решта містить дані заявника, декларації та інформацію про обробку даних.
-- [Сторінка наборів ROPS](https://rops.krakow.pl/nabory-szkolenia-granty-dotacje-wizyty-studyjne-studia-specjalizacje-superwizje/granty-na-innowacje-spoleczne): IWS 2.0 — 13.11–13.12.2024, завершено. Також завершено два опубліковані набори Usługa Wrażliwa: 22.12.2025–20.02.2026 і 27.05–30.06.2026. Перевіреного активного набору на цій сторінці немає.
+Wersja: `iws-2024-public-form-v1`. Definicja pól i walidacji: `src/lib/contracts/grant.ts`.
 
-Реалізація: `/pomysly/:id/grant`, owner-only. Частина 1 і 3–8 — текстові поля;
-частина 9 — підготовка, дві фази тестування та редаговані рядки дій/термінів/витрат;
-частина 10 — сума введених автором витрат; частина 11 — ролі та досвід.
-Частини 2 і 12 не заповнюються. Збережений матеріал доступний у preview/друці
-картки та після передачі ідеї — у консультації. Збереження не подає заявку.
+## Zawartość
 
-Внутрішня версія шаблону `iws-2024-public-form-v1`, origin PUBLIC_SOURCE;
-це версія адаптації застосунку, не заявлений номер редакції ROPS. Змінені назви
-та підказки передають зміст оригінальних питань. Ліміти тексту власні: PDF
-не задає таких обмежень. 3 місяці підготовки / 9 місяців тестування є правилами
-саме цього архівного формуляра, не всіх майбутніх конкурсів.
+- Tytuł, opis, nowość rozwiązania, diagnoza, odbiorcy, oczekiwana zmiana i przyszłe zastosowanie.
+- Opcjonalne dane wnioskodawcy: osoba, podmiot lub grupa.
+- Przygotowanie do testu, dwie fazy testowania, działania, terminy i koszty.
+- Budżet obliczany z kwot wpisanych przez autora.
+- Role zespołu i lista zapoznania się z deklaracjami formularza.
+- Podgląd, wydruk oraz udostępnienie w konsultacji.
 
-AI отримує лише власну картку та текст чернетки, повертає текст полів,
-не змінює бюджет і не заповнює декларації. Пропозиція не записується до явного
-прийняття та збереження. Гіпотези/прогалини потрібно оцінити автору; це не
-перевірка формальної прийнятності, унікальності чи гарантія фінансування.
+Przygotowanie może trwać do 3 miesięcy, testowanie do 9 — zgodnie z tym szablonem. Edytor pokazuje brakujące elementy i sprawdza kompletność faz.
 
-Залишковий обсяг: реєстр нових активних наборів та їхніх шаблонів через admin
-ще не реалізовано; повний офіційний application submission не є дією застосунку.
-Фактичні результати ручних перевірок — QA.md.
+Pomoc AI otrzymuje treść pomysłu i szkicu bez pól osobowych wnioskodawcy. Zwraca propozycję tekstu do przyjęcia przez autora; nie zmienia tabeli kosztów.
+
+Szkic jest zapisany w rekordzie pomysłu z kontrolą właściciela i numeru wersji. Po przekazaniu do konsultacji kolejne zapisane zmiany są widoczne dla personelu. Podpisanie deklaracji i oficjalne złożenie wniosku odbywa się poza aplikacją.

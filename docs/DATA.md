@@ -1,64 +1,48 @@
-# Дані й походження
+# Dane i źródła
 
-## Показники повітів ROPS — 2026-10-04
+| Plik | Zawartość |
+| --- | --- |
+| `data/rops/corpus.json` | 114 innowacji i 69 materiałów ze źródeł ROPS. |
+| `data/rops/collection-report.json` | Metadane pobrania, źródła i pominięte rekordy. |
+| `data/rops/regional-indicators.json` | 4 wskaźniki dla 22 powiatów, z rokiem i źródłem. |
+| `data/demo/innovations.json` | 12 syntetycznych innowacji do demonstracji i testów. |
 
-`data/rops/regional-indicators.json`: 4 показники × 22 повіти, без персональних
-даних. Values, рік, назви територій і первинне джерело завантажено безпосередньо
-з `https://obserwator.rops.krakow.pl/differenceanalysis/{id}`. IDs 285/17/215/25
-виявлено завдяки Wici: https://github.com/JohnnyArachnid/hackyeah-2026-hubmi/blob/main/data/wskazniki.yaml.
-Імпортер написано у нас за принципом читання chart arrays; чужий код не запускали.
-`node scripts/collect-regional-indicators.mjs` перевіряє 22 унікальні території,
-спільний набір повітів, валідний рік і діапазон процентних значень. Snapshot
-статичний і датований; оновлення файла потребує review та звичайного deploy.
-Роки: seniorzy/pomoc społeczna/bezrobocie — 2024; niepełnosprawność — 2021.
-Це значення для повітів, без вигаданого «середнього по воєводству», без
-індивідуальних висновків, причинності чи автоматичного призначення послуг.
-UI дає explicit append у diagnosis; автор уточнює застосовність.
+## Katalog i materiały
 
-Актуально після імпорту ROPS: 114 інновацій і 69 матеріалів, включно з описом та
-посиланням на Social Innovation Canvas (`rops-knowledge-7b2381c3ed665c63`). M3 використовує
-цей запис за умови публікації в каталозі. Повного інтерактивного Canvas немає.
-Шаблону конкретного активного грантового набору в корпусі не знайдено.
-Нижче — історія початкових даних, потім фактичний імпорт.
+Snapshot katalogu pochodzi z 3 października 2026. Z 115 unikalnych kart pominięto „Lekki wózek aktywny” z powodu pustego opisu rozwiązania. Duplikaty między kategoriami połączono według identyfikatora źródła.
 
-- CRITERIA Wojewodztwo Malopolskie HUBMI.pdf: 8 сторінок, прочитано текст.
-- RULES Wojewodztwo Malopolskie HUBMI.pdf: регламент і шаблон договору, польська й англійська частини. Використано для меж реалізації, не як бібліотеку інновацій.
-- SPEC.md прочитано повністю (614 рядків).
-- `data/demo/innovations.json`: 12 SYNTHETIC, CONCEPT, PUBLISHED. Авторські вигадані fixtures цієї реалізації, без зовнішніх URL, персональних даних і заяв про ефективність.
-- Source-backed інновацій: 0. KnowledgeResource: 0. Імпорт реальних матеріалів: не виконаний.
-- `scripts/create-fixtures.py` відтворює лише синтетичний набір; не потрібен для запуску.
+Materiały obejmują 44 opisy, 8 fragmentów Mapy Wyzwań Społecznych i 17 odnośników. Indeksowaniu podlega 114 innowacji i 52 materiały zawierające opis.
 
-Бракує бібліотеки / дозволеного експорту ROPS, карти/звітів, описів випадків, Canwy,
-шаблону й умов грантового набору. Без цих матеріалів відповідні модулі не можуть бути валідовані.
-Нормалізований JSON імпортується атомарно з idempotent upsert; невідомі поля заборонено.
-Приватні матеріали `data/import/` ігноруються Git. Не передавати персональні дані в Azure.
-## Публічні джерела ROPS — 2026-10-03
+Źródła:
 
-Власник надав 6 QR-посилань і дозволив використання даних.
-Snapshot: `data/rops/corpus.json`; звіт: `data/rops/collection-report.json`.
-114 PUBLIC_SOURCE / PUBLISHED інновацій із 115 унікальних карток дев'яти категорій.
-`Lekki wózek aktywny` пропущено через порожній опис рішення. Дублікати між категоріями
-об'єднано за slug. Maturity UNKNOWN: індивідуальну доказовість тестування ще не оцінено.
-Імена авторів, контакти, персональні історії та PDF-персони не імпортовано.
+- [Biblioteka innowacji społecznych ROPS](https://rops.krakow.pl/innowacje-spoleczne/biblioteka-innowacji-spolecznych/kategorie)
+- [Raporty z badań](https://rops.krakow.pl/badania-analizy-raporty/raporty-z-badan)
+- [Mapa Wyzwań Społecznych](https://rops.krakow.pl/mpliki/IS/IWS_20/za._nr_2._Mapa_Wyzwa_Spoecznych.pdf) — fragmenty stron 5, 9, 14, 19, 24, 29, 35 i 41
+- [Publikacje ze świata innowacji](https://rops.krakow.pl/innowacje-spoleczne/publikacje-ze-swiata-innowacji)
+- [Social Innovation Canvas — ROPS / InnoAGH](https://rops.krakow.pl/mpliki/IS/Moj_folder/INNO_AGH_-_SOCIAL_CANVAS.pdf)
 
-69 KnowledgeResource: 44 описи, 8 фрагментів карти, 17 довідкових посилань
-(включно з документами без опису). Індексуються 114 інновацій і 52 змістовні ресурси.
+Rekordy zachowują URL, datę pobrania i fragment źródłowy. Katalog nie importuje kontaktów ani osobistych historii. Pochodzenie, dojrzałość rozwiązania i publikacja są osobnymi polami.
 
-- Бібліотека: https://rops.krakow.pl/innowacje-spoleczne/biblioteka-innowacji-spolecznych/kategorie — 9 категорій, лише розділи опису, проблеми й аудиторії; обмеження 250 запитів, послідовне читання з cache.
-- Звіти: https://rops.krakow.pl/badania-analizy-raporty/raporty-z-badan — 51 бібліографічний запис; описи зі сторінки, не повні PDF; збережено рік.
-- Обсерватор: https://obserwator.rops.krakow.pl/ — опис і посилання. Числові показники не завантажено, рік/гміну вибирають у джерелі.
-- Карта: https://rops.krakow.pl/mpliki/IS/IWS_20/za._nr_2._Mapa_Wyzwa_Spoecznych.pdf — 44 сторінки; імпортовано ключові виклики зі сторінок 5, 9, 14, 19, 24, 29, 35, 41. Дані загальнопольські, не регіональні.
-- Публікації: https://rops.krakow.pl/innowacje-spoleczne/publikacje-ze-swiata-innowacji — 4 описи з посиланнями на PDF.
-- Canvas: https://rops.krakow.pl/mpliki/IS/Moj_folder/INNO_AGH_-_SOCIAL_CANVAS.pdf — 3 сторінки; опис першої візуально перевіреної панелі та посилання на оригінал. Інтерактивного заповнювача немає.
+## Wskaźniki regionalne
 
-ROPS попереджає про перебудову сайту й неактивні посилання. Не всі ZIP/PDF перевірені.
-Вказано URL, дату доступу й evidenceExcerpt. Умови використання оригіналів залишаються
-в джерелі; LICENSE застосунку не поширюється на них. Повні PDF/ZIP не копіюються у Git.
-Raw HTML/PDF зберігаються лише в ігнорованому tmp/.
+Snapshot z 4 października 2026 pochodzi z [Obserwatora ROPS](https://obserwator.rops.krakow.pl/), zestawy `285`, `17`, `215` i `25`. Dotyczy seniorów, pomocy społecznej i bezrobocia (2024) oraz niepełnosprawności (2021). Identyfikatory zestawów wskazano na podstawie [listy Wici](https://github.com/JohnnyArachnid/hackyeah-2026-hubmi/blob/main/data/wskazniki.yaml); wartości pobiera własny kolektor ze źródła ROPS.
 
-Оновлення: `npm run data:collect`; підготувати HTML звітів/публікацій і pdftotext -layout
-extracts у tmp; `node scripts/prepare-rops-corpus.mjs`; перевірити diff і переклади;
-`npm run data:validate`. Snapshot комітиться після перегляду. Публічного crawler/API імпорту немає.
-Deployment sync зберігає статуси публікації існуючих записів, не видаляє сторонні дані,
-переіндексовує лише змінений зміст/модель. API та збережені matches фільтрують PUBLISHED.
-Попередні твердження про відсутній корпус вище — історичні.
+```sh
+node scripts/collect-regional-indicators.mjs
+```
+
+Kolektor sprawdza komplet 22 unikalnych powiatów, zgodność terytoriów, rok i zakres wartości. Aplikacja odczytuje zapisany plik bez zapytań do Obserwatora podczas obsługi użytkownika.
+
+## Import i aktualizacja
+
+```sh
+npm run data:validate
+npm run data:import -- --file data/import/records.json
+npm run data:index
+```
+
+Import przyjmuje tablicę JSON zgodną z `innovationSchema`. Synchronizacja pełnego snapshotu: `npm run data:sync`. Komendy zapisujące wymagają dedykowanej bazy i konfiguracji z [DEPLOYMENT](DEPLOYMENT.md).
+
+`npm run data:collect` pobiera katalog. `scripts/prepare-rops-corpus.mjs` łączy wynik z HTML i tekstami PDF przygotowanymi w `tmp/`; wymagane nazwy wejść znajdują się w skrypcie. Surowe pobrania pozostają poza Git.
+
+Synchronizacja zachowuje ręczne zmiany administratora i statusy publikacji. Zmieniona treść unieważnia poprzedni embedding. Rekordy spoza snapshotu nie są usuwane.
