@@ -1,15 +1,18 @@
 "use client";
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import type { AdaptationInput } from "@/lib/contracts/adaptation";
 import styles from "./adaptation.module.css";
 export function AdaptationForm({
   innovationId,
   needs,
   selectedNeedId,
+  initialConstraints,
 }: {
   innovationId: string;
   needs: { id: string; description: string }[];
   selectedNeedId?: string;
+  initialConstraints?: AdaptationInput["constraints"];
 }) {
   const router = useRouter(),
     key = useRef("");
@@ -100,6 +103,7 @@ export function AdaptationForm({
           minLength={3}
           maxLength={300}
           placeholder="Np. biblioteka lub ośrodek pomocy"
+          defaultValue={initialConstraints?.institution}
         />
       </fieldset>
       <fieldset disabled={busy} className="stack">
@@ -116,6 +120,7 @@ export function AdaptationForm({
               maxLength={1500}
               rows={2}
               placeholder="Np. sala i dwie osoby do pomocy"
+              defaultValue={initialConstraints?.resources}
             />
           </div>
           <div className={styles.field}>
@@ -127,15 +132,26 @@ export function AdaptationForm({
               maxLength={600}
               rows={2}
               placeholder="Np. 10 seniorów z naszej gminy"
+              defaultValue={initialConstraints?.scope}
             />
           </div>
           <div className={styles.field}>
             <label htmlFor="plan-timeline">Termin</label>
-            <input id="plan-timeline" name="timeline" maxLength={300} />
+            <input
+              id="plan-timeline"
+              name="timeline"
+              maxLength={300}
+              defaultValue={initialConstraints?.timeline}
+            />
           </div>
           <div className={styles.field}>
             <label htmlFor="plan-budget">Budżet</label>
-            <input id="plan-budget" name="budget" maxLength={300} />
+            <input
+              id="plan-budget"
+              name="budget"
+              maxLength={300}
+              defaultValue={initialConstraints?.budget}
+            />
           </div>
         </div>
       </fieldset>

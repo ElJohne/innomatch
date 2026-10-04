@@ -1,15 +1,12 @@
 import { listKnowledge } from "@/server/services/repository";
-import { normalize } from "@/server/search/ranking";
-import { knowledgeContent } from "@/server/search/knowledge";
+import { searchKnowledge } from "@/server/search/catalog-search";
 import { handle, json } from "@/server/http";
 export async function GET(request: Request) {
   return handle(async () => {
     const p = new URL(request.url).searchParams;
-    const q = normalize(p.get("q") ?? "").slice(0, 200);
-    const records = (await listKnowledge()).filter(
-      (r) =>
-        (!p.get("type") || p.get("type") === r.type) &&
-        normalize(knowledgeContent(r)).includes(q),
+    const records = searchKnowledge(
+      await listKnowledge(),
+      Object.fromEntries(p),
     );
     const page = Math.max(
       1,

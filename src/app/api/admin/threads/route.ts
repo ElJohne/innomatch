@@ -1,8 +1,15 @@
 import { requireStaff } from "@/server/auth/staff";
-import { listThreads } from "@/server/services/communication";
+import { threadQueue } from "@/server/services/communication";
+import { queueQuery } from "@/lib/contracts/communication";
 import { handle, json } from "@/server/http";
-export async function GET() {
-  return handle(async () =>
-    json({ items: await listThreads(await requireStaff()) }),
-  );
+export async function GET(request: Request) {
+  return handle(async () => {
+    const a = await requireStaff();
+    const query = queueQuery.parse(
+      Object.fromEntries(new URL(request.url).searchParams),
+    );
+    return json(
+      await threadQueue(a, { page: query.page, unread: query.unread === "1" }),
+    );
+  });
 }

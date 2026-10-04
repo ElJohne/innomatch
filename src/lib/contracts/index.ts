@@ -70,7 +70,7 @@ export const knowledgeSchema = z
     description: z.string().min(10).max(6000),
     topics: z.array(shortText).max(20),
     coverage: z.enum(["DESCRIPTION", "EXCERPT", "DIRECTORY"]),
-    origin: z.enum(["PUBLIC_SOURCE", "SYNTHETIC"]),
+    origin: z.enum(["ORGANIZER", "PUBLIC_SOURCE", "SYNTHETIC"]),
     publicationStatus: z.enum(["DRAFT", "IN_REVIEW", "PUBLISHED", "ARCHIVED"]),
     sources: z.array(sourceSchema).min(1).max(5),
   })
@@ -107,6 +107,8 @@ export const matchResponseSchema = explanationSchema.extend({
   runId: z.string().uuid().optional(),
   assumptions: z.array(z.string().max(300)).max(3).optional(),
   matchingVersion: z.number().int().optional(),
+  cacheKey: z.string().length(64).optional(),
+  refreshAvailable: z.boolean().optional(),
   guidance: z.enum(["emergency", "support", "clarify"]).optional(),
   contacts: z
     .array(z.enum(["112", "999"]))

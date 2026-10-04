@@ -1,10 +1,20 @@
-import { threadInput } from "@/lib/contracts/communication";
+import { threadInput, queueQuery } from "@/lib/contracts/communication";
 import { actor } from "@/server/auth/staff";
-import { createThread, listThreads } from "@/server/services/communication";
+import { createThread, threadQueue } from "@/server/services/communication";
 import { consumeLimit } from "@/server/services/repository";
 import { handle, HttpError, json, readBody, writeGuard } from "@/server/http";
-export async function GET() {
-  return handle(async () => json({ items: await listThreads(await actor()) }));
+export async function GET(request: Request) {
+  return handle(async () => {
+    const query = queueQuery.parse(
+      Object.fromEntries(new URL(request.url).searchParams),
+    );
+    return json(
+      await threadQueue(await actor(), {
+        page: query.page,
+        unread: query.unread === "1",
+      }),
+    );
+  });
 }
 export async function POST(request: Request) {
   return handle(async () => {

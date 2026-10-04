@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { listKnowledge } from "@/server/services/repository";
-import { normalize } from "@/server/search/ranking";
-import { knowledgeContent } from "@/server/search/knowledge";
+import { searchKnowledge } from "@/server/search/catalog-search";
 import { KnowledgeNav } from "../knowledge-nav";
 import styles from "../discovery.module.css";
 
@@ -18,17 +17,12 @@ export default async function MaterialsPage({
   searchParams: Promise<Record<string, string | undefined>>;
 }) {
   const p = await searchParams;
-  const query = normalize(p.q ?? "")
-    .slice(0, 200)
-    .trim();
-  const words = query.split(/\s+/).filter(Boolean);
-  const resources = (await listKnowledge()).filter(
-    (resource) =>
-      (!p.type || resource.type === p.type) &&
-      words.every((word) =>
-        normalize(knowledgeContent(resource)).includes(word),
-      ),
-  );
+  const all = await listKnowledge();
+  const resources = searchKnowledge(all, p);
+  const pages = Math.max(1, Math.ceil(resources.length / 12));
+  const page = Math.min(pages, Math.max(1, Math.floor(Number(p.page) || 1)));
+  const pageUrl = (next: number) =>
+    `/innowacje/materialy?${new URLSearchParams({ q: p.q ?? "", type: p.type ?? "", topic: p.topic ?? "", page: String(next) })}`;
   return (
     <section className="section">
       <KnowledgeNav current="materials" />
@@ -56,17 +50,28 @@ export default async function MaterialsPage({
             ))}
           </select>
         </div>
+        <div>
+          <label htmlFor="resource-topic">Temat</label>
+          <select id="resource-topic" name="topic" defaultValue={p.topic ?? ""}>
+            <option value="">Wszystkie</option>
+            {[...new Set(all.flatMap((r) => r.topics))]
+              .sort((a, b) => a.localeCompare(b, "pl"))
+              .map((topic) => (
+                <option key={topic}>{topic}</option>
+              ))}
+          </select>
+        </div>
       </form>
       <div className="catalog-results-bar">
         <p className="muted">
           Liczba materiałów: <strong>{resources.length}</strong>
         </p>
-        {(p.q || p.type) && (
+        {(p.q || p.type || p.topic) && (
           <Link href="/innowacje/materialy">Wyczyść filtry</Link>
         )}
       </div>
       <div className={styles.materials}>
-        {resources.map((resource) => (
+        {resources.slice((page - 1) * 12, page * 12).map((resource) => (
           <article className={`card ${styles.material}`} key={resource.id}>
             <p className="eyebrow">{labels[resource.type]}</p>
             <h2>{resource.title}</h2>
@@ -94,6 +99,13 @@ export default async function MaterialsPage({
           </article>
         ))}
       </div>
+      <nav className="actions" aria-label="Strony materiałów">
+        {page > 1 && <Link href={pageUrl(page - 1)}>← Poprzednia</Link>}
+        <span>
+          Strona {page} z {pages}
+        </span>
+        {page < pages && <Link href={pageUrl(page + 1)}>Następna →</Link>}
+      </nav>
       {!resources.length && (
         <div className="note">
           <h2>Brak materiałów</h2>

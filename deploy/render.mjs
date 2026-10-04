@@ -23,7 +23,24 @@ const pod = {
   },
 };
 let manifest;
-if (process.argv[2] === 'migration' || process.argv[2] === 'corpus') {
+if (process.argv[2] === 'backup') {
+  const job = process.env.BACKUP_JOB;
+  if (!/^backup-[0-9]+-[0-9]+$/.test(job || '')) throw new Error('Invalid backup job');
+  manifest = {
+    apiVersion: 'batch/v1', kind: 'Job', metadata: { name: job, namespace },
+    spec: { backoffLimit: 0, activeDeadlineSeconds: 180, ttlSecondsAfterFinished: 86400,
+      template: { metadata: { labels: { app: 'innomatch-backup' } }, spec: {
+        restartPolicy: 'Never', automountServiceAccountToken: false,
+        containers: [{ name: 'backup', image: 'postgres:17.11-bookworm',
+          env: [{ name: 'PGPASSWORD', valueFrom: { secretKeyRef: { name: 'postgres-env', key: 'POSTGRES_PASSWORD' } } }],
+          command: ['/bin/sh', '-ec', 'umask 077; attempt=0; until pg_isready -h postgres -U postgres -d innomatch -t 3 >/dev/null 2>&1; do attempt=$((attempt+1)); [ "$attempt" -lt 30 ] || exit 1; sleep 2; done; file=/backups/innomatch-pre-release-' + release + '.dump; pg_dump -h postgres -U postgres -d innomatch -Fc -f "$file.tmp"; pg_restore --list "$file.tmp" >/dev/null; mv "$file.tmp" "$file"; echo "Pre-release backup complete"'],
+          resources: { requests: { cpu: '50m', memory: '64Mi' }, limits: { cpu: '500m', memory: '256Mi' } },
+          volumeMounts: [{ name: 'backups', mountPath: '/backups' }],
+        }], volumes: [{ name: 'backups', persistentVolumeClaim: { claimName: 'backups' } }],
+      } },
+    },
+  };
+} else if (process.argv[2] === 'migration' || process.argv[2] === 'corpus') {
   const corpus = process.argv[2] === 'corpus';
   const job = process.env.MIGRATION_JOB;
   if (!/^(migrate|corpus)-[0-9]+-[0-9]+$/.test(job || '')) throw new Error('Invalid job');

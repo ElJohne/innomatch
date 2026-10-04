@@ -1,11 +1,15 @@
 import { actor } from "@/server/auth/staff";
-import { publicFeedback, saveFeedback } from "@/server/services/pilots";
+import { publicFeedbackPage, saveFeedback } from "@/server/services/pilots";
+import { feedbackQueueQuery } from "@/lib/contracts/pilot";
 import { handle, json, readBody, writeGuard } from "@/server/http";
 type Context = { params: Promise<{ id: string }> };
-export async function GET(_request: Request, { params }: Context) {
-  return handle(async () =>
-    json({ items: await publicFeedback((await params).id) }),
-  );
+export async function GET(request: Request, { params }: Context) {
+  return handle(async () => {
+    const query = feedbackQueueQuery.parse(
+      Object.fromEntries(new URL(request.url).searchParams),
+    );
+    return json(await publicFeedbackPage((await params).id, query.page));
+  });
 }
 export async function POST(request: Request, { params }: Context) {
   return handle(async () => {

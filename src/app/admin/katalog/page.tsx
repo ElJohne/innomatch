@@ -7,7 +7,12 @@ import styles from "../admin.module.css";
 export default async function CatalogPage({
   searchParams,
 }: {
-  searchParams: Promise<{ kind?: string; status?: string; q?: string }>;
+  searchParams: Promise<{
+    kind?: string;
+    status?: string;
+    q?: string;
+    pending?: string;
+  }>;
 }) {
   const a = await adminPage();
   const query = await searchParams;
@@ -16,6 +21,7 @@ export default async function CatalogPage({
   const all = await listCatalog(a, kind);
   const items = all.filter(
     (e) =>
+      (query.pending !== "1" || e.indexPending) &&
       (!query.status || e.record.publicationStatus === query.status) &&
       (!query.q ||
         e.record.title
@@ -71,6 +77,15 @@ export default async function CatalogPage({
             ))}
           </select>
         </div>
+        <label>
+          <input
+            type="checkbox"
+            name="pending"
+            value="1"
+            defaultChecked={query.pending === "1"}
+          />{" "}
+          Tylko wymagające aktualizacji wyszukiwania AI
+        </label>
         <button>Filtruj wpisy</button>
       </form>
       <div className={styles.toolbar}>

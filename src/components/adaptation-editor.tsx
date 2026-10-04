@@ -9,6 +9,7 @@ import {
   draftText,
   firstStepFor,
   firstStepLabels,
+  constraintLabels,
   type AdaptationPlan,
 } from "@/lib/contracts/adaptation";
 import type { Innovation } from "@/lib/contracts";
@@ -31,6 +32,13 @@ export function AdaptationEditor({
     [copyFallback, setCopyFallback] = useState(false);
   const copyText =
     draftText(plan.draft) +
+    "\n\nWarunki instytucji:\n" +
+    Object.entries(constraintLabels)
+      .map(
+        ([key, label]) =>
+          `${label}: ${plan.constraints[key as keyof typeof constraintLabels] || "Nieustalony"}`,
+      )
+      .join("\n") +
     `\n\n${plan.mode === "mock" ? "Tryb demonstracyjny, bez AI." : "Szkic AI"}${plan.editedByOwner ? "; zmieniony przez autora" : ""}. Wersja ${plan.revision}.\n\nŹródła:\n` +
     sources
       .filter((s) => plan.draft.sourceIds.includes(s.id))
@@ -42,6 +50,10 @@ export function AdaptationEditor({
   return (
     <div className="stack">
       <p className="help">W listach wpisuj jedną pozycję w wierszu.</p>
+      <p className="help">
+        Po zmianie warunków sprawdź też treść planu. Zapis nie uruchamia AI;
+        nową wersję udostępnisz w rozmowie.
+      </p>
       <form
         className="form stack"
         key={plan.revision}
@@ -83,6 +95,12 @@ export function AdaptationEditor({
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({
                 draft,
+                constraints: Object.fromEntries(
+                  Object.keys(constraintLabels).map((key) => [
+                    key,
+                    String(form.get(`constraint-${key}`) ?? ""),
+                  ]),
+                ),
                 expectedRevision: plan.revision,
               }),
             });
@@ -100,6 +118,29 @@ export function AdaptationEditor({
           }
         }}
       >
+        <fieldset disabled={busy} className="stack">
+          <legend>Warunki instytucji</legend>
+          {Object.entries(constraintLabels).map(([key, label]) => (
+            <div key={key}>
+              <label htmlFor={`constraint-${key}`}>{label}</label>
+              <textarea
+                id={`constraint-${key}`}
+                name={`constraint-${key}`}
+                rows={2}
+                required={!["timeline", "budget"].includes(key)}
+                minLength={
+                  !["timeline", "budget"].includes(key) ? 3 : undefined
+                }
+                maxLength={
+                  key === "resources" ? 1500 : key === "scope" ? 600 : 300
+                }
+                defaultValue={
+                  plan.constraints[key as keyof typeof constraintLabels]
+                }
+              />
+            </div>
+          ))}
+        </fieldset>
         <fieldset disabled={busy} className="stack">
           <legend>Pierwszy krok</legend>
           {Object.entries(firstStepLabels).map(([key, label]) => (

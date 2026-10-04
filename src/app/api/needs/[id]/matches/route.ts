@@ -46,7 +46,8 @@ export async function POST(
       return json(await matchNeed(need));
     if (need.match?.matchingVersion === MATCHING_VERSION) {
       const visible = await visibleMatch(need.match);
-      if (!canRetryMatch(visible, retryOf)) return json(visible);
+      if (!visible.refreshAvailable && !canRetryMatch(visible, retryOf))
+        return json(visible);
     }
     const key = `${s.ownerId}:${id}`;
     if (pending.has(key)) return json(await pending.get(key));

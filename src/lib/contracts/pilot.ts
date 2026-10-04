@@ -1,4 +1,8 @@
 import { z } from "zod";
+export const feedbackQueueQuery = z.object({
+  page: z.coerce.number().int().min(1).max(1000000).default(1),
+  status: z.enum(["ALL", "IN_REVIEW", "PUBLISHED", "ARCHIVED"]).default("ALL"),
+});
 export const feedbackInput = z
   .object({
     rating: z.number().int().min(1).max(5),

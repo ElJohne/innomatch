@@ -1,21 +1,31 @@
 import Link from "next/link";
 import { adminPage } from "@/server/auth/admin-page";
-import { moderationFeedback } from "@/server/services/pilots";
+import { moderationFeedbackQueue } from "@/server/services/pilots";
 import { FeedbackReview } from "@/components/pilot-forms";
-import { experienceLabels, feedbackStatusLabels } from "@/lib/contracts/pilot";
+import {
+  experienceLabels,
+  feedbackStatusLabels,
+  feedbackQueueQuery,
+} from "@/lib/contracts/pilot";
 import { AdminNavigation } from "../admin-navigation";
 import styles from "../admin.module.css";
 export default async function FeedbackModeration({
   searchParams,
 }: {
-  searchParams: Promise<{ status?: string }>;
+  searchParams: Promise<{ status?: string; page?: string }>;
 }) {
-  const items = await moderationFeedback(await adminPage());
-  const { status } = await searchParams;
-  const selected =
-    status && status in feedbackStatusLabels ? status : "IN_REVIEW";
-  const visible =
-    status === "all" ? items : items.filter((item) => item.status === selected);
+  const raw = await searchParams;
+  const parsed = feedbackQueueQuery.safeParse({
+    ...raw,
+    status: raw.status === "all" ? "ALL" : (raw.status ?? "IN_REVIEW"),
+  });
+  const query = parsed.success
+    ? parsed.data
+    : { page: 1, status: "IN_REVIEW" as const };
+  const result = await moderationFeedbackQueue(await adminPage(), query);
+  const visible = result.items;
+  const selected = query.status;
+  const status = selected === "ALL" ? "all" : selected;
   return (
     <section className={styles.page}>
       <AdminNavigation active="feedback" />
@@ -29,8 +39,7 @@ export default async function FeedbackModeration({
             status !== "all" && selected === "IN_REVIEW" ? "page" : undefined
           }
         >
-          Do sprawdzenia (
-          {items.filter((item) => item.status === "IN_REVIEW").length})
+          Do sprawdzenia ({result.pending})
         </Link>
         <Link
           href="/admin/opinie?status=PUBLISHED"
@@ -46,6 +55,9 @@ export default async function FeedbackModeration({
         </Link>
       </nav>
       <p className="help">Przed publikacją sprawdź treść i dane osobowe.</p>
+      <p className="help">
+        Opinie w tym widoku: {result.total}. Strona {result.page}.
+      </p>
       {!visible.length && (
         <p className={styles.empty}>
           {selected === "IN_REVIEW" && status !== "all"
@@ -88,11 +100,22 @@ export default async function FeedbackModeration({
           </article>
         ))}
       </div>
-      {items.length === 200 && (
-        <p className="help">
-          Widok obejmuje 200 ostatnio aktualizowanych opinii.
-        </p>
-      )}
+      <nav className="actions" aria-label="Strony opinii">
+        {result.page > 1 && (
+          <Link
+            href={`/admin/opinie?page=${result.page - 1}&status=${query.status}`}
+          >
+            ← Poprzednia strona
+          </Link>
+        )}
+        {result.hasNext && (
+          <Link
+            href={`/admin/opinie?page=${result.page + 1}&status=${query.status}`}
+          >
+            Następna strona →
+          </Link>
+        )}
+      </nav>
     </section>
   );
 }

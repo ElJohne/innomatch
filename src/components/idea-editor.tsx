@@ -366,7 +366,8 @@ export function IdeaEditor({
         <section className="note stack">
           <h2>Porozmawiaj z koordynatorem</h2>
           <p className="help">
-            Udostępnisz zapisaną kartę w prywatnej rozmowie.
+            Udostępnisz zapisaną kartę, szkic grantowy z danymi autora oraz
+            kolejne zapisane aktualizacje w prywatnej rozmowie.
           </p>
           <label htmlFor="idea-contact-purpose">
             Jakiego wsparcia szukasz?
@@ -400,6 +401,12 @@ export function IdeaEditor({
             Przekaż pomysł do konsultacji
           </button>
         </section>
+      )}
+      {idea?.threadId && (
+        <p className="help">
+          Personel widzi bieżącą zapisaną kartę i szkic grantowy. Każde zapisane
+          uaktualnienie pojawi się jako nowa wiadomość w konsultacji.
+        </p>
       )}
       {idea?.threadId && !dirty && (
         <Link className="button" href={`/wiadomosci/${idea.threadId}`}>

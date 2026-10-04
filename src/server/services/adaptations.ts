@@ -57,7 +57,7 @@ function validateSources(
   )
     throw new Error("INVALID_PLAN_SOURCES");
 }
-export async function getPlan(id: string, ownerId: string) {
+async function getOwnedPlan(id: string, ownerId: string) {
   const row = fixtures()
     ? memory().get(id)
     : (
@@ -67,12 +67,38 @@ export async function getPlan(id: string, ownerId: string) {
       )[0];
   if (!row || row.owner_id !== ownerId || row.state !== "ready" || !row.record)
     return null;
-  const innovation = (await listInnovations()).find(
-    (r) => r.id === row.record!.innovationId,
-  );
-  if (!innovation || catalogVersion(innovation) !== row.record.sourceVersion)
-    return null;
   return structuredClone(row.record);
+}
+export async function getPlan(id: string, ownerId: string) {
+  const plan = await getOwnedPlan(id, ownerId);
+  if (!plan) return null;
+  const innovation = (await listInnovations()).find(
+    (r) => r.id === plan.innovationId,
+  );
+  if (!innovation || catalogVersion(innovation) !== plan.sourceVersion)
+    return null;
+  return plan;
+}
+// Owner-only recovery metadata. Never expose withdrawn source content or the
+// mixed source/AI draft through this path; sharing still uses strict getPlan.
+export async function getPlanRecovery(id: string, ownerId: string) {
+  const plan = await getOwnedPlan(id, ownerId);
+  if (!plan) return null;
+  const innovation = (await listInnovations()).find(
+    (record) => record.id === plan.innovationId,
+  );
+  return {
+    id: plan.id,
+    needId: plan.needId,
+    revision: plan.revision,
+    constraints: plan.constraints,
+    innovationId: innovation?.id ?? null,
+    sourceStatus: !innovation
+      ? ("unavailable" as const)
+      : catalogVersion(innovation) === plan.sourceVersion
+        ? ("current" as const)
+        : ("changed" as const),
+  };
 }
 export async function listPlans(ownerId: string) {
   const rows = fixtures()
@@ -90,7 +116,15 @@ export async function listPlans(ownerId: string) {
       innovations.find(
         (r) => r.id === p.innovationId && catalogVersion(r) === p.sourceVersion,
       );
-    return p && r ? [{ id: p.id, title: r.title, revision: p.revision }] : [];
+    return p
+      ? [
+          {
+            id: p.id,
+            title: r?.title ?? "Plan wymagający ponownej weryfikacji źródła",
+            revision: p.revision,
+          },
+        ]
+      : [];
   });
 }
 function demoDraft(input: AdaptationInput, need: Need, r: Innovation) {
@@ -297,6 +331,7 @@ export async function editPlan(id: string, ownerId: string, value: unknown) {
   const next = {
     ...plan,
     draft: input.draft,
+    constraints: input.constraints ?? plan.constraints,
     revision: plan.revision + 1,
     editedByOwner: true,
   };

@@ -7,11 +7,13 @@ import type { Idea } from "@/lib/contracts/idea";
 import type { KnowledgeResource } from "@/lib/contracts";
 import { GrantResources } from "./grant-resources";
 import { RegionalDiagnosis } from "./regional-diagnosis";
+import { GrantFormal } from "./grant-formal";
 import {
   costPhases,
   formatPLN,
   grantBudget,
   grantFields,
+  grantReadiness,
   prefillGrant,
   type GrantCost,
   type GrantDraft,
@@ -64,6 +66,7 @@ export function GrantEditor({
     [suggestion, setSuggestion] = useState<GrantSuggestion | null>(null);
   const budget = grantBudget(draft.costs),
     completed = Object.values(draft.sections).filter((v) => v.trim()).length;
+  const missing = grantReadiness(draft);
   function change(next: GrantDraft) {
     setDraft(next);
     setDirty(true);
@@ -118,8 +121,29 @@ export function GrantEditor({
       <IdeaNav id={idea.id} current="grant" disabled={dirty} />
       <GrantSource />
       <p className="help">
-        Uzupełnione pola: {completed}/{Object.keys(grantFields).length}.
+        Uzupełnione pola: {completed}/{Object.keys(grantFields).length}. Możesz
+        zapisać szkic i wrócić później. Licznik nie oznacza gotowości wniosku.
       </p>
+      <details className="note">
+        <summary>Co jeszcze sprawdzić? ({missing.length})</summary>
+        {missing.length ? (
+          <ul>
+            {missing.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
+        ) : (
+          <p>
+            Podstawowe dane uzupełnione. Sprawdź źródła, zgodność terminów
+            działań z podanym czasem i warunki właściwego naboru z
+            organizatorem.
+          </p>
+        )}
+        <p className="help">
+          To kontrola kompletności szkicu. Nie potwierdza kwalifikowalności,
+          jakości diagnozy ani spełnienia warunków finansowania.
+        </p>
+      </details>
       <form
         className="form stack"
         aria-busy={busy}
@@ -144,6 +168,7 @@ export function GrantEditor({
           <legend className="sr-only">
             Szkic merytoryczny formularza IWS 2.0
           </legend>
+          <GrantFormal draft={draft} onChange={change} />
           {groups.map((group) => (
             <section className="canvas-section" key={group.title}>
               <h2>{group.title}</h2>
@@ -188,7 +213,48 @@ export function GrantEditor({
           <section className="canvas-section">
             <h2>Plan kosztów</h2>
             <div className="stack">
-              <p>Nieznany koszt pozostaw pusty.</p>
+              <p className="help">
+                Czas całych okresów z formularza: przygotowanie do 3 miesięcy,
+                testowanie do 9 miesięcy. Terminy poszczególnych działań powinny
+                mieścić się w tych okresach.
+              </p>
+              {(
+                [
+                  ["preparationMonths", "Czas przygotowania (miesiące)", 3],
+                  ["testingMonths", "Czas testowania (miesiące)", 9],
+                  ["testers", "Ile osób będzie testowało innowację?", 1000000],
+                ] as const
+              ).map(([key, label, maximum]) => (
+                <label key={key}>
+                  {label}
+                  <input
+                    type="number"
+                    min={1}
+                    max={maximum}
+                    step={1}
+                    value={draft.schedule?.[key] ?? ""}
+                    onChange={(e) =>
+                      change({
+                        ...draft,
+                        schedule: {
+                          preparationMonths: null,
+                          testingMonths: null,
+                          testers: null,
+                          ...draft.schedule,
+                          [key]:
+                            e.target.value === ""
+                              ? null
+                              : Number(e.target.value),
+                        },
+                      })
+                    }
+                  />
+                </label>
+              ))}
+              <p>
+                Dodaj działanie, termin i koszt w PLN. Nieznany koszt pozostaw
+                pusty.
+              </p>
               {draft.costs.map((cost, i) => (
                 <div className="note stack" key={i}>
                   <h3>Działanie {i + 1}</h3>
@@ -359,7 +425,18 @@ export function GrantEditor({
           Podgląd i druk zapisanej karty ze szkicem
         </Link>
       )}
-      {dirty && <p className="help">Zapisz zmiany przed przejściem dalej.</p>}
+      {dirty && (
+        <p className="help">
+          Masz niezapisane zmiany. Podgląd i konsultacja pokazują wyłącznie
+          ostatnią zapisaną wersję.
+        </p>
+      )}
+      {idea.threadId && (
+        <p className="help">
+          Pomysł jest udostępniony personelowi. Kolejne zapisane zmiany szkicu i
+          danych autora będą widoczne w tej konsultacji.
+        </p>
+      )}
       {message && <p role="status">{message}</p>}
       {error && (
         <p className="error" role="alert">

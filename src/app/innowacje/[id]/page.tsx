@@ -6,31 +6,37 @@ import { actor } from "@/server/auth/staff";
 import {
   getParticipation,
   getOwnFeedback,
-  publicFeedback,
+  publicFeedbackPage,
 } from "@/server/services/pilots";
 import { listThreads } from "@/server/services/communication";
 import { PilotForms } from "@/components/pilot-forms";
 import { CatalogHelp } from "@/components/catalog-help";
-import { experienceLabels } from "@/lib/contracts/pilot";
+import { experienceLabels, feedbackQueueQuery } from "@/lib/contracts/pilot";
 import { catalogVersion } from "@/server/services/catalog";
 import styles from "../discovery.module.css";
 
 export default async function Detail({
   params,
+  searchParams,
 }: {
   params: Promise<{ id: string }>;
+  searchParams: Promise<{ feedbackPage?: string }>;
 }) {
   const { id } = await params;
   const r = (await listInnovations()).find((r) => r.id === id);
   if (!r) notFound();
   const s = await session();
   const a = s.ownerId ? await actor() : null;
-  const [participation, feedback, opinions, threads] = await Promise.all([
+  const query = feedbackQueueQuery.safeParse({
+    page: (await searchParams).feedbackPage,
+  });
+  const [participation, feedback, opinionPage, threads] = await Promise.all([
     a && !a.staff ? getParticipation(id, a.ownerId) : null,
     a && !a.staff ? getOwnFeedback(id, a.ownerId) : null,
-    publicFeedback(id),
+    publicFeedbackPage(id, query.success ? query.data.page : 1),
     a && !a.staff ? listThreads(a) : [],
   ]);
+  const opinions = opinionPage.items;
   const existing = threads.find(
     (t) => t.innovationId === id && !t.needId && !t.adaptationId && !t.ideaId,
   );
@@ -154,8 +160,8 @@ export default async function Detail({
           />
         )}
       </section>
-      <section className={styles.section}>
-        <h2>Opinie użytkowników ({opinions.length})</h2>
+      <section className={styles.section} id="opinie">
+        <h2>Opinie użytkowników ({opinionPage.total})</h2>
         {!opinions.length && <p>Nie ma jeszcze opinii.</p>}
         {opinions.map((opinion) => (
           <article className="card" key={opinion.id}>
@@ -173,6 +179,22 @@ export default async function Detail({
             )}
           </article>
         ))}
+        <nav className="actions" aria-label="Strony opinii użytkowników">
+          {opinionPage.page > 1 && (
+            <Link
+              href={`/innowacje/${id}?feedbackPage=${opinionPage.page - 1}#opinie`}
+            >
+              ← Nowsze opinie
+            </Link>
+          )}
+          {opinionPage.hasNext && (
+            <Link
+              href={`/innowacje/${id}?feedbackPage=${opinionPage.page + 1}#opinie`}
+            >
+              Starsze opinie →
+            </Link>
+          )}
+        </nav>
       </section>
     </section>
   );

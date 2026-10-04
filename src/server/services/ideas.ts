@@ -159,17 +159,49 @@ export async function editIdea(id: string, ownerId: string, value: unknown) {
 }
 async function persistIdea(next: Idea, ownerId: string, revision: number) {
   const id = next.id;
+  const updateBody = `Autor zaktualizował udostępniony pomysł — wersja ${next.revision}.`;
+  const updateKey = `idea-revision:${id}:${next.revision}`;
   if (fixtures()) {
     const row = memory().get(id)!;
     if (row.owner_id !== ownerId || row.record.revision !== revision)
       throw conflict();
     row.record = next;
-  } else if (
-    !(
-      await sqlClient()`update ideas set record=${sqlClient().json(next)},updated_at=now() where id=${id} and owner_id=${ownerId} and (record->>'revision')::int=${revision} returning id`
-    ).length
-  )
-    throw conflict();
+    if (next.threadId) {
+      const messages = communicationMemory();
+      const thread = messages.threads.find((t) => t.id === next.threadId);
+      if (
+        thread &&
+        !messages.messages.some(
+          (m) => m.thread_id === thread.id && m.request_key === updateKey,
+        )
+      ) {
+        thread.updated_at = new Date();
+        messages.messages.push({
+          id: randomUUID(),
+          sequence: ++messages.sequence,
+          thread_id: thread.id,
+          author_id: ownerId,
+          author_role: "USER",
+          body: updateBody,
+          request_key: updateKey,
+          created_at: new Date(),
+        });
+      }
+    }
+  } else
+    await sqlClient().begin(async (tx) => {
+      if (
+        !(
+          await tx`update ideas set record=${tx.json(next)},updated_at=now() where id=${id} and owner_id=${ownerId} and (record->>'revision')::int=${revision} returning id`
+        ).length
+      )
+        throw conflict();
+      if (next.threadId) {
+        await tx`select id from threads where id=${next.threadId} for update`;
+        await tx`insert into messages (id,thread_id,author_id,author_role,body,request_key) values (${randomUUID()},${next.threadId},${ownerId},'USER',${updateBody},${updateKey}) on conflict (thread_id,author_id,request_key) do nothing`;
+        await tx`update threads set updated_at=now() where id=${next.threadId}`;
+      }
+    });
   return next;
 }
 export async function saveGrantDraft(

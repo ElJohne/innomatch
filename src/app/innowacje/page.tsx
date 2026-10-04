@@ -1,5 +1,6 @@
 import { listInnovations } from "@/server/services/repository";
-import { normalize, content } from "@/server/search/ranking";
+import { searchInnovations } from "@/server/search/catalog-search";
+import { redirect } from "next/navigation";
 import { InnovationCard } from "@/components/innovation-card";
 import Link from "next/link";
 import styles from "./discovery.module.css";
@@ -10,39 +11,18 @@ export default async function Catalog({
   searchParams: Promise<Record<string, string | undefined>>;
 }) {
   const p = await searchParams;
+  if (p.view === "materials" || p.view === "region") {
+    const query = new URLSearchParams(
+      Object.entries(p).filter(
+        ([key, value]) => key !== "view" && value !== undefined,
+      ) as [string, string][],
+    );
+    redirect(
+      `/innowacje/${p.view === "materials" ? "materialy" : "region"}?${query}`,
+    );
+  }
   const all = await listInnovations();
-  const query = normalize(p.q ?? "")
-    .trim()
-    .slice(0, 200);
-  const words = [...new Set(query.match(/[a-z0-9]+/g) ?? [])];
-  const records = all
-    .filter(
-      (r) =>
-        words.every((word) => {
-          const text = normalize(content(r));
-          return (
-            text.includes(word) ||
-            (word.length >= 6 &&
-              (text.match(/[a-z0-9]+/g) ?? []).some(
-                (term) =>
-                  term.length >= 6 && term.slice(0, 5) === word.slice(0, 5),
-              ))
-          );
-        }) &&
-        (!p.group || r.targetGroups.includes(p.group)) &&
-        (!p.category || r.categories.includes(p.category)) &&
-        (!p.stage || r.maturity === p.stage),
-    )
-    .sort((a, b) => {
-      if (!query) return 0;
-      const titleScore = (title: string) =>
-        Number(normalize(title).includes(query)) * 10 +
-        words.filter((word) => normalize(title).includes(word)).length;
-      return (
-        titleScore(b.title) - titleScore(a.title) ||
-        a.title.localeCompare(b.title, "pl")
-      );
-    });
+  const records = searchInnovations(all, p);
   return (
     <section className="section innovation-catalog">
       <KnowledgeNav current="catalog" />

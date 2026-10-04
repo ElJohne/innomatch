@@ -4,6 +4,7 @@ import styles from "./idea-simple.module.css";
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { Idea, IdeaSuggestion } from "@/lib/contracts/idea";
+import { initialIdeaTitle } from "@/lib/contracts/idea";
 import { emptyCanvas } from "@/lib/contracts/canvas";
 async function request(url: string, method: string, body: unknown) {
   const response = await fetch(url, {
@@ -42,10 +43,7 @@ export function IdeaStart() {
               (await request("/api/ideas", "POST", {
                 requestKey: key.current,
                 card: {
-                  title: description
-                    .trim()
-                    .split(/[.!?\n]/)[0]
-                    .slice(0, 180),
+                  title: initialIdeaTitle(description),
                   problem: description.trim(),
                   essence: description.trim(),
                   targetGroups: ["Do ustalenia"],

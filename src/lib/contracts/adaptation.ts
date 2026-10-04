@@ -48,6 +48,7 @@ export const adaptationEdit = z
   .object({
     expectedRevision: z.number().int().positive(),
     draft: adaptationDraft,
+    constraints: adaptationInput.shape.constraints.optional(),
   })
   .strict();
 export type AdaptationDraft = z.infer<typeof adaptationDraft>;
@@ -72,6 +73,13 @@ export function firstStepFor(draft: AdaptationDraft) {
   );
 }
 export type AdaptationInput = z.infer<typeof adaptationInput>;
+export const constraintLabels = {
+  institution: "Instytucja",
+  resources: "Zasoby i ograniczenia",
+  scope: "Odbiorcy i zasięg",
+  timeline: "Termin — jeśli znany",
+  budget: "Budżet — jeśli znany",
+} as const;
 export type AdaptationPlan = {
   id: string;
   needId: string;

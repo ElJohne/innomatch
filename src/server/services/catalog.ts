@@ -104,15 +104,41 @@ export async function listCatalog(
     : await sqlClient()<
         Control[]
       >`select * from catalog_controls where record_type = ${kind}`;
+  const vectors = demo
+    ? []
+    : (
+        await sqlClient()<
+          { record: Embedding }[]
+        >`select record from ${sqlClient()(embeddingTable(kind))}`
+      ).map((row) => row.record);
+  const c = config();
+  const deployment =
+    c.AI_PROVIDER === "azure"
+      ? process.env.AZURE_OPENAI_EMBEDDING_DEPLOYMENT
+      : c.OPENAI_EMBEDDING_MODEL;
   return records.map((raw) => {
     const record = parse(kind, raw),
       meta = metadata.find((c) => c.record_id === record.id);
+    const indexable =
+      record.publicationStatus === "PUBLISHED" &&
+      !(
+        kind === "knowledge" &&
+        (record as KnowledgeResource).coverage === "DIRECTORY"
+      );
     return {
       kind,
       record,
       version: catalogVersion(record),
       managedLocally: meta?.managed_locally ?? false,
-      indexPending: meta?.index_pending ?? false,
+      indexPending: demo
+        ? (meta?.index_pending ?? false)
+        : indexable &&
+          !vectors.some(
+            (v) =>
+              v.recordId === record.id &&
+              v.contentHash === hash(kind, record) &&
+              v.deployment === deployment,
+          ),
       reviewedAt: meta?.reviewed_at?.toISOString() ?? null,
     };
   });

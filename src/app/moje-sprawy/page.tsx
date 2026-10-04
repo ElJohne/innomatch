@@ -37,6 +37,11 @@ export default async function Cases() {
           <Link href="/moje-sprawy/dostep">Zachowaj lub przywróć dostęp</Link>
         )}
       </div>
+      {a && !a.staff && (
+        <p>
+          <Link href="/wiadomosci">Wszystkie moje rozmowy →</Link>
+        </p>
+      )}
       {a?.staff && (
         <p>
           <Link href="/admin">Otwórz skrzynkę personelu →</Link>

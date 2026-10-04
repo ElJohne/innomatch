@@ -32,6 +32,7 @@ import {
   saveMatch,
 } from "./repository";
 import { keywordKnowledge, knowledgeHash } from "@/server/search/knowledge";
+import { matchCacheKey } from "@/server/search/match-cache";
 import {
   keywordCandidates,
   compatible,
@@ -39,6 +40,26 @@ import {
   validateExplanation,
   selectEvidence,
 } from "@/server/search/ranking";
+
+function cacheKey(
+  records: Awaited<ReturnType<typeof listInnovations>>,
+  knowledge: Awaited<ReturnType<typeof listKnowledge>>,
+) {
+  const c = config();
+  return matchCacheKey(records, knowledge, {
+    version: MATCHING_VERSION,
+    provider: c.AI_PROVIDER,
+    data: c.DATA_PROVIDER,
+    chat:
+      c.AI_PROVIDER === "azure"
+        ? process.env.AZURE_OPENAI_CHAT_DEPLOYMENT
+        : c.OPENAI_CHAT_MODEL,
+    embedding:
+      c.AI_PROVIDER === "azure"
+        ? process.env.AZURE_OPENAI_EMBEDDING_DEPLOYMENT
+        : c.OPENAI_EMBEDDING_MODEL,
+  });
+}
 
 export async function visibleMatch(
   match: MatchResponse,
@@ -83,6 +104,9 @@ export async function visibleMatch(
     relatedResources.length !== match.relatedResources.length;
   return {
     ...match,
+    ...(match.cacheKey !== cacheKey(records, knowledge)
+      ? { refreshAvailable: true }
+      : {}),
     matches,
     relatedResources,
     status: matches.length
@@ -101,12 +125,6 @@ export async function matchNeed(
   need: Need,
   retryOf?: string,
 ): Promise<MatchResponse> {
-  if (need.match?.matchingVersion === MATCHING_VERSION) {
-    const visible = await visibleMatch(need.match);
-    // Publication changes can invalidate an otherwise successful saved run.
-    // Authorize retry against the same view that the user actually sees.
-    if (!canRetryMatch(visible, retryOf)) return visible;
-  }
   const c = config();
   const clarificationAllowed =
     !need.skipClarification && !need.clarifications?.length;
@@ -161,6 +179,19 @@ export async function matchNeed(
     ]);
   if (clarificationAllowed && lacksNeedTopic(original))
     return guided("clarify", fallbackQuestions(answersOnly));
+  const [records, knowledge] = await Promise.all([
+    listInnovations(),
+    listKnowledge(),
+  ]);
+  const currentCacheKey = cacheKey(records, knowledge);
+  if (
+    need.match?.matchingVersion === MATCHING_VERSION &&
+    need.match.cacheKey === currentCacheKey
+  ) {
+    const visible = await visibleMatch(need.match);
+    // Publication changes can invalidate an otherwise successful saved run.
+    if (!canRetryMatch(visible, retryOf)) return visible;
+  }
   // Validate live AI configuration before entering the transient fallback path.
   const ai = c.AI_PROVIDER === "mock" ? null : createLiveAiProvider();
   if (ai && c.DATA_PROVIDER !== "postgres")
@@ -218,8 +249,6 @@ export async function matchNeed(
       );
     }
   }
-  const records = await listInnovations();
-  const knowledge = await listKnowledge();
   let related = keywordKnowledge(query, knowledge);
   const lexical = [
     ...new Map(
@@ -314,7 +343,14 @@ export async function matchNeed(
     },
     candidates,
   );
-  let relatedResources: MatchResponse["relatedResources"] = [];
+  let relatedResources: MatchResponse["relatedResources"] = keywordKnowledge(
+    original,
+    knowledge,
+  ).map((r) => ({
+    resourceId: r.id,
+    reason:
+      "Materiał porusza tematy z Twojego opisu. Sprawdź zakres i datę w źródle.",
+  }));
   if (ai && candidates.length) {
     try {
       const schema = explanationSchema.extend({
@@ -415,7 +451,7 @@ export async function matchNeed(
         warnings.push(
           "Pominięto materiały, których źródeł nie udało się potwierdzić.",
         );
-      relatedResources = result.matches.length ? allowedResources : [];
+      relatedResources = allowedResources;
       explanation = c.AI_PROVIDER === "openai" ? "openai" : "azure";
     } catch (error) {
       verificationUnavailable = true;
@@ -455,12 +491,13 @@ export async function matchNeed(
   const response: MatchResponse = {
     runId: randomUUID(),
     matchingVersion: MATCHING_VERSION,
+    cacheKey: currentCacheKey,
     assumptions,
     catalogVersions: Object.fromEntries([
       ...records
         .filter((r) => result.matches.some((m) => m.innovationId === r.id))
         .map((r) => [`innovation:${r.id}`, catalogVersion(r)]),
-      ...related
+      ...knowledge
         .filter((r) => relatedResources.some((x) => x.resourceId === r.id))
         .map((r) => [`knowledge:${r.id}`, catalogVersion(r)]),
     ]),

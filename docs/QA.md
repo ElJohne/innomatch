@@ -23,6 +23,61 @@
 - Перші два прогони знайшли мобільні регресії (поле нижче екрана, довгі заголовки
   при 200%); їх виправлено, фінальний прогін PASS. Повного WCAG-аудиту та
   live AI/production QA не виконували; deployment і зміни БД не здійснювались.
+## Production release d16ed07 — 2026-10-04, 09:33
+
+- Поєднано функціональні правки з новішим master redesign `6127baa`/`f100695`.
+- Після узгодження: typecheck/lint/build PASS; 79/79 unit, 13files,4.21s PASS.
+- Короткий `tmp/functional-smoke.mjs` на зібраній локальній production версії:
+  M1 search/cache; M3 idea/grant/preview/share; M5 queue/revision message;
+  M7 constraints edit/reopen/preview — PASS. Тільки synthetic fixtures/mock.
+- Backup Job `backup-functional-20261004` Complete до push/rollout.
+- Actions37185993820 SUCCESS (build1m13s,deploy38s). Точний mount
+  `d16ed07e00795e1ce5dd7a3f8a69abdbcce12f06-37185993820-1`, rollout SUCCESS.
+- `https://pomocnypunkt.pl`: health/ready200 ok; home/catalog/materials/region/
+  new idea200; UI `seniorzy bankomat` містить Merkury, API total1; education API
+  total7; anonymous analytics403 та conversations307 — очікуваний захист.
+- Production перевірка цього релізу — read-only. Повторних live AI викликів,
+  створення приватних записів або повного E2E/PG suite не було.
+
+## Швидка функціональна ітерація M1–M7 — 2026-10-04, 09:20
+
+- `npm run typecheck` — PASS; `npm run lint` — PASS. Використано штатний npm-cli
+  через Node через несправний глобальний launcher. Початковий lint prefer-const
+  виправлено; наведені результати — після виправлення й форматування.
+- `npm test -- --reporter=dot` — 79/79 PASS, 13 files, 2.79s.
+  Нові regressions: cache/catalog/model + material-only; 205 conversations та
+  moderation + 51 feedback; M7 constraints/snapshot/recovery; M3 title/form/
+  private applicant excluded from AI/revision notification.
+- `git diff --check` — PASS.
+- Окремий локальний Next dev 3101, fixtures/mock: головна/каталог/матеріали/
+  регіон/API/нова ідея — HTTP200; anonymous admin/threads — redirect;
+  adaptation без innovationId — очікуваний404, з валідним context —200.
+- `node tmp/functional-smoke.mjs` — PASS. Реальні HTTP create need → matching
+  → повтор без нового runId → page; plan create → budget PATCH → page/preview;
+  feedback read; private thread → paginated queue/unread; idea → grant/preview
+  → submit → edit → рівно очікувана revision message. Усі приклади синтетичні,
+  лише локальна process memory, повідомлень реальним координаторам немає.
+- Повні E2E/build/PostgreSQL integration не повторювали за запитом власника
+  не запускати довгі перевірки. Ці результати не успадковуються від попереднього
+  аудиту. Runtime нових SQL pagination/import/notification лишається неперевіреним.
+- Live AI/production/спільна БД не змінені. Повний результат —
+  [FIX-RESULTS](audit-2026-10-04/FIX-RESULTS.md).
+
+## Аудит M1–M7 — 2026-10-04, checkout 5728d1b
+
+Повний свіжий журнал: [audit-2026-10-04/QA.md](audit-2026-10-04/QA.md).
+Lint/typecheck/build PASS, 68 unit PASS, corpus 114/69 valid. На окремій
+PostgreSQL 17.11: 7 PASS / 1 FAIL (Canvas assist expectation); контейнер прибрано.
+Default E2E не мав Chromium executable; повтор Chrome: 11 завершених PASS,
+15 завершених FAIL (переважно старі UI селектори). Після 26 результатів teardown
+не закінчився, runner перервано; JSON reporter не записаний. Геометричний failure
+320×800 і суперечливий unavailable/no-match UI підтверджені окремими snapshots.
+
+Production перевірено read-only; HTTP/UI catalog search mismatch підтверджено,
+health/ready 200, anonymous analytics 403. Нових live AI-запитів/production
+записів не було. Local mock M3: відтворено title bug «Np.»; контрольний create →
+grant save/reload PASS. PDF звірено, 7 агентських звітів готові; application code
+не змінений. Попередні production/live докази нижче залишаються історичними.
 
 ## Seven-module redesign deployed — 2026-10-04
 

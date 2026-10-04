@@ -7,6 +7,10 @@ mkdir "$release"
 tar -xzf release.tar.gz -C "$release"
 mkdir -p "$release/.next/cache"
 chmod -R a+rX "$release"
+export BACKUP_JOB="backup-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+node deploy/render.mjs backup | kubectl -n innomatch apply -f -
+kubectl -n innomatch wait --for=condition=complete "job/$BACKUP_JOB" --timeout=190s
+kubectl -n innomatch logs "job/$BACKUP_JOB"
 job="migrate-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
 export MIGRATION_JOB="$job"
 node deploy/render.mjs migration | kubectl -n innomatch apply -f -
