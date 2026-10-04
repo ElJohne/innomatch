@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { session } from "@/server/auth/session";
 import { getIdea } from "@/server/services/ideas";
 import { GrantEditor } from "@/components/grant-editor";
+import { listKnowledge } from "@/server/services/repository";
 export default async function GrantPage({
   params,
 }: {
@@ -12,6 +13,9 @@ export default async function GrantPage({
   if (!s.ownerId) notFound();
   const idea = await getIdea((await params).id, s.ownerId);
   if (!idea) notFound();
+  const resources = (await listKnowledge()).filter(
+    (r) => r.type === "CHALLENGE" || r.type === "REPORT",
+  );
   return (
     <section className="narrow stack">
       <Link href={`/pomysly/${idea.id}`}>← Karta pomysłu</Link>
@@ -20,7 +24,7 @@ export default async function GrantPage({
         <h1>Przygotuj szkic grantowy</h1>
         <p>{idea.card.title}</p>
       </header>
-      <GrantEditor initial={idea} />
+      <GrantEditor initial={idea} resources={resources} />
     </section>
   );
 }

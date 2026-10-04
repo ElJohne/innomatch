@@ -3,6 +3,8 @@ import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import type { Idea } from "@/lib/contracts/idea";
+import type { KnowledgeResource } from "@/lib/contracts";
+import { GrantResources } from "./grant-resources";
 import {
   costPhases,
   formatPLN,
@@ -40,7 +42,13 @@ const groups: { title: string; keys: GrantKey[] }[] = [
     keys: ["preparation", "testing", "team"],
   },
 ];
-export function GrantEditor({ initial }: { initial: Idea }) {
+export function GrantEditor({
+  initial,
+  resources,
+}: {
+  initial: Idea;
+  resources: KnowledgeResource[];
+}) {
   const router = useRouter();
   const [idea, setIdea] = useState(initial),
     [draft, setDraft] = useState<GrantDraft>(
@@ -166,6 +174,24 @@ export function GrantEditor({ initial }: { initial: Idea }) {
               </div>
             </details>
           ))}
+          <GrantResources
+            items={resources}
+            diagnosis={draft.sections.diagnosis}
+            onAppend={(note) => {
+              change({
+                ...draft,
+                sections: {
+                  ...draft.sections,
+                  diagnosis: [draft.sections.diagnosis.trim(), note]
+                    .filter(Boolean)
+                    .join("\n\n"),
+                },
+              });
+              setMessage(
+                "Dodano odnośnik do pola diagnozy. Uzupełnij jego związek z pomysłem i zapisz szkic.",
+              );
+            }}
+          />
           <details className="canvas-section">
             <summary>Plan kosztów i wnioskowana kwota</summary>
             <div className="stack">

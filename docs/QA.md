@@ -1,5 +1,16 @@
 # Перевірки — 2026-10-03, поточна ітерація та історія
 
+## Live мета звернення / бюджет; джерела локально — 2026-10-04, 03:50
+
+- c697f0c / Actions 37168777448 SUCCESS. Власна синтетична ідея → MENTORSHIP
+  → thread 5f8b2f63… → Moje sprawy: title + «Wsparcie mentora» PASS у PostgreSQL.
+  Screenshot містить лише синтетичну картку: live-contact-purpose-20261004.jpg.
+- Live grant AI з budgetContext описав підготовку інструментів і два тестові
+  зустрічі з уже введеними строками; не повторив «витрати до уточнення».
+  Explicit apply/save PASS. Авторська сума 175,50 PLN не змінена AI.
+- Новий пошук матеріалів diagnosis: lint/build PASS. Ручна перевірка пошуку,
+  append і persistence ще очікує rollout; нових автоматичних тестів немає.
+
 ## Live compare та локальна мета звернення — 2026-10-04, 03:43
 
 - 2c5f0bc / Actions 37167868599 SUCCESS. Ручний live compare цифрових занять:
