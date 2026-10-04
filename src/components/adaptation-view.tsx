@@ -5,7 +5,13 @@ import {
   firstStepLabels,
   type AdaptationPlan,
 } from "@/lib/contracts/adaptation";
-export function AdaptationView({ plan }: { plan: AdaptationPlan }) {
+export function AdaptationView({
+  plan,
+  expanded = false,
+}: {
+  plan: AdaptationPlan;
+  expanded?: boolean;
+}) {
   const show = (value: string | string[]) =>
     Array.isArray(value) ? (
       <ul>
@@ -54,7 +60,7 @@ export function AdaptationView({ plan }: { plan: AdaptationPlan }) {
           </div>
         </dl>
       </section>
-      <details className="plan-details">
+      <details className="plan-details" open={expanded}>
         <summary>Pełny szkic: uzasadnienie, zasoby, ryzyka i pilotaż</summary>
         {Object.entries(draftLabels).map(([key, label]) => (
           <section className="card" key={key}>

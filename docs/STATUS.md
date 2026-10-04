@@ -1,5 +1,18 @@
 # Стан — 2026-10-04
 
+## Каталог live PASS; повний перегляд адаптації локально — 04:08
+
+6399a26 / Actions 37169305927 SUCCESS. Production catalog: «seniorzy bankomat»,
+«bankomatu seniorów» та точне «Merkury» дають одну релевантну картку PASS.
+Пошук не викликає AI; фільтри та публікація лишаються серверними.
+
+Локальний fixtures/mock normal journey: потреба → підтвердження → рішення →
+умови установи → план → повний preview PASS. Новий /adaptacje/:id/podglad
+містить усі розділи, умови й джерела; details відкритий, overflow відсутній.
+Кнопка використовує наявний browser print і print CSS. Створення PDF файлу
+через системний діалог не виконували; production preview ще очікує rollout.
+Lint/build PASS. Нової БД/міграції/залежності/тестів немає.
+
 ## Джерела діагнозу live PASS; каталог покращено локально — 03:57
 
 2d0bc9d / Actions 37169054931 SUCCESS. Ручний production grant: пошук seniorzy

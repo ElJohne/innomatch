@@ -1,5 +1,17 @@
 # Перевірки — 2026-10-03, поточна ітерація та історія
 
+## Catalog live / plan preview local — 2026-10-04, 04:08
+
+- 6399a26 / Actions 37169305927 SUCCESS. Ручний production query:
+  seniorzy bankomat → Merkury (1); bankomatu seniorów → Merkury (1);
+  exact Merkury → Merkury (1). Без AI.
+- Ручний local fixtures/mock need → confirm → Sąsiedzki stół → institution
+  constraints → plan → preview PASS. Full draft open, усі 13 змістовних headings
+  і джерела видимі; горизонтального overflow немає. Screenshot:
+  local-plan-preview-20261004.jpg. Browser print функція і CSS повторно використані;
+  фізичне збереження PDF не виконували. Live preview ще очікує rollout.
+- Lint/build PASS; нових автоматичних тестів немає.
+
 ## Live grant resources / QA cleanup — 2026-10-04, 03:57
 
 - 2d0bc9d / Actions 37169054931 SUCCESS. Manual production seniorzy → Mapa

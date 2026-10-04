@@ -31,6 +31,11 @@ export default async function PlanPage({
       <h1>Twój szkic usługi</h1>
       <p className="lead">{innovation.title}</p>
       <p>
+        <Link href={`/adaptacje/${plan.id}/podglad`}>
+          Przejrzyj cały plan i zapisz PDF →
+        </Link>
+      </p>
+      <p>
         <Link href={`/potrzeby/${plan.needId}`}>
           Potrzeba, dla której powstał plan
         </Link>
