@@ -1,5 +1,9 @@
 # Запуск і підключення
 
+Наступні production релізи без міграцій: 3193da5 / Actions 37167103864 SUCCESS
+(grant JSONB) і 2c5f0bc / Actions 37167868599 SUCCESS (idea comparison).
+Live grant persistence/AI/consultation та compare/append/reopen підтверджені.
+
 Production оновлення 2026-10-04: bc82c12 / GitHub Actions 37165955711 SUCCESS.
 Deployment mount bc82c12b4b054f1a5a11688bc6fb618c2d2ffc1a-37165955711-1
 підтверджено SSH. Backup backup-quality-20261004-0246 Complete перед rollout;

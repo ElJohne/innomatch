@@ -23,7 +23,8 @@ export function IdeaComparison({
     [busy, setBusy] = useState(false),
     [error, setError] = useState(""),
     [message, setMessage] = useState(""),
-    [attached, setAttached] = useState(false);
+    [attached, setAttached] = useState(false),
+    [operation, setOperation] = useState<"compare" | "save">("compare");
   async function request(url: string, method: string, body: unknown) {
     const response = await fetch(url, {
       method,
@@ -38,9 +39,13 @@ export function IdeaComparison({
       );
     return data;
   }
-  async function run(action: () => Promise<void>) {
+  async function run(
+    action: () => Promise<void>,
+    kind: "compare" | "save" = "compare",
+  ) {
     if (busy || disabled) return;
     setBusy(true);
+    setOperation(kind);
     setError("");
     setMessage("");
     try {
@@ -86,12 +91,15 @@ export function IdeaComparison({
           })
         }
       >
-        {busy ? "Porównujemy opisy i źródła…" : "Porównaj z katalogiem"}
+        {busy && operation === "compare"
+          ? "Porównujemy opisy i źródła…"
+          : "Porównaj z katalogiem"}
       </button>
       {busy && (
         <p role="status">
-          Wyszukujemy podobne sposoby działania i przygotowujemy porównanie.
-          Pozostań na stronie.
+          {operation === "save"
+            ? "Zapisujemy notatki w Twoim szkicu grantowym…"
+            : "Wyszukujemy podobne sposoby działania i przygotowujemy porównanie. Pozostań na stronie."}
         </p>
       )}
       {result && (
@@ -207,10 +215,12 @@ export function IdeaComparison({
                       "Dodano notatki do zapisanego szkicu grantowego. Przejrzyj i dopracuj tekst przed użyciem.",
                     );
                     router.refresh();
-                  })
+                  }, "save")
                 }
               >
-                Dodaj notatki do szkicu grantowego
+                {busy && operation === "save"
+                  ? "Zapisywanie notatek…"
+                  : "Dodaj notatki do szkicu grantowego"}
               </button>
               <Link href={`/pomysly/${idea.id}/grant`}>
                 Otwórz szkic grantowy

@@ -142,7 +142,7 @@ export default async function ThreadPage({
         id={thread.id}
         through={thread.messages.at(-1)?.sequence ?? 0}
       />
-      <MessageForm threadId={thread.id} />
+      <MessageForm threadId={thread.id} contactOptions={!a.staff} />
     </section>
   );
 }

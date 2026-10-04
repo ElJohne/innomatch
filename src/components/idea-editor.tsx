@@ -13,6 +13,8 @@ import { IdeaView } from "./idea-view";
 import { CanvasFields } from "./idea-canvas";
 import { emptyCanvas } from "@/lib/contracts/canvas";
 import { IdeaComparison } from "./idea-comparison";
+import { ContactChoice } from "./contact-choice";
+import type { ContactPurpose } from "@/lib/contact-purpose";
 const empty: IdeaCard = {
   title: "",
   problem: "",
@@ -74,6 +76,7 @@ export function IdeaEditor({
     [error, setError] = useState(""),
     [suggestion, setSuggestion] = useState<IdeaSuggestion | null>(null),
     [accepted, setAccepted] = useState(false);
+  const [purpose, setPurpose] = useState<ContactPurpose>("CONSULTATION");
   const submitted = idea?.status === "SUBMITTED";
   const change = (key: keyof typeof ideaLabels, value: string) => {
     setCard((c) => ({ ...c, [key]: value }));
@@ -379,6 +382,12 @@ export function IdeaEditor({
             zapisanych zmian. Powstanie prywatna rozmowa, w której otrzymasz
             odpowiedź. To nie jest publiczna publikacja ani wniosek grantowy.
           </p>
+          <ContactChoice
+            id="idea-contact-purpose"
+            value={purpose}
+            disabled={busy || dirty}
+            onChange={(value) => setPurpose(value || "CONSULTATION")}
+          />
           <button
             disabled={busy || dirty}
             onClick={() =>
@@ -386,7 +395,7 @@ export function IdeaEditor({
                 const saved: Idea = await request(
                   `/api/ideas/${idea.id}/submit`,
                   "POST",
-                  { expectedRevision: idea.revision },
+                  { expectedRevision: idea.revision, purpose },
                 );
                 setIdea(saved);
                 router.push(`/wiadomosci/${saved.threadId}`);

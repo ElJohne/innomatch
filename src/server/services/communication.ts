@@ -13,6 +13,7 @@ import { HttpError } from "@/server/http";
 import { getNeed, listInnovations } from "./repository";
 import { getPlan } from "./adaptations";
 import { getIdea } from "./ideas";
+import { purposeFromMessage } from "@/lib/contact-purpose";
 import {
   communicationMemory as memory,
   type ThreadRow,
@@ -51,31 +52,64 @@ async function accessibleThread(id: string, a: Actor) {
   return row;
 }
 export async function listThreads(a: Actor): Promise<ThreadSummary[]> {
+  const titles = new Map((await listInnovations()).map((i) => [i.id, i.title]));
   if (fixtures()) {
-    return memory()
-      .threads.filter((t) => canReadThread(a, t.owner_id))
-      .sort((x, y) => y.updated_at.getTime() - x.updated_at.getTime())
-      .map((t) => ({
-        ideaId: t.idea_id ?? null,
-        adaptationId: t.adaptation_id ?? null,
-        id: t.id,
-        needId: t.need_id,
-        innovationId: t.innovation_id,
-        updatedAt: t.updated_at.toISOString(),
-        unread: memory().messages.filter(
-          (m) =>
-            m.thread_id === t.id &&
-            m.author_role === (a.staff ? "USER" : "STAFF") &&
-            m.sequence > (a.staff ? t.staff_read : t.user_read),
-        ).length,
-      }));
+    return Promise.all(
+      memory()
+        .threads.filter((t) => canReadThread(a, t.owner_id))
+        .sort((x, y) => y.updated_at.getTime() - x.updated_at.getTime())
+        .map(async (t) => ({
+          title: t.idea_id
+            ? (await getIdea(t.idea_id, t.owner_id))?.card.title
+            : titles.get(
+                t.innovation_id ?? t.adaptation_snapshot?.innovationId ?? "",
+              ),
+          purpose: purposeFromMessage(
+            memory()
+              .messages.filter(
+                (m) =>
+                  m.thread_id === t.id &&
+                  m.author_role === "USER" &&
+                  m.body.startsWith("Cel zgłoszenia:"),
+              )
+              .at(-1)?.body ?? "",
+          ),
+          ideaId: t.idea_id ?? null,
+          adaptationId: t.adaptation_id ?? null,
+          id: t.id,
+          needId: t.need_id,
+          innovationId: t.innovation_id,
+          updatedAt: t.updated_at.toISOString(),
+          unread: memory().messages.filter(
+            (m) =>
+              m.thread_id === t.id &&
+              m.author_role === (a.staff ? "USER" : "STAFF") &&
+              m.sequence > (a.staff ? t.staff_read : t.user_read),
+          ).length,
+        })),
+    );
   }
-  const rows = await sqlClient()<(ThreadRow & { unread: number })[]>`
-    select t.*, (select count(*)::int from messages m where m.thread_id = t.id
+  const rows = await sqlClient()<
+    (ThreadRow & {
+      unread: number;
+      idea_title: string | null;
+      context_innovation_id: string | null;
+      purpose_message: string | null;
+    })[]
+  >`
+    select t.*, i.record->'card'->>'title' as idea_title,
+      coalesce(t.innovation_id,p.innovation_id) as context_innovation_id,
+      (select left(m.body,100) from messages m where m.thread_id=t.id and m.author_role='USER' and m.body like 'Cel zgłoszenia:%' order by m.sequence desc limit 1) as purpose_message,
+      (select count(*)::int from messages m where m.thread_id = t.id
       and m.author_role = ${a.staff ? "USER" : "STAFF"}
       and m.sequence > case when ${Boolean(a.staff)} then t.staff_read else t.user_read end) as unread
-    from threads t where (${Boolean(a.staff)} or t.owner_id = ${a.ownerId}) order by t.updated_at desc limit 200`;
+    from threads t
+    left join ideas i on i.id=t.idea_id and i.owner_id=t.owner_id
+    left join adaptations p on p.id=t.adaptation_id and p.owner_id=t.owner_id
+    where (${Boolean(a.staff)} or t.owner_id = ${a.ownerId}) order by t.updated_at desc limit 200`;
   return rows.map((t) => ({
+    title: t.idea_title ?? titles.get(t.context_innovation_id ?? ""),
+    purpose: purposeFromMessage(t.purpose_message ?? ""),
     ideaId: t.idea_id ?? null,
     adaptationId: t.adaptation_id ?? null,
     id: t.id,

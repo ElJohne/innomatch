@@ -1,5 +1,18 @@
 # Перевірки — 2026-10-03, поточна ітерація та історія
 
+## Live compare та локальна мета звернення — 2026-10-04, 03:43
+
+- 2c5f0bc / Actions 37167868599 SUCCESS. Ручний live compare цифрових занять:
+  Merkury, спільні функції/відмінності, точний фрагмент, append → grant reopen PASS.
+  Screenshot: screenshots/live-idea-comparison-section-20261004.jpg.
+- Ручний local fixtures/mock idea → «Wsparcie mentora» → submit → видимий
+  префікс мети у thread → назва і мета у Moje sprawy PASS. Новий SQL для списку
+  справ ще не перевірено production; без міграції. Lint/build PASS.
+- Повтор live grant AI після costsEnteredByAuthor залишив старе речення про
+  невизначені кошти; бюджет 175,50 PLN незмінний. Посилено prompt і передано
+  budgetContext; перевірка цієї останньої зміни ще очікує deployment.
+- Нових тестів/пайплайнів не додавали; основний контроль — ручний user journey.
+
 ## Live grant і локальне порівняння — 2026-10-04, 03:24
 
 - 3193da5, Actions 37167103864 SUCCESS. Ручний production create idea →

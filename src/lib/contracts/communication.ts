@@ -1,4 +1,5 @@
 import { z } from "zod";
+import type { ContactPurpose } from "@/lib/contact-purpose";
 
 export const loginInput = z
   .object({
@@ -50,6 +51,8 @@ export type Staff = {
 };
 export type Actor = { ownerId: string; staff?: Staff };
 export type ThreadSummary = {
+  title?: string;
+  purpose?: ContactPurpose;
   ideaId?: string | null;
   adaptationId?: string | null;
   id: string;

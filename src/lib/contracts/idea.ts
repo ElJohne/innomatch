@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { ideaCanvas } from "./canvas";
 import type { GrantDraft } from "./grant";
+import { contactPurpose } from "@/lib/contact-purpose";
 export const ideaCard = z
   .object({
     title: z.string().trim().min(3).max(200),
@@ -21,6 +22,9 @@ export const ideaEdit = z
   .strict();
 export const ideaRevision = z
   .object({ expectedRevision: z.number().int().positive() })
+  .strict();
+export const ideaSubmit = ideaRevision
+  .extend({ purpose: contactPurpose.optional() })
   .strict();
 export const ideaSuggestion = z
   .object({

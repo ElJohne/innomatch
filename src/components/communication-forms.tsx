@@ -1,6 +1,8 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { withContactPurpose, type ContactPurpose } from "@/lib/contact-purpose";
+import { ContactChoice } from "./contact-choice";
 
 async function post(url: string, body: unknown) {
   const response = await fetch(url, {
@@ -117,6 +119,7 @@ export function MessageForm({
   adaptationId,
   adaptationRevision,
   initialBody = "",
+  contactOptions = false,
 }: {
   threadId?: string;
   needId?: string;
@@ -124,10 +127,15 @@ export function MessageForm({
   adaptationId?: string;
   adaptationRevision?: number;
   initialBody?: string;
+  contactOptions?: boolean;
 }) {
   const router = useRouter();
   const key = useRef("");
   const [body, setBody] = useState(initialBody);
+  const [purpose, setPurpose] = useState<ContactPurpose | "">(
+    threadId ? "" : "CONSULTATION",
+  );
+  const showContactOptions = !threadId || contactOptions;
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   return (
@@ -144,7 +152,10 @@ export function MessageForm({
           const result = await post(
             threadId ? `/api/threads/${threadId}/messages` : "/api/threads",
             {
-              body,
+              body: withContactPurpose(
+                body,
+                showContactOptions ? purpose : undefined,
+              ),
               requestKey: key.current,
               ...(threadId
                 ? {}
@@ -162,6 +173,18 @@ export function MessageForm({
         }
       }}
     >
+      {showContactOptions && (
+        <ContactChoice
+          id="message-purpose"
+          value={purpose}
+          continuation={Boolean(threadId)}
+          disabled={busy}
+          onChange={(value) => {
+            setPurpose(value);
+            key.current = "";
+          }}
+        />
+      )}
       <label htmlFor="message-body">
         {threadId ? "Nowa wiadomość" : "O co chcesz zapytać koordynatora?"}
       </label>
@@ -174,7 +197,7 @@ export function MessageForm({
         aria-describedby="message-help"
         rows={5}
         required
-        maxLength={4000}
+        maxLength={showContactOptions && purpose ? 3900 : 4000}
         value={body}
         disabled={busy}
         onChange={(e) => {
