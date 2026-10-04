@@ -30,7 +30,7 @@ export const grantFields = {
   novelty: {
     label: "4. Innowacyjność rozwiązania",
     hint: "Porównaj podobne rozwiązania i nazwij nową wartość. Sam opis pomysłu nie potwierdza jego nowości.",
-    maxLength: 3000,
+    maxLength: 6000,
   },
   diagnosis: {
     label: "5. Diagnoza problemu",

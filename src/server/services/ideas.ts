@@ -224,6 +224,7 @@ export async function assistGrantDraft(
           {
             card: idea.card,
             draft: input.draft.sections,
+            costsEnteredByAuthor: input.draft.costs,
             template: { title: grantTemplate.title, fields: grantFields },
           },
           grantSections,

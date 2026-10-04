@@ -1,5 +1,24 @@
 # Стан — 2026-10-04
 
+## Грантова чернетка на production; порівняння ідей локально — 03:24 Europe/Warsaw
+
+3193da5 / Actions 37167103864 SUCCESS. Ручний live PostgreSQL/OpenAI прохід:
+create idea → prefill grant → три витрати 125,50/50/0 PLN → save → AI preview →
+explicit apply → save → reload → preview → submit idea → grant у консультації
+(revision 4, сума 175,50 PLN) PASS. Дані в AI-тексті явно поділені на
+спостереження автора, гіпотези й прогалини. Бюджет не змінений AI.
+Скріншот — screenshots/live-grant-preview-20261004.jpg.
+
+Наступне локальне покращення M3 за підходом bobrovsky420/hackyeah2026:
+порівняння власної картки з опублікованими інноваціями. Semantic + lexical
+retrieval, до трьох функціонально схожих рішень, подібність/різниця/питання,
+перевірені ID та точні джерельні фрагменти. Явне дописування нотаток у grant
+novelty зберігає наявний текст; не підтверджує унікальність чи плагіат.
+Локальний ручний mock compare → append → reopen grant PASS; live compare
+ще не перевірено. Додатково передаємо AI вже введені витрати як контекст,
+щоб текст підготовки не суперечив ручному бюджету; вихід AI лишається текстовим.
+Власні production QA записи ще не прибрано; вони явно підписані synthetic QA.
+
 ## Production rollout підтверджено; грантова чернетка локально — 03:07 Europe/Warsaw
 
 Пакет bc82c12 розгорнуто: GitHub Actions 37165955711 SUCCESS, deployment

@@ -12,6 +12,7 @@ import {
 import { IdeaView } from "./idea-view";
 import { CanvasFields } from "./idea-canvas";
 import { emptyCanvas } from "@/lib/contracts/canvas";
+import { IdeaComparison } from "./idea-comparison";
 const empty: IdeaCard = {
   title: "",
   problem: "",
@@ -362,6 +363,13 @@ export function IdeaEditor({
             </div>
           )}
         </section>
+      )}
+      {idea && (
+        <IdeaComparison
+          idea={idea}
+          disabled={busy || dirty}
+          onSaved={setIdea}
+        />
       )}
       {idea && !submitted && (
         <section className="note">
