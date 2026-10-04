@@ -4,7 +4,24 @@ import {
   type IdeaCard,
 } from "@/lib/contracts/idea";
 import { CanvasView } from "./idea-canvas";
-export function IdeaView({ card }: { card: IdeaCard }) {
+export function IdeaView({
+  card,
+  compact = false,
+}: {
+  card: IdeaCard;
+  compact?: boolean;
+}) {
+  if (compact)
+    return (
+      <div className="stack">
+        <h3>{card.title}</h3>
+        <p>{card.essence.split(/(?<=[.!?])\s/)[0].slice(0, 220)}</p>
+        <details>
+          <summary>Pełna karta i Canvas</summary>
+          <IdeaView card={card} />
+        </details>
+      </div>
+    );
   return (
     <div className="stack">
       {Object.entries(ideaLabels).map(([key, label]) => (

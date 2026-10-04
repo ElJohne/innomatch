@@ -9,13 +9,11 @@ import {
 export function CanvasCredit() {
   return (
     <p className="help">
-      Uproszczony arkusz pracy Pomocnego Punktu na podstawie trzech plansz{" "}
+      Na podstawie{" "}
       <a href={canvasSourceUrl} target="_blank" rel="noreferrer">
         Social Innovation Canvas — ROPS / InnoAGH ↗
       </a>{" "}
-      (wersja 1.0, 5 maja 2026), inspirowanych The New Global School. Opis
-      problemu, rozwiązanie, odbiorcy i etap pochodzą z Twojej karty. To robocze
-      opracowanie, nie formularz wniosku.
+      (wersja 1.0).
     </p>
   );
 }
@@ -30,20 +28,12 @@ export function CanvasFields({
   return (
     <section className="canvas-editor stack" aria-labelledby="canvas-title">
       <h2 id="canvas-title">Canvas Twojego pomysłu</h2>
-      <p>
-        Rozwijaj pomysł po kawałku. Wszystkie pola są opcjonalne; możesz zapisać
-        pracę i wrócić później.
-      </p>
+
       <p className="help">
-        Uzupełnione pola: {completed} z {Object.keys(canvasFields).length}. To
-        stan notatek, nie ocena gotowości pomysłu.
+        Uzupełnione pola: {completed} z {Object.keys(canvasFields).length}.
       </p>
       {canvasSections.map((section, index) => (
-        <details
-          key={section.title}
-          open={index === 0}
-          className="canvas-section"
-        >
+        <details key={section.title} className="canvas-section">
           <summary>
             {index + 1}. {section.title}
           </summary>

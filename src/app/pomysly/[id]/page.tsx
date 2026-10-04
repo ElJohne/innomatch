@@ -1,3 +1,4 @@
+import styles from "@/components/idea-simple.module.css";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { session } from "@/server/auth/session";
@@ -14,12 +15,14 @@ export default async function IdeaPage({
   const idea = await getIdea((await params).id, s.ownerId);
   if (!idea) notFound();
   return (
-    <section className="narrow">
+    <section className={`narrow ${styles.page}`}>
       <Link href="/moje-sprawy">← Moje sprawy</Link>
-      <p className="eyebrow detail-label">Kreator pomysłów</p>
       <h1>Twoja karta pomysłu</h1>
       <IdeaEditor initial={idea} />
-      <IdeaResources />
+      <details className="card">
+        <summary>Materiały źródłowe i nabory</summary>
+        <IdeaResources />
+      </details>
     </section>
   );
 }

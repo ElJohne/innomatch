@@ -8,26 +8,27 @@ import {
   type GrantKey,
 } from "@/lib/contracts/grant";
 
-export function GrantSource() {
+export function GrantSource({ compact = true }: { compact?: boolean }) {
   return (
     <div className="note">
       <p>
-        <strong>{grantTemplate.title} — nabór zakończony.</strong> Materiał do
-        przygotowania pomysłu na podstawie opublikowanego formularza. To szkic
-        merytoryczny, bez złożenia wniosku.
+        <strong>{grantTemplate.title} — nabór zakończony.</strong>
       </p>
-      <p className="help">
-        Nabór: 13.11–13.12.2024. Status sprawdzony: {grantTemplate.checkedAt}.
-        Wersja szablonu: {grantTemplate.version}.
-      </p>
-      <div className="actions">
-        <a href={grantTemplate.sourceUrl} target="_blank" rel="noreferrer">
-          Oryginalny formularz ROPS (PDF) ↗
-        </a>
-        <a href={grantTemplate.callsUrl} target="_blank" rel="noreferrer">
-          Sprawdź aktualne nabory ↗
-        </a>
-      </div>
+      <details open={!compact}>
+        <summary>Formularz i aktualne nabory</summary>
+        <p className="help">
+          Szablon archiwalny: 13.11–13.12.2024. Wersja {grantTemplate.version}.
+          Zapis szkicu nie jest złożeniem wniosku.
+        </p>
+        <div className="actions">
+          <a href={grantTemplate.sourceUrl} target="_blank" rel="noreferrer">
+            Formularz ROPS (PDF) ↗
+          </a>
+          <a href={grantTemplate.callsUrl} target="_blank" rel="noreferrer">
+            Aktualne nabory ↗
+          </a>
+        </div>
+      </details>
     </div>
   );
 }
@@ -36,7 +37,7 @@ export function GrantView({ draft }: { draft: GrantDraft }) {
   return (
     <section className="stack grant-preview">
       <h2>Szkic grantowy — część merytoryczna</h2>
-      <GrantSource />
+      <GrantSource compact={false} />
       <dl>
         {Object.entries(grantFields)
           .filter(([key]) => key !== "team")

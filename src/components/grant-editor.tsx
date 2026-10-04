@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import styles from "./idea-simple.module.css";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import type { Idea } from "@/lib/contracts/idea";
@@ -107,24 +108,16 @@ export function GrantEditor({
     );
   }
   return (
-    <div className="stack">
+    <div className={`stack ${styles.workspace}`}>
       {idea.origin === "SYNTHETIC" && (
         <p className="notice">
           Szkic demonstracyjny — dane syntetyczne, zapisywane w pamięci procesu.
         </p>
       )}
       <GrantSource />
-      <p>
-        {initial.grantDraft
-          ? "Otworzono zapisany szkic."
-          : "Początek szkicu przeniesiono z Twojej karty i Canvas — bez AI. Uzupełnij pozostałe pola we własnym tempie."}{" "}
-        Wypełnione pola: {completed}/{Object.keys(grantFields).length}.
-      </p>
       <p className="help">
-        {idea.status === "SUBMITTED"
-          ? "Zapisany szkic i późniejsze zmiany są widoczne w konsultacji pomysłu."
-          : "Szkic pozostaje prywatny. Do konsultacji możesz przekazać go wraz z kartą pomysłu."}{" "}
-        Limity znaków są limitami tego edytora, nie oficjalnego formularza.
+        Uzupełnione pola: {completed}/{Object.keys(grantFields).length}. Możesz
+        zapisać szkic i wrócić później.
       </p>
       <form
         className="form stack"
@@ -141,9 +134,7 @@ export function GrantEditor({
             setDraft(saved.grantDraft!);
             setDirty(false);
             setSuggestion(null);
-            setMessage(
-              "Zapisano szkic grantowy. Możesz wrócić do niego w karcie pomysłu.",
-            );
+            setMessage("Zapisano szkic grantowy.");
             router.refresh();
           });
         }}
@@ -152,12 +143,8 @@ export function GrantEditor({
           <legend className="sr-only">
             Szkic merytoryczny formularza IWS 2.0
           </legend>
-          {groups.map((group, i) => (
-            <details
-              className="canvas-section"
-              key={group.title}
-              open={i === 0}
-            >
+          {groups.map((group) => (
+            <details className="canvas-section" key={group.title}>
               <summary>{group.title}</summary>
               <div className="stack">
                 {group.keys.map((key) => (
@@ -189,22 +176,24 @@ export function GrantEditor({
               </div>
             </details>
           ))}
-          <GrantResources
-            items={resources}
-            diagnosis={draft.sections.diagnosis}
-            onAppend={appendDiagnosis}
-          />
-          <RegionalDiagnosis
-            diagnosis={draft.sections.diagnosis}
-            onAppend={appendDiagnosis}
-          />
+          <details className="canvas-section">
+            <summary>Dane i źródła diagnozy</summary>
+            <GrantResources
+              items={resources}
+              diagnosis={draft.sections.diagnosis}
+              onAppend={appendDiagnosis}
+            />
+            <RegionalDiagnosis
+              diagnosis={draft.sections.diagnosis}
+              onAppend={appendDiagnosis}
+            />
+          </details>
           <details className="canvas-section">
             <summary>Plan kosztów i wnioskowana kwota</summary>
             <div className="stack">
               <p>
-                Dodaj działanie, termin i jego całkowity koszt w PLN. Brak
-                wyceny pozostaw pusty; potwierdzony brak kosztu wpisz jako 0.
-                Kwota jest sumowana z Twoich wpisów.
+                Dodaj działanie, termin i koszt w PLN. Nieznany koszt pozostaw
+                pusty.
               </p>
               {draft.costs.map((cost, i) => (
                 <div className="note stack" key={i}>
@@ -332,11 +321,9 @@ export function GrantEditor({
         </button>
       </form>
       <section className="card stack">
-        <h2>Uporządkuj tekst z pomocą AI</h2>
-        <p>
-          AI zaproponuje zwięzły tekst na podstawie karty i obecnego szkicu.
-          Kwoty pozostają takie, jak wpiszesz. Najpierw przeczytasz propozycję,
-          następnie zdecydujesz, czy wstawić ją do formularza.
+        <h2>Przygotuj tekst szkicu</h2>
+        <p className="help">
+          Uporządkuj opis. Kwoty z Twojej tabeli pozostają bez zmian.
         </p>
         <button
           className="secondary"
@@ -356,20 +343,20 @@ export function GrantEditor({
         </button>
         {suggestion && (
           <div className="note stack">
-            <p className="notice">
-              {suggestion.mode === "mock"
-                ? "Propozycja demonstracyjna — bez AI."
-                : "Propozycja AI — sprawdź przed użyciem. Braki i hipotezy wymagają oceny autora."}
-            </p>
-            <GrantView draft={{ ...draft, sections: suggestion.sections }} />
+            {suggestion.mode === "mock" && (
+              <p className="help">Propozycja demonstracyjna.</p>
+            )}
+            <p>{suggestion.sections.description.split(/(?<=[.!?])\s/)[0]}</p>
+            <details>
+              <summary>Cały proponowany szkic</summary>
+              <GrantView draft={{ ...draft, sections: suggestion.sections }} />
+            </details>
             <button
               disabled={busy}
               onClick={() => {
                 change({ ...draft, sections: suggestion.sections });
                 setSuggestion(null);
-                setMessage(
-                  "Wstawiono propozycję. Możesz ją zmienić, a następnie zapisać.",
-                );
+                setMessage("Propozycja wstawiona. Zapisz szkic.");
               }}
             >
               Wstaw propozycję do formularza

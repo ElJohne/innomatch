@@ -1,3 +1,4 @@
+import styles from "@/components/idea-simple.module.css";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { session } from "@/server/auth/session";
@@ -17,7 +18,7 @@ export default async function GrantPage({
     (r) => r.type === "CHALLENGE" || r.type === "REPORT",
   );
   return (
-    <section className="narrow stack">
+    <section className={`narrow stack ${styles.page}`}>
       <Link href={`/pomysly/${idea.id}`}>← Karta pomysłu</Link>
       <header>
         <p className="eyebrow">Od pomysłu do wniosku</p>
