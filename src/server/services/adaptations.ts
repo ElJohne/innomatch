@@ -2,6 +2,7 @@ import "server-only";
 import { createHash, randomUUID } from "node:crypto";
 import {
   adaptationDraft,
+  generatedAdaptationDraft,
   adaptationInput,
   adaptationEdit,
   type AdaptationPlan,
@@ -94,6 +95,15 @@ export async function listPlans(ownerId: string) {
 }
 function demoDraft(input: AdaptationInput, need: Need, r: Innovation) {
   return adaptationDraft.parse({
+    firstStep: {
+      action:
+        "Omów z koordynatorem zakres małej próby i warunki zastosowania rozwiązania.",
+      responsible:
+        "Rola do wyznaczenia: osoba koordynująca po stronie instytucji.",
+      resources: input.constraints.resources.slice(0, 600),
+      completion:
+        "Zapisano uzgodniony zakres próby, osobę odpowiedzialną i pytania wymagające wyjaśnienia. To proponowane kryterium, nie osiągnięty wynik.",
+    },
     summary: `Szkic demonstracyjny zastosowania „${r.title}” w instytucji: ${input.constraints.institution}.`,
     serviceDescription: `Propozycja do rozmowy: dostosować sposób udostępnienia rozwiązania do wskazanej grupy i zasobów. Zakres zgłoszony przez autora: ${input.constraints.scope}.`,
     fitAndGaps: `Tematyka źródła: ${r.problem.slice(0, 500)}. Potrzeba autora: ${need.description.slice(0, 350)}. Zbieżność tematu nie potwierdza skuteczności; dopasowanie wymaga oceny eksperta.`,
@@ -224,7 +234,7 @@ export async function createPlan(ownerId: string, value: unknown) {
       c.AI_PROVIDER === "mock"
         ? demoDraft(input, need, innovation)
         : await createLiveAiProvider().generateStructured(
-            "Przygotuj krótki szkic adaptacji innowacji do formy usługi dla instytucji, maksymalnie 650 słów. Wszystkie pola są propozycjami wymagającymi oceny, a nie zatwierdzonym planem. Oddziel fakty źródłowe od propozycji i założeń. Uwzględnij zasoby, zasięg, terminy i budżet podane przez autora; nie wymyślaj kwot, terminów, partnerów, kontaktów ani skuteczności. Brak informacji zapisz jako pytanie lub założenie. Zaproponuj mały dobrowolny pilotaż i mierniki bez fikcyjnych wyników. W sourceIds użyj wyłącznie ID źródeł przekazanej innowacji. Żadnego HTML ani nowych URL.",
+            "Przygotuj krótki szkic adaptacji innowacji do formy usługi dla instytucji, maksymalnie 650 słów. Wszystkie pola są propozycjami wymagającymi oceny, a nie zatwierdzonym planem. W firstStep podaj jedno konkretne działanie, rolę odpowiedzialną (bez wymyślania osoby lub zobowiązania instytucji), zasoby na start i obserwowalne kryterium wykonania tego kroku. Odróżnij wykonanie kroku od skuteczności całej innowacji. Niewyznaczone role oznacz jako do uzgodnienia. Oddziel fakty źródłowe od propozycji i założeń. Uwzględnij zasoby, zasięg, terminy i budżet podane przez autora; nie wymyślaj kwot, terminów, partnerów, kontaktów ani skuteczności. Brak informacji zapisz jako pytanie lub założenie. Zaproponuj mały dobrowolny pilotaż i mierniki bez fikcyjnych wyników. W sourceIds użyj wyłącznie ID źródeł przekazanej innowacji. Żadnego HTML ani nowych URL.",
             {
               need: {
                 description: need.description,
@@ -235,7 +245,7 @@ export async function createPlan(ownerId: string, value: unknown) {
               institution: input.constraints,
               innovation,
             },
-            adaptationDraft,
+            generatedAdaptationDraft,
           );
     validateSources(draft, innovation);
     const current = (await listInnovations()).find(
@@ -253,7 +263,7 @@ export async function createPlan(ownerId: string, value: unknown) {
       editedByOwner: false,
       sourceVersion: catalogVersion(innovation),
       mode: c.AI_PROVIDER,
-      promptVersion: "adaptation-v1",
+      promptVersion: "adaptation-v2",
       createdAt: new Date().toISOString(),
     };
     if (demo) {

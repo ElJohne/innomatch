@@ -33,7 +33,7 @@ test("three-character input, preserved clarification and urgent help before subm
     .click();
   await expect(page).not.toHaveURL(originalUrl);
   await expect(
-    page.getByRole("heading", { name: "Wybierz organizację", exact: true }),
+    page.getByRole("heading", { name: "Rozwiązania pasujące do części potrzeby", exact: true }),
   ).toBeVisible();
   const id = page.url().split("/").at(-1);
   const body = await (await page.request.get(`/api/needs/${id}`)).json();
@@ -46,7 +46,7 @@ test("three-character input, preserved clarification and urgent help before subm
   expect((await request.get(`/api/needs/${id}`)).status()).toBe(404);
   await page.reload();
   await expect(
-    page.getByRole("heading", { name: "Wybierz organizację", exact: true }),
+    page.getByRole("heading", { name: "Rozwiązania pasujące do części potrzeby", exact: true }),
   ).toBeVisible();
 });
 

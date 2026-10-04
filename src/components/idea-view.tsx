@@ -3,6 +3,7 @@ import {
   ideaStageLabels,
   type IdeaCard,
 } from "@/lib/contracts/idea";
+import { CanvasView } from "./idea-canvas";
 export function IdeaView({ card }: { card: IdeaCard }) {
   return (
     <div className="stack">
@@ -24,6 +25,7 @@ export function IdeaView({ card }: { card: IdeaCard }) {
           autora, bez weryfikacji ROPS.
         </p>
       </div>
+      {card.canvas && <CanvasView value={card.canvas} />}
     </div>
   );
 }

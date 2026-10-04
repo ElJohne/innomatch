@@ -75,6 +75,13 @@ export const knowledgeSchema = z
   })
   .strict();
 export type KnowledgeResource = z.infer<typeof knowledgeSchema>;
+export const matchEvidenceSchema = z
+  .object({
+    fragmentId: z.string().min(1).max(100),
+    sourceId: z.string().min(1).max(100),
+    excerpt: z.string().min(1).max(600),
+  })
+  .strict();
 export const matchSchema = z
   .object({
     innovationId: z.string(),
@@ -82,6 +89,7 @@ export const matchSchema = z
     reasons: z.array(z.string().max(700)).min(1).max(5),
     limitations: z.array(z.string().max(700)).min(1).max(5),
     sourceIds: z.array(z.string()).min(1).max(10),
+    evidence: z.array(matchEvidenceSchema).max(3).optional(),
   })
   .strict();
 export const explanationSchema = z
@@ -92,6 +100,8 @@ export const explanationSchema = z
   })
   .strict();
 export const matchResponseSchema = explanationSchema.extend({
+  status: z.enum(["matched", "partial", "no_match", "unavailable"]),
+  runId: z.string().uuid().optional(),
   assumptions: z.array(z.string().max(300)).max(3).optional(),
   matchingVersion: z.number().int().optional(),
   guidance: z.enum(["emergency", "support", "clarify"]).optional(),

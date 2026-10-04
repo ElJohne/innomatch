@@ -1,0 +1,119 @@
+{
+  "version": "quality-holdout-2026-10-04-v1",
+  "synthetic": true,
+  "labeling": "New cases authored after selecting the binary BM25 variant, before any run on these cases. Different innovation targets from the development suite. Provisional agent labels, not human expert validation; do not tune on this set.",
+  "cases": [
+    {
+      "id": "holdout-vibration",
+      "kind": "direct",
+      "description": "Dom kultury chce pozwolić osobom Głuchym odbierać muzykę przez odczuwalne wibracje. Szukamy urządzenia zakładanego na ciało.",
+      "expectedIds": [
+        "rops-wibraap-c33c87b3"
+      ],
+      "expectedSourceIds": [
+        "rops-wibraap-c33c87b3-source"
+      ],
+      "rationale": "Kamizelka przekształca dźwięk w wibracje."
+    },
+    {
+      "id": "holdout-memory",
+      "kind": "direct",
+      "description": "DPS szuka sposobu wykorzystania zdjęć mieszkańców i nagranych wspomnień w pracy grupowej z seniorami z otępieniem.",
+      "expectedIds": [
+        "rops-korytarz-wspomnien-62ca984d"
+      ],
+      "expectedSourceIds": [
+        "rops-korytarz-wspomnien-62ca984d-source"
+      ],
+      "rationale": "Ekspozycja zdjęć i nagrania przywołujące wspomnienia."
+    },
+    {
+      "id": "holdout-meals",
+      "kind": "direct",
+      "description": "Na zajęciach dla seniorów uczymy komponowania zbilansowanych posiłków. Potrzebujemy prostych ruchomych pomocy dydaktycznych i przepisów.",
+      "expectedIds": [
+        "rops-talerze-zdrowia-49de2c36"
+      ],
+      "expectedSourceIds": [
+        "rops-talerze-zdrowia-49de2c36-source"
+      ],
+      "rationale": "Tarcze składników posiłku i przepisy, nie indywidualne zalecenia leczenia."
+    },
+    {
+      "id": "holdout-dressing",
+      "kind": "short",
+      "description": "Jak samodzielnie zapiąć biustonosz jedną sprawną ręką?",
+      "expectedIds": [
+        "rops-biustspinka-f7f7a569"
+      ],
+      "expectedSourceIds": [
+        "rops-biustspinka-f7f7a569-source"
+      ],
+      "rationale": "Pomoc w ubieraniu dla kobiet z dysfunkcją ręki."
+    },
+    {
+      "id": "holdout-passport",
+      "kind": "direct",
+      "description": "Organizacja pacjentów z chorobami rzadkimi szuka przenośnej elektronicznej karty z informacjami wprowadzanymi przez personel medyczny.",
+      "expectedIds": [
+        "rops-paszport-pacjenta-z-choroba-rzadka-da6cb941"
+      ],
+      "expectedSourceIds": [
+        "rops-paszport-pacjenta-z-choroba-rzadka-da6cb941-source"
+      ],
+      "rationale": "Elektroniczny nośnik danych pacjenta; brak automatycznej diagnozy."
+    },
+    {
+      "id": "holdout-burnout",
+      "kind": "direct",
+      "description": "Pracownicy z niepełnosprawnością intelektualną szybko tracą motywację i odchodzą. Szukamy warsztatów zapobiegania wypaleniu zawodowemu w prostym języku.",
+      "expectedIds": [
+        "rops-niewypaleni-a4584600"
+      ],
+      "expectedSourceIds": [
+        "rops-niewypaleni-a4584600-source"
+      ],
+      "rationale": "Warsztat i broszura ETR o wypaleniu i utrzymaniu pracy."
+    },
+    {
+      "id": "holdout-library",
+      "kind": "short",
+      "description": "Materiały w PJM o korzystaniu z biblioteki i wspieraniu dziecka w czytaniu.",
+      "expectedIds": [
+        "rops-gluchy-czytelnik-w-bibliotece-70106b9e"
+      ],
+      "expectedSourceIds": [
+        "rops-gluchy-czytelnik-w-bibliotece-70106b9e-source"
+      ],
+      "rationale": "Publikacja biblioteczna w PJM."
+    },
+    {
+      "id": "holdout-navigation",
+      "kind": "partial",
+      "description": "Muzeum chce głosowo prowadzić niewidomych po budynku, ale nie ma jeszcze sprzętu ani budżetu. Szukamy koncepcji do oceny, bez obietnicy natychmiastowego wdrożenia.",
+      "expectedIds": [
+        "rops-ngoz-nawigacja-glosowa-osob-zaleznych-f64abbf5"
+      ],
+      "expectedSourceIds": [
+        "rops-ngoz-nawigacja-glosowa-osob-zaleznych-f64abbf5-source"
+      ],
+      "rationale": "Nawigacja iBeacon; trzeba ocenić sprzęt i koszty."
+    },
+    {
+      "id": "holdout-car",
+      "kind": "negative",
+      "description": "Potrzebuję instrukcji wymiany skrzyni biegów w samochodzie.",
+      "expectedIds": [],
+      "expectedSourceIds": [],
+      "rationale": "Brak społecznego lub dostępnościowego celu."
+    },
+    {
+      "id": "holdout-slogan",
+      "kind": "negative",
+      "description": "Wymyśl slogan dla sklepu sprzedającego drogie zegarki.",
+      "expectedIds": [],
+      "expectedSourceIds": [],
+      "rationale": "Zadanie marketingowe, poza celem katalogu."
+    }
+  ]
+}

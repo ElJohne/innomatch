@@ -1,0 +1,42 @@
+{
+  "synthetic": true,
+  "passed": true,
+  "elapsedMs": 5181,
+  "suggestion": {
+    "card": {
+      "title": "Sąsiedzkie spotkania w świetlicy — syntetyczny przykład QA",
+      "problem": "Hipoteza do sprawdzenia: seniorzy w jednej okolicy mogą potrzebować regularnej okazji do spotkań bez konieczności korzystania z internetu.",
+      "essence": "Małe, dobrowolne spotkania w świetlicy, podczas których mieszkańcy rozmawiają i wspólnie wybierają aktywności.",
+      "targetGroups": [
+        "Seniorzy z jednej okolicy"
+      ],
+      "stage": "CONCEPT",
+      "resources": "Dostępność sali i wolontariuszy pozostaje do uzgodnienia. Nie ustalono jeszcze kosztów ani dostępnych zasobów.",
+      "pilotOutline": "Zorganizować jedno dobrowolne spotkanie, jeśli uda się uzgodnić miejsce i wsparcie. Zebrać anonimowe uwagi uczestników, bez zakładania z góry rezultatu.",
+      "canvas": {
+        "problemContext": "Syntetyczna hipoteza: kilka osób chciałoby spotykać się co tydzień. Warto sprawdzić, czy potrzeba jest szersza i jakie aktywności są interesujące.",
+        "supporters": "Do sprawdzenia: czy są mieszkańcy chętni do współorganizacji lub udziału.",
+        "barriers": "Możliwe bariery do sprawdzenia: dostępność miejsca i dogodny termin; inne ograniczenia nie zostały opisane.",
+        "accessibility": "Do ustalenia z uczestnikami, jakie warunki miejsca i spotkania ułatwią udział.",
+        "fixedCosts": "Koszt sali nie jest znany. Warto sprawdzić, czy korzystanie z miejsca wiąże się z opłatą.",
+        "variableCosts": "Nie podano. Do sprawdzenia mogą być ewentualne materiały lub napoje.",
+        "payer": "Nie ustalono, kto miałby pokrywać ewentualne koszty.",
+        "emotionalValue": "Hipoteza do sprawdzenia: spotkania mogą dawać okazję do rozmowy i poczucia sąsiedzkiego kontaktu.",
+        "practicalValue": "Możliwa wartość do sprawdzenia: regularna okazja do spotkań bez korzystania z internetu.",
+        "funding": "Nie ustalono źródła finansowania; najpierw warto oszacować koszty i sprawdzić, czy wystąpią.",
+        "channels": "Do sprawdzenia: jak przekazać informację osobom zainteresowanym bez internetu.",
+        "partners": "Biblioteka — potencjalny partner; nie było jeszcze rozmowy.",
+        "impact": "Do sprawdzenia po spotkaniu: czy uczestnicy chcą kolejnych spotkań i jakie aktywności wybierają."
+      }
+    },
+    "questions": [
+      "Czy znasz osoby zainteresowane udziałem lub współorganizacją?",
+      "Czy masz możliwość uzgodnienia świetlicy, terminu i ewentualnych kosztów?",
+      "Jak można dotrzeć do seniorów, którzy nie korzystają z internetu?",
+      "Jakie warunki dostępności i formę anonimowych uwag warto zapewnić?"
+    ],
+    "mode": "openai"
+  },
+  "runnerCorrection": "Initial verification used JSON.stringify order against JSONB. Deep equality confirms persistence. Cleanup now deletes child assists before the parent idea.",
+  "cleanup": true
+}

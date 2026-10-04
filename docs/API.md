@@ -1,5 +1,21 @@
 # API — поточна реалізація
 
+## Пакет якості 2026-10-04 (локально)
+
+- MatchResponse v4 додає `runId`, `status: unavailable` та перевірені `evidence`.
+  POST matches приймає `{}` або `{retryOf: UUID}`. Повтор дозволений для конкретного
+  недоступного результату / partial-template; reload та replay старого runId
+  повертають збережений результат. Зміна публікації враховується до перевірки retry.
+- POST `/api/threads` для плану вимагає `adaptationId` і `adaptationRevision`.
+  Невідповідність поточній версії → 409; сервер зберігає snapshot, не клієнтський текст плану.
+- POST `/api/threads/:id/plan`: `{expectedRevision, requestKey}` явно передає нову
+  версію у власну наявну розмову, атомарно додаючи повідомлення. Повтор дедуплікований,
+  чужа сесія/персонал не можуть поділитися планом від імені власника. Зміна джерела
+  або приховування робить snapshot недоступним. Персонал не отримує приватні редакції.
+- Readiness вимагає `0008_shared_plan_snapshot`. Пакет ще не розгорнутий.
+
+Попередня документація нижче описує історичні версії контрактів.
+
 Zod DTO: `src/lib/contracts/index.ts`. Всі JSON-відповіді — Cache-Control: private, no-store.
 Помилки: `{code,message,requestId}` без приватних даних або помилок SDK.
 
@@ -136,3 +152,14 @@ AI suggestion кешується за idea/revision, має reservation/attempt 
 Вона не змінює збережену картку; стадія примусово зберігає авторське значення.
 GrantCall — тільки контракт даних (строки, версія полів, джерело), без налаштованих наборів/API.
 Pilots поки залишаються цільовими маршрутами зі SPEC.
+# Canvas картки помислу — локальний пакет 2026-10-04
+
+`POST /api/ideas` і `PATCH /api/ideas/:id` приймають необов'язковий `card.canvas`
+(null або object із 13 текстовими полями, кожне ≤1000 символів; порожні дозволені).
+Ключі: problemContext, supporters, barriers, accessibility, fixedCosts, variableCosts,
+payer, emotionalValue, practicalValue, funding, channels, partners, impact.
+Старі картки без canvas залишаються валідними. Revision/ownership/submit контракти
+ті самі. AI suggestion має required nullable canvas для OpenAI strict schema;
+пропозиція не зберігається автоматично. `/pomysly/:id/podglad` — приватний серверний
+перегляд останньої збереженої картки з browser print. Canvas потрапляє в консультацію
+разом із карткою та наступними збереженими редагуваннями (чинний M3-контракт).

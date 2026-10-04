@@ -1,8 +1,18 @@
 import { z } from "zod";
 const text = z.string().trim().min(1).max(1200);
 const items = z.array(z.string().trim().min(1).max(600)).min(1).max(8);
+export const firstStepSchema = z
+  .object({
+    action: z.string().trim().min(1).max(600),
+    responsible: z.string().trim().min(1).max(600),
+    resources: z.string().trim().min(1).max(600),
+    completion: z.string().trim().min(1).max(600),
+  })
+  .strict();
 export const adaptationDraft = z
   .object({
+    // Optional for saved v1 plans; required for newly generated plans below.
+    firstStep: firstStepSchema.optional(),
     summary: text,
     serviceDescription: text,
     fitAndGaps: text,
@@ -41,6 +51,26 @@ export const adaptationEdit = z
   })
   .strict();
 export type AdaptationDraft = z.infer<typeof adaptationDraft>;
+export const generatedAdaptationDraft = adaptationDraft.extend({
+  firstStep: firstStepSchema,
+});
+export const firstStepLabels = {
+  action: "Pierwsze działanie",
+  responsible: "Kto odpowiada?",
+  resources: "Co jest potrzebne na start?",
+  completion: "Po czym poznamy, że krok jest wykonany?",
+} as const;
+export function firstStepFor(draft: AdaptationDraft) {
+  return (
+    draft.firstStep ?? {
+      action: draft.steps[0],
+      responsible: "Do wyznaczenia przez autora planu.",
+      resources: draft.requiredResources[0],
+      completion:
+        "Do uzgodnienia z koordynatorem przed rozpoczęciem działania.",
+    }
+  );
+}
 export type AdaptationInput = z.infer<typeof adaptationInput>;
 export type AdaptationPlan = {
   id: string;
@@ -52,7 +82,7 @@ export type AdaptationPlan = {
   editedByOwner: boolean;
   sourceVersion: string;
   mode: "mock" | "openai" | "azure";
-  promptVersion: "adaptation-v1";
+  promptVersion: "adaptation-v1" | "adaptation-v2";
   createdAt: string;
 };
 export const draftLabels = {
@@ -76,6 +106,9 @@ export function draftText(draft: AdaptationDraft) {
     `${label}\n${Array.isArray(value) ? value.map((x) => `• ${x}`).join("\n") : value}`;
   return [
     "SZKIC ADAPTACJI — propozycja do weryfikacji, bez zatwierdzenia ROPS",
+    ...Object.entries(firstStepLabels).map(([key, label]) =>
+      section(label, firstStepFor(draft)[key as keyof typeof firstStepLabels]),
+    ),
     ...Object.entries(draftLabels).map(([key, label]) =>
       section(label, draft[key as keyof typeof draftLabels]),
     ),

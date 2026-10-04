@@ -15,6 +15,7 @@ export const searchStatusLabels = {
   matched: "Znaleziono dopasowania",
   partial: "Częściowe dopasowanie",
   no_match: "Bez dopasowania",
+  unavailable: "Nie udało się sprawdzić dopasowania",
   unknown: "Nierozpoznany status",
 } as const;
 export type AnalyticsBucket = { label: string; count: number };

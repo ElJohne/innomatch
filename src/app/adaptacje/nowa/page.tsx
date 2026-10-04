@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { session } from "@/server/auth/session";
 import { listInnovations, listNeeds } from "@/server/services/repository";
 import { AdaptationForm } from "@/components/adaptation-form";
+import { FlowSteps } from "@/components/flow-steps";
 export default async function NewPlan({
   searchParams,
 }: {
@@ -18,10 +19,20 @@ export default async function NewPlan({
   if (query.needId && !needs.some((n) => n.id === query.needId)) notFound();
   return (
     <section className="narrow">
+      <FlowSteps current={4} />
+      {query.needId && (
+        <p>
+          <Link href={`/potrzeby/${query.needId}`}>← Wróć do propozycji</Link>
+        </p>
+      )}
       <Link href={`/innowacje/${innovation.id}`}>← Innowacja</Link>
       <p className="eyebrow detail-label">Middleman Innowacji</p>
       <h1>Dostosuj do mojej instytucji</h1>
       <p className="lead">{innovation.title}</p>
+      <p>
+        Przygotujemy pierwszy krok, potrzebne zasoby i pytania do koordynatora.
+        Nieznany termin lub budżet możesz pozostawić pusty.
+      </p>
       {innovation.origin === "SYNTHETIC" && (
         <p className="notice">
           Przykład syntetyczny, nie innowacja z portfolio ROPS.

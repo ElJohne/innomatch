@@ -1,7 +1,9 @@
 import { session } from "@/server/auth/session";
 import { getNeed, consumeLimit } from "@/server/services/repository";
-import { matchNeed } from "@/server/services/matching";
-import { handle, HttpError, json, writeGuard } from "@/server/http";
+import { matchNeed, visibleMatch } from "@/server/services/matching";
+import { handle, HttpError, json, writeGuard, readBody } from "@/server/http";
+import { z } from "zod";
+import { canRetryMatch } from "@/lib/match-state";
 import { sqlClient } from "@/server/db/client";
 import { config } from "@/server/config";
 import { MATCHING_VERSION } from "@/server/search/intake";
@@ -16,6 +18,10 @@ export async function POST(
 ) {
   return handle(async () => {
     writeGuard(request);
+    const { retryOf } = z
+      .object({ retryOf: z.string().uuid().optional() })
+      .strict()
+      .parse(await readBody(request, 1000));
     const s = await session();
     const id = (await context.params).id;
     const need = s.ownerId ? await getNeed(id, s.ownerId) : null;
@@ -38,8 +44,10 @@ export async function POST(
       )
     )
       return json(await matchNeed(need));
-    if (need.match?.matchingVersion === MATCHING_VERSION)
-      return json(await matchNeed(need));
+    if (need.match?.matchingVersion === MATCHING_VERSION) {
+      const visible = await visibleMatch(need.match);
+      if (!canRetryMatch(visible, retryOf)) return json(visible);
+    }
     const key = `${s.ownerId}:${id}`;
     if (pending.has(key)) return json(await pending.get(key));
     const run = async () => {
@@ -70,10 +78,10 @@ export async function POST(
             const current = await getNeed(id, s.ownerId!);
             if (!current)
               throw new HttpError(404, "NOT_FOUND", "Nie znaleziono sprawy.");
-            return matchNeed(current);
+            return matchNeed(current, retryOf);
           });
         }
-        return await matchNeed(need);
+        return await matchNeed(need, retryOf);
       } finally {
         if (postgres) activePostgresRuns--;
       }

@@ -1,0 +1,198 @@
+{
+  "recordedAt": "2026-10-03T23:50:08.506Z",
+  "synthetic": true,
+  "live": false,
+  "failed": false,
+  "matchingVersion": 4,
+  "corpusHash": "9322f77826395492f78472dd162bf3ac3c7eca5038053a3e5dcc55c5dbffa544",
+  "suiteHash": "dc27c61d368d77a961f589986ee878b1da48d24633bc29525ac67d13e31247e4",
+  "limitation": "Keyword candidate retrieval only, not full AI matching. Negative/ambiguous candidate lists are diagnostic, not final product answers. No AI calls.",
+  "groups": [
+    {
+      "kind": "direct",
+      "count": 5,
+      "hit3": 5,
+      "hit8": 5
+    },
+    {
+      "kind": "short",
+      "count": 2,
+      "hit3": 2,
+      "hit8": 2
+    },
+    {
+      "kind": "partial",
+      "count": 1,
+      "hit3": 1,
+      "hit8": 1
+    },
+    {
+      "kind": "negative",
+      "count": 2,
+      "hit3": 0,
+      "hit8": 0
+    },
+    {
+      "kind": "ambiguous",
+      "count": 0,
+      "hit3": 0,
+      "hit8": 0
+    }
+  ],
+  "results": [
+    {
+      "id": "holdout-vibration",
+      "kind": "direct",
+      "ids": [
+        "rops-wibraap-c33c87b3",
+        "rops-straznik-d94d6fa0",
+        "rops-biustspinka-f7f7a569",
+        "rops-gluchy-czytelnik-w-bibliotece-70106b9e",
+        "rops-blue-sea-eye-f79a8197",
+        "rops-dostepny-wniosek-dla-ggluchych-7d576423",
+        "rops-my-way-to-culture-2f265f29",
+        "rops-rodzinny-system-wzajemnej-pomocy-06abcd4e"
+      ],
+      "hit3": true,
+      "hit8": true,
+      "latencyMs": 10
+    },
+    {
+      "id": "holdout-memory",
+      "kind": "direct",
+      "ids": [
+        "rops-korytarz-wspomnien-62ca984d",
+        "rops-centrum-antydepresyjne-dd621421",
+        "rops-marimbaza-769565a1",
+        "rops-bawita-a7351986",
+        "rops-sciezka-treningu-umyslu-9253884a",
+        "rops-organizator-kompleksowej-opieki-w-miejscu-zamieszkania-602380c0",
+        "rops-kody-qr-na-pomoc-seniorom-169ce452",
+        "rops-therapy-set-76f33283"
+      ],
+      "hit3": true,
+      "hit8": true,
+      "latencyMs": 19
+    },
+    {
+      "id": "holdout-meals",
+      "kind": "direct",
+      "ids": [
+        "rops-talerze-zdrowia-49de2c36",
+        "rops-therapy-set-76f33283",
+        "rops-piosenki-uczestniczace-22378dc6",
+        "rops-e-rzecznik-konsumenta-seniora-6a1f0310",
+        "rops-mix-ar-i-vr-dla-koordynacji-ruchowej-b6aa067a",
+        "rops-ta-sciezka-terapeutyczna-sciezka-kulturowa-dla-dzieci-i-doro-6fca4030",
+        "rops-moduly-niezaleznosci-ca2c4f03",
+        "rops-zeglowanie-w-wyobrazni-czyli-sposob-na-strachy-na-wodzie-ceae371c"
+      ],
+      "hit3": true,
+      "hit8": true,
+      "latencyMs": 7
+    },
+    {
+      "id": "holdout-dressing",
+      "kind": "short",
+      "ids": [
+        "rops-biustspinka-f7f7a569",
+        "rops-szablony-piekna-dcc66a5a",
+        "rops-obu-obuwie-po-domu-8bedaa46",
+        "rops-dostepna-polska-f43f366d",
+        "rops-ev-modul-do-wozkow-inwalidzkich-1aae3693",
+        "rops-ngoz-nawigacja-glosowa-osob-zaleznych-f64abbf5",
+        "rops-hear-it-a90cc913",
+        "rops-merkury-4f7b04cf"
+      ],
+      "hit3": true,
+      "hit8": true,
+      "latencyMs": 5
+    },
+    {
+      "id": "holdout-passport",
+      "kind": "direct",
+      "ids": [
+        "rops-paszport-pacjenta-z-choroba-rzadka-da6cb941",
+        "rops-pelnia-zdrowia-0b922b42",
+        "rops-drogowskazy-ajkum-5bbb3e34",
+        "rops-organizator-kompleksowej-opieki-w-miejscu-zamieszkania-602380c0",
+        "rops-pacjent-pro-31897660",
+        "rops-oncotriada-878fa8fc",
+        "rops-czas-na-aktywnosc-b954fc08",
+        "rops-to-nie-koniec-swiata-to-poczatek-swiata-ecf83fab"
+      ],
+      "hit3": true,
+      "hit8": true,
+      "latencyMs": 5
+    },
+    {
+      "id": "holdout-burnout",
+      "kind": "direct",
+      "ids": [
+        "rops-niewypaleni-a4584600",
+        "rops-konsultant-etr-941e6c2e",
+        "rops-senior-cuder-3e4f7869",
+        "rops-talerze-zdrowia-49de2c36",
+        "rops-niepelnosprawnosc-szansa-na-pelnosprawnosc-w-pracy-i-zyciu-a84ed91d",
+        "rops-e-rzecznik-konsumenta-seniora-6a1f0310",
+        "rops-dostepny-wniosek-dla-ggluchych-7d576423",
+        "rops-stop-otylosci-innowacyjna-metoda-pracy-z-osobami-niepelnospr-cf6ccd41"
+      ],
+      "hit3": true,
+      "hit8": true,
+      "latencyMs": 6
+    },
+    {
+      "id": "holdout-library",
+      "kind": "short",
+      "ids": [
+        "rops-gluchy-czytelnik-w-bibliotece-70106b9e",
+        "rops-puzzle-3d-9fd9219f",
+        "rops-rodzina-adopcyjna-dorasta-cff999aa",
+        "rops-bez-presji-z-depresji-44ca029f",
+        "rops-merkury-4f7b04cf",
+        "rops-marina-pai-e1d17550",
+        "rops-edki-kredki-terapeutyczne-60f4729c",
+        "rops-przewodnik-dla-osob-z-asd-moje-potrzeby-gdzie-i-jak-je-reali-21d938b9"
+      ],
+      "hit3": true,
+      "hit8": true,
+      "latencyMs": 5
+    },
+    {
+      "id": "holdout-navigation",
+      "kind": "partial",
+      "ids": [
+        "rops-wsparcie-imprez-masowych-dla-osob-z-niepelnosprawnoscia-wzro-62548947",
+        "rops-ngoz-nawigacja-glosowa-osob-zaleznych-f64abbf5",
+        "rops-my-way-to-culture-2f265f29",
+        "rops-drogowskazy-ajkum-5bbb3e34",
+        "rops-konsultant-etr-941e6c2e",
+        "rops-blue-sea-eye-f79a8197",
+        "rops-bez-stresu-do-sukcesu-terapia-neurologiczna-przyjazna-dzieck-84ccc595",
+        "rops-mobilna-pomoc-terapeutyczna-a98981d4"
+      ],
+      "hit3": true,
+      "hit8": true,
+      "latencyMs": 6
+    },
+    {
+      "id": "holdout-car",
+      "kind": "negative",
+      "ids": [
+        "rops-jezykolamacz-0990a709"
+      ],
+      "hit3": null,
+      "hit8": null,
+      "latencyMs": 5
+    },
+    {
+      "id": "holdout-slogan",
+      "kind": "negative",
+      "ids": [],
+      "hit3": null,
+      "hit8": null,
+      "latencyMs": 6
+    }
+  ]
+}

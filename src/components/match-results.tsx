@@ -11,6 +11,7 @@ import { UrgentHelp } from "./urgent-help";
 import { ClarifyNeed } from "./clarify-need";
 import { coverageLabels } from "@/lib/knowledge-labels";
 import { organizationOptions, type Organization } from "@/lib/organizations";
+import { MatchCard } from "./match-card";
 export function MatchResults({
   id,
   initial,
@@ -37,7 +38,12 @@ export function MatchResults({
       const r = await fetch(`/api/needs/${id}/matches`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: "{}",
+        body: JSON.stringify(
+          result?.status === "unavailable" ||
+            result?.mode.explanation === "template"
+            ? { retryOf: result?.runId }
+            : {},
+        ),
       });
       const data = await r.json();
       if (!r.ok) throw new Error(data.message);
@@ -76,7 +82,13 @@ export function MatchResults({
         <p role="alert" className="error">
           {error}
         </p>
+        <p>Twój opis jest zapisany. Nie musisz wprowadzać go ponownie.</p>
         <button onClick={search}>Spróbuj ponownie</button>
+        <p>
+          <Link href={`/wiadomosci/nowa?needId=${id}`}>
+            Zapytaj koordynatora
+          </Link>
+        </p>
       </div>
     );
   if (!result) return null;
@@ -108,18 +120,20 @@ export function MatchResults({
       <div className="flow-heading">
         <p className="eyebrow">Krok 3 · Ty wybierasz</p>
         <h1>
-          {result.status === "no_match"
-            ? result.guidance === "clarify"
-              ? "Pomóż nam lepiej zrozumieć"
-              : "Nie znaleźliśmy wystarczającego dopasowania"
-            : options.length
-              ? "Wybierz organizację"
-              : "Propozycje do sprawdzenia"}
+          {result.status === "unavailable"
+            ? "Nie udało się teraz sprawdzić dopasowania"
+            : result.status === "no_match"
+              ? result.guidance === "clarify"
+                ? "Pomóż nam lepiej zrozumieć"
+                : "Nie znaleźliśmy wystarczającego dopasowania"
+              : result.status === "partial"
+                ? "Rozwiązania pasujące do części potrzeby"
+                : "Propozycje do sprawdzenia"}
         </h1>
         <p className="lead">
-          {options.length
-            ? "Wybierz jedną propozycję, a pokażemy Ci, co zrobić dalej."
-            : "Sprawdź wynik wyszukiwania i dostępne możliwości wsparcia."}
+          {result.matches.length
+            ? "Porównaj uzasadnienie i ograniczenia. Wybierz rozwiązanie, aby przygotować prywatny plan działania."
+            : "Twój opis pozostaje zapisany w Moich sprawach."}
         </p>
       </div>
       <p className="muted">
@@ -130,11 +144,43 @@ export function MatchResults({
             ? "Wyjaśnienia wygenerowane przez AI — wymagają oceny."
             : "Wyjaśnienia szablonowe. Wyniki nie są rekomendacją wdrożenia."}
       </p>
-      {result.warnings.map((w) => (
-        <p className="notice" key={w}>
-          {w}
-        </p>
-      ))}
+      {!!result.warnings.length && (
+        <details className="note">
+          <summary>Jak powstał ten wynik?</summary>
+          {result.warnings.map((w) => (
+            <p className="notice" key={w}>
+              {w}
+            </p>
+          ))}
+        </details>
+      )}
+      {result.status === "unavailable" && (
+        <div className="card">
+          <p>
+            Nie możemy teraz ocenić, czy w katalogu jest odpowiednie
+            rozwiązanie. Twój opis jest zapisany — ponowimy wyszukiwanie bez
+            wypełniania formularza.
+          </p>
+          <button onClick={search}>Ponów wyszukiwanie</button>
+          <p>Możesz też przekazać zapisaną potrzebę koordynatorowi poniżej.</p>
+        </div>
+      )}
+      {result.matches.length > 0 && (
+        <div className="match-list">
+          {result.matches.map((match) => {
+            const record = records.find((r) => r.id === match.innovationId);
+            return record ? (
+              <MatchCard
+                key={record.id}
+                record={record}
+                match={match}
+                needId={id}
+                partial={result.status === "partial"}
+              />
+            ) : null;
+          })}
+        </div>
+      )}
       {options.length > 0 && (
         <>
           <p className="demo-context">
@@ -186,57 +232,6 @@ export function MatchResults({
           </p>
         </>
       )}
-      {!options.length && result.status !== "no_match" && (
-        <div className="card">
-          <h2>Rozwiązania są dostępne, organizacje czekają na weryfikację</h2>
-          <p>
-            Nie mamy jeszcze potwierdzonych organizacji dla tych wyników. Możesz
-            poznać same innowacje:
-          </p>
-          <ul>
-            {result.matches.map((m) => {
-              const record = records.find((r) => r.id === m.innovationId);
-              return record ? (
-                <li key={record.id}>
-                  <Link href={`/innowacje/${record.id}`}>{record.title}</Link>
-                  <p>{m.reasons.join(" ")}</p>
-                  <details>
-                    <summary>Ograniczenia i źródła</summary>
-                    <ul>
-                      {m.limitations.map((text) => (
-                        <li key={text}>{text}</li>
-                      ))}
-                    </ul>
-                    {record.sources
-                      .filter((source) => m.sourceIds.includes(source.id))
-                      .map((source) => (
-                        <p className="help" key={source.id}>
-                          {source.sourceTitle}
-                        </p>
-                      ))}
-                  </details>
-                  <p>
-                    <Link
-                      className="text-link"
-                      href={`/adaptacje/nowa?innovationId=${record.id}&needId=${id}`}
-                    >
-                      Dostosuj do mojej instytucji →
-                    </Link>
-                  </p>
-                </li>
-              ) : null;
-            })}
-          </ul>
-          {!input && result.clarifyingQuestions.length > 0 && (
-            <details>
-              <summary>Warto doprecyzować</summary>
-              {result.clarifyingQuestions.map((question) => (
-                <p key={question}>{question}</p>
-              ))}
-            </details>
-          )}
-        </div>
-      )}
       {!!result.assumptions?.length && (
         <aside className="note">
           <h2>Przyjęte założenia</h2>
@@ -254,15 +249,13 @@ export function MatchResults({
               "Nie znamy jeszcze głównej potrzeby. Możesz odpowiedzieć na jedno pytanie albo od razu zobaczyć wynik na podstawie obecnego opisu."
             ) : (
               <>
-                W obecnym katalogu nie ma wystarczająco zbliżonego rozwiązania.
-                Nie chcemy proponować przypadkowej organizacji.
+                Nie znaleźliśmy wystarczającego uzasadnienia, by polecić
+                rozwiązanie z obecnego katalogu. Koordynator może pomóc
+                sprawdzić inne możliwości.
               </>
             )}
           </p>
           {!input && result.clarifyingQuestions.map((q) => <p key={q}>{q}</p>)}
-          <Link className="button" href="/potrzeby/nowa">
-            Opisz potrzebę ponownie →
-          </Link>
           <p>
             Możesz też <Link href="/pomysly/nowy">zapisać własny pomysł</Link>.
           </p>

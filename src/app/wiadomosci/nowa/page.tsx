@@ -6,6 +6,7 @@ import { getNeed, listInnovations } from "@/server/services/repository";
 import { listThreads } from "@/server/services/communication";
 import { MessageForm } from "@/components/communication-forms";
 import { getPlan } from "@/server/services/adaptations";
+import { firstStepFor } from "@/lib/contracts/adaptation";
 export default async function NewThread({
   searchParams,
 }: {
@@ -76,7 +77,7 @@ export default async function NewThread({
         Wysyłając pytanie, udostępniasz personelowi treść rozmowy
         {need ? " oraz opis i ograniczenia tej potrzeby" : ""}
         {plan
-          ? ", zapisany plan adaptacji, warunki instytucji i jego późniejsze zapisane wersje"
+          ? `, wersję ${plan.revision} planu adaptacji i warunki instytucji. Późniejsze zmiany pozostają prywatne, dopóki ich nie udostępnisz`
           : ""}
         . To zgłoszenie do kontaktu, bez gwarancji partnerstwa lub finansowania.
       </p>
@@ -94,6 +95,12 @@ export default async function NewThread({
           needId={needId}
           innovationId={innovationId}
           adaptationId={adaptationId}
+          adaptationRevision={plan?.revision}
+          initialBody={
+            plan
+              ? `Proszę o ocenę pierwszego kroku mojego planu (wersja ${plan.revision}):\n${firstStepFor(plan.draft).action}\n\nCo trzeba sprawdzić przed rozpoczęciem?\n${plan.draft.openQuestions.slice(0, 2).join("\n")}`
+              : undefined
+          }
         />
       )}
     </section>

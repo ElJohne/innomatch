@@ -5,6 +5,8 @@ import {
   draftLabels,
   pilotLabels,
   draftText,
+  firstStepFor,
+  firstStepLabels,
   type AdaptationPlan,
 } from "@/lib/contracts/adaptation";
 import type { Innovation } from "@/lib/contracts";
@@ -41,8 +43,8 @@ export function AdaptationEditor({
         <p className="help">
           Lista: jedna pozycja w wierszu, od 1 do 8 pozycji, każda do 600
           znaków. Pozostałe pola: do 1200 znaków. Zmiany zapisujesz bez
-          ponownego wywołania AI. Jeśli udostępnisz plan w rozmowie, personel
-          zobaczy także późniejsze zapisane zmiany.
+          ponownego wywołania AI. Zapisane zmiany pozostają prywatne, dopóki
+          nie udostępnisz nowej wersji w rozmowie z koordynatorem.
         </p>
         <form
           className="form stack"
@@ -54,6 +56,12 @@ export function AdaptationEditor({
             setBusy(true);
             setMessage("");
             const draft = { ...plan.draft, pilot: { ...plan.draft.pilot } };
+            draft.firstStep = {
+              action: String(form.get("first-action") ?? ""),
+              responsible: String(form.get("first-responsible") ?? ""),
+              resources: String(form.get("first-resources") ?? ""),
+              completion: String(form.get("first-completion") ?? ""),
+            };
             for (const key of Object.keys(
               draftLabels,
             ) as (keyof typeof draftLabels)[]) {
@@ -98,6 +106,23 @@ export function AdaptationEditor({
         >
           <fieldset disabled={busy} className="stack">
             <legend>Treść planu</legend>
+            {Object.entries(firstStepLabels).map(([key, label]) => (
+              <div key={key}>
+                <label htmlFor={`first-${key}`}>{label}</label>
+                <textarea
+                  id={`first-${key}`}
+                  name={`first-${key}`}
+                  required
+                  maxLength={600}
+                  rows={3}
+                  defaultValue={
+                    firstStepFor(plan.draft)[
+                      key as keyof typeof firstStepLabels
+                    ]
+                  }
+                />
+              </div>
+            ))}
             {Object.entries(draftLabels).map(([key, label]) => {
               const v = plan.draft[key as keyof typeof draftLabels];
               return (

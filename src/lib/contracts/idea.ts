@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { ideaCanvas } from "./canvas";
 export const ideaCard = z
   .object({
     title: z.string().trim().min(3).max(200),
@@ -8,6 +9,7 @@ export const ideaCard = z
     stage: z.enum(["CONCEPT", "PILOT", "TESTED"]),
     resources: z.string().trim().min(3).max(1500),
     pilotOutline: z.string().trim().min(3).max(1500),
+    canvas: ideaCanvas.nullable().optional(),
   })
   .strict();
 export const ideaCreate = z
@@ -21,7 +23,8 @@ export const ideaRevision = z
   .strict();
 export const ideaSuggestion = z
   .object({
-    card: ideaCard,
+    // OpenAI strict structured output requires every property to be required.
+    card: ideaCard.extend({ canvas: ideaCanvas.nullable() }),
     questions: z.array(z.string().trim().min(1).max(500)).min(1).max(5),
   })
   .strict();

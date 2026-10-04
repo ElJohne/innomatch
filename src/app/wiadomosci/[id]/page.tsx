@@ -10,6 +10,7 @@ import {
   MessageForm,
   ReadReceipt,
   RefreshMessages,
+  SharePlanButton,
 } from "@/components/communication-forms";
 export default async function ThreadPage({
   params,
@@ -55,6 +56,25 @@ export default async function ThreadPage({
         </details>
       )}
       <div className="actions">
+        {!a.staff &&
+          thread.privatePlanRevision &&
+          thread.privatePlanRevision !== thread.adaptation?.revision && (
+            <aside className="note">
+              <h2>Masz nowszą prywatną wersję planu</h2>
+              <p>Koordynator zobaczy ją dopiero po udostępnieniu.</p>
+              {thread.adaptation && (
+                <p>
+                  <Link href={`/adaptacje/${thread.adaptation.id}`}>
+                    Przejrzyj aktualny plan
+                  </Link>
+                </p>
+              )}
+              <SharePlanButton
+                threadId={thread.id}
+                revision={thread.privatePlanRevision}
+              />
+            </aside>
+          )}
         {thread.idea && (
           <details className="card">
             <summary>

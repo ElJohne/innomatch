@@ -72,7 +72,7 @@ export async function needAnalytics(
       with selected as materialized (
         select to_char(created_at at time zone 'UTC', 'YYYY-MM-DD') as day,
           case when match is null then 'pending'
-            when match->>'status' in ('matched','partial','no_match') then match->>'status'
+            when match->>'status' in ('matched','partial','no_match','unavailable') then match->>'status'
             else 'unknown' end as status,
           case when jsonb_typeof(input->'targetGroups')='array' then input->'targetGroups' else '[]'::jsonb end as groups,
           length(trim(coalesce(input->>'municipality',''))) > 0 as has_municipality

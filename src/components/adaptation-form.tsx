@@ -75,6 +75,10 @@ export function AdaptationForm({
           przygotowania szkicu AI.
         </p>
         <label htmlFor="plan-institution">Typ instytucji i jej rola</label>
+        <p className="help">
+          Działasz prywatnie? Wpisz „osoba prywatna” lub rodzaj grupy — bez
+          nazwisk. Jeśli zasoby nie są jeszcze znane, napisz „do ustalenia”.
+        </p>
         <input
           id="plan-institution"
           name="institution"

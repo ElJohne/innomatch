@@ -16,10 +16,14 @@ export const threadInput = messageInput
   .extend({
     needId: z.string().uuid().optional(),
     adaptationId: z.string().uuid().optional(),
+    adaptationRevision: z.number().int().positive().optional(),
     innovationId: z
       .string()
       .regex(/^[a-z0-9-]{1,80}$/)
       .optional(),
+  })
+  .refine((v) => Boolean(v.adaptationId) === Boolean(v.adaptationRevision), {
+    message: "Wskaż wersję udostępnianego planu.",
   })
   .refine(
     (v) =>
@@ -30,6 +34,12 @@ export const threadInput = messageInput
   );
 export const readInput = z
   .object({ through: z.number().int().positive() })
+  .strict();
+export const sharePlanInput = z
+  .object({
+    expectedRevision: z.number().int().positive(),
+    requestKey: z.string().uuid(),
+  })
   .strict();
 export type ThreadInput = z.infer<typeof threadInput>;
 export type MessageInput = z.infer<typeof messageInput>;

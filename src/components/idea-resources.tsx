@@ -7,8 +7,8 @@ export async function IdeaResources() {
     <aside className="note">
       <h2>Materiały i nabory grantowe</h2>
       <p>
-        To ogólna karta pomysłu Pomocny Punkt. Nie zastępuje oficjalnej Canwy
-        Innowacji Społecznych.
+        W karcie możesz rozwinąć pomysł w Canvas i wydrukować zapisaną wersję.
+        To uproszczony arkusz pracy; oryginalne plansze znajdziesz poniżej.
       </p>
       <p>
         Nie udostępniono aktywnego naboru ani jego formularza. Generator wniosku

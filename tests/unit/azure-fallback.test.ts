@@ -15,7 +15,7 @@ vi.mock("@/server/services/repository", () => ({
   saveMatch: vi.fn(),
 }));
 import { AzureAiProvider } from "@/server/ai/provider";
-import { matchNeed } from "@/server/services/matching";
+import { matchNeed, visibleMatch } from "@/server/services/matching";
 afterEach(() => {
   vi.restoreAllMocks();
   vi.unstubAllEnvs();
@@ -57,7 +57,45 @@ it("Azure failure does not restart clarification or recommend unverified candida
   expect(result.matches).toEqual([]);
   expect(result.relatedResources).toEqual([]);
   expect(result.clarifyingQuestions).toEqual([]);
+  expect(result.status).toBe("unavailable");
+  expect((await visibleMatch(result)).status).toBe("unavailable");
   expect(result.warnings).toHaveLength(3);
+});
+it("saves failures, retries only the named attempt, and does not rerun on refresh or replay", async () => {
+  configure();
+  vi.spyOn(AzureAiProvider.prototype, "embed").mockRejectedValue(
+    new Error("timeout"),
+  );
+  const generate = vi
+    .spyOn(AzureAiProvider.prototype, "generateStructured")
+    .mockRejectedValue(new Error("AI_LIMIT"));
+  const first = await matchNeed(need);
+  generate.mockClear();
+  expect(await matchNeed({ ...need, match: first })).toEqual(first);
+  expect(generate).not.toHaveBeenCalled();
+  const second = await matchNeed({ ...need, match: first }, first.runId);
+  expect(generate).toHaveBeenCalled();
+  expect(second.runId).not.toBe(first.runId);
+  generate.mockClear();
+  expect(await matchNeed({ ...need, match: second }, first.runId)).toEqual(
+    second,
+  );
+  expect(generate).not.toHaveBeenCalled();
+});
+it("failed semantic search with zero lexical candidates is unavailable, not a catalogue no-match", async () => {
+  configure();
+  vi.spyOn(AzureAiProvider.prototype, "embed").mockRejectedValue(
+    new Error("timeout"),
+  );
+  vi.spyOn(AzureAiProvider.prototype, "generateStructured").mockRejectedValue(
+    new Error("timeout"),
+  );
+  const result = await matchNeed({
+    ...need,
+    description: "Poszukuję teleskopu astronomicznego",
+  });
+  expect(result.status).toBe("unavailable");
+  expect(result.matches).toEqual([]);
 });
 it("fabricated AI sources never enter saved results", async () => {
   configure();

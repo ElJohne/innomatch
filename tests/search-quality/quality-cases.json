@@ -1,0 +1,337 @@
+{
+  "version": "quality-2026-10-04-v1",
+  "synthetic": true,
+  "labeling": "New agent-authored cases and provisional source labels fixed before running this suite; not independent human expert validation. Partial labels require limitation review, not merely Hit@3.",
+  "cases": [
+    {
+      "id": "direct-atm",
+      "kind": "direct",
+      "description": "Prowadzimy warsztaty dla seniorów. Potrzebujemy ćwiczeń wypłaty gotówki z bankomatu bez używania prawdziwej karty.",
+      "expectedIds": [
+        "rops-merkury-4f7b04cf"
+      ],
+      "expectedSourceIds": [
+        "rops-merkury-4f7b04cf-source"
+      ],
+      "rationale": "Symulator bankomatu jest opisanym elementem platformy."
+    },
+    {
+      "id": "direct-bed",
+      "kind": "direct",
+      "description": "Terapeuta w DPS szuka zestawu zajęć manualnych dla starszych mieszkańców, którzy nie wstają z łóżka.",
+      "expectedIds": [
+        "rops-therapy-set-76f33283"
+      ],
+      "expectedSourceIds": [
+        "rops-therapy-set-76f33283-source"
+      ],
+      "rationale": "Zajęcia przy łóżku dla niemobilnych seniorów."
+    },
+    {
+      "id": "direct-cooling",
+      "kind": "direct",
+      "description": "Podczas wyjazdu trzeba przechowywać osobiste leki w chłodzie, także przez kilka godzin bez gniazdka. Chodzi o pojemnik, nie zalecenia leczenia.",
+      "expectedIds": [
+        "rops-cold-box-5fed2b56"
+      ],
+      "expectedSourceIds": [
+        "rops-cold-box-5fed2b56-source"
+      ],
+      "rationale": "Przenośny pojemnik z baterią; bez deklarowania czasu pracy."
+    },
+    {
+      "id": "direct-coding",
+      "kind": "direct",
+      "description": "Chcemy zorganizować podstawowy kurs programowania dla osób Głuchych, z materiałami w polskim języku migowym.",
+      "expectedIds": [
+        "rops-hear-it-a90cc913"
+      ],
+      "expectedSourceIds": [
+        "rops-hear-it-a90cc913-source"
+      ],
+      "rationale": "Materiały programistyczne w PJM."
+    },
+    {
+      "id": "direct-home",
+      "kind": "direct",
+      "description": "Senior ma trudności z poruszaniem się po własnym mieszkaniu. Szukamy usługi dostosowania przestrzeni i treningu korzystania z niej.",
+      "expectedIds": [
+        "rops-terapeuta-przestrzeni-99960f70"
+      ],
+      "expectedSourceIds": [
+        "rops-terapeuta-przestrzeni-99960f70-source"
+      ],
+      "rationale": "Ergonomizacja i trening adaptacji przestrzeni domowej."
+    },
+    {
+      "id": "direct-etr",
+      "kind": "direct",
+      "description": "Warsztat chce przygotować osoby z niepełnosprawnością intelektualną do pracy jako konsultanci tekstów łatwych do czytania ETR.",
+      "expectedIds": [
+        "rops-konsultant-etr-941e6c2e"
+      ],
+      "expectedSourceIds": [
+        "rops-konsultant-etr-941e6c2e-source"
+      ],
+      "rationale": "Profil kompetencji i szkolenia konsultantów ETR."
+    },
+    {
+      "id": "direct-survey",
+      "kind": "direct",
+      "description": "Badamy potrzeby społeczności Głuchych. Ankieta LimeSurvey powinna przyjmować nagrane odpowiedzi w języku migowym.",
+      "expectedIds": [
+        "rops-glucha-ankieta-d3512afd"
+      ],
+      "expectedSourceIds": [
+        "rops-glucha-ankieta-d3512afd-source"
+      ],
+      "rationale": "Wtyczka do nagrywania odpowiedzi video w PJM."
+    },
+    {
+      "id": "direct-forms",
+      "kind": "direct",
+      "description": "Osoba Głucha potrzebuje zrozumiałego wzoru wniosku o dostępność usług publicznych i tłumacza PJM w urzędzie.",
+      "expectedIds": [
+        "rops-dostepny-wniosek-dla-ggluchych-7d576423"
+      ],
+      "expectedSourceIds": [
+        "rops-dostepny-wniosek-dla-ggluchych-7d576423-source"
+      ],
+      "rationale": "Opracowane wzory dokumentów dostępności."
+    },
+    {
+      "id": "direct-office",
+      "kind": "direct",
+      "description": "Szukamy gry do ćwiczenia prostych spraw urzędowych z dorosłymi osobami z niepełnosprawnością intelektualną, np. wysłania listu poleconego.",
+      "expectedIds": [
+        "rops-urzedowy-ambaras-8a9ef414"
+      ],
+      "expectedSourceIds": [
+        "rops-urzedowy-ambaras-8a9ef414-source"
+      ],
+      "rationale": "Gra planszowa symulująca proste sprawy."
+    },
+    {
+      "id": "direct-medicine",
+      "kind": "direct",
+      "description": "Opiekunka rodzinna chciałaby wiedzieć, czy senior wyjął lek z organizera. Przydałoby się przypomnienie i powiadomienie o pominięciu dawki, bez zmiany leczenia.",
+      "expectedIds": [
+        "rops-inteligentny-organizer-do-lekow-290617c5"
+      ],
+      "expectedSourceIds": [
+        "rops-inteligentny-organizer-do-lekow-290617c5-source"
+      ],
+      "rationale": "Czujniki pobrania leku i powiadomienia opiekuna."
+    },
+    {
+      "id": "direct-bathroom",
+      "kind": "direct",
+      "description": "Rodzina mieszka w lokalu bez prywatnej łazienki. Szukamy modułowego prysznica i toalety do wniesienia i montażu w nietypowym pomieszczeniu.",
+      "expectedIds": [
+        "rops-przenosne-modularne-lazienki-d62f12d1"
+      ],
+      "expectedSourceIds": [
+        "rops-przenosne-modularne-lazienki-d62f12d1-source"
+      ],
+      "rationale": "Modułowa łazienka dla lokali bez sanitariatów."
+    },
+    {
+      "id": "direct-ramp",
+      "kind": "direct",
+      "description": "Próg przy wejściu do świetlicy blokuje wózek. Szukamy tymczasowego podjazdu składanego z gumowych elementów.",
+      "expectedIds": [
+        "rops-puzzles-ramp-cbaf51d0"
+      ],
+      "expectedSourceIds": [
+        "rops-puzzles-ramp-cbaf51d0-source"
+      ],
+      "rationale": "Gumowe moduły do pokonywania progów."
+    },
+    {
+      "id": "short-parcel",
+      "kind": "short",
+      "description": "Chcę poćwiczyć odbieranie paczki z automatu.",
+      "expectedIds": [
+        "rops-merkury-4f7b04cf"
+      ],
+      "expectedSourceIds": [
+        "rops-merkury-4f7b04cf-source"
+      ],
+      "rationale": "Nauka obsługi, nie fizyczne obniżanie skrytki."
+    },
+    {
+      "id": "short-cold",
+      "kind": "short",
+      "description": "Pojemnik chłodzący na insulinę w podróży.",
+      "expectedIds": [
+        "rops-cold-box-5fed2b56"
+      ],
+      "expectedSourceIds": [
+        "rops-cold-box-5fed2b56-source"
+      ],
+      "rationale": "Warunki przechowywania, bez porad medycznych."
+    },
+    {
+      "id": "short-coding",
+      "kind": "short",
+      "description": "Kurs Pythona w języku migowym.",
+      "expectedIds": [
+        "rops-hear-it-a90cc913"
+      ],
+      "expectedSourceIds": [
+        "rops-hear-it-a90cc913-source"
+      ],
+      "rationale": "Podręczniki i kursy programowania w PJM."
+    },
+    {
+      "id": "short-ramp",
+      "kind": "short",
+      "description": "Gumowy podjazd przez próg dla wózka.",
+      "expectedIds": [
+        "rops-puzzles-ramp-cbaf51d0"
+      ],
+      "expectedSourceIds": [
+        "rops-puzzles-ramp-cbaf51d0-source"
+      ],
+      "rationale": "Modułowy podjazd."
+    },
+    {
+      "id": "short-survey",
+      "kind": "short",
+      "description": "Odpowiedzi do ankiety nagrywane w PJM.",
+      "expectedIds": [
+        "rops-glucha-ankieta-d3512afd"
+      ],
+      "expectedSourceIds": [
+        "rops-glucha-ankieta-d3512afd-source"
+      ],
+      "rationale": "Nagrywanie odpowiedzi w PJM."
+    },
+    {
+      "id": "short-therapy",
+      "kind": "short",
+      "description": "Terapia zajęciowa przy łóżku seniora.",
+      "expectedIds": [
+        "rops-therapy-set-76f33283"
+      ],
+      "expectedSourceIds": [
+        "rops-therapy-set-76f33283-source"
+      ],
+      "rationale": "Niemobilny senior i terapia przy łóżku."
+    },
+    {
+      "id": "partial-home",
+      "kind": "partial",
+      "description": "Chcemy poprawić samodzielność starszych lokatorów i ograniczyć bariery w mieszkaniu. Możemy tylko przestawić posiadane meble, nie kupimy nowego wyposażenia.",
+      "expectedIds": [
+        "rops-terapeuta-przestrzeni-99960f70"
+      ],
+      "expectedSourceIds": [
+        "rops-terapeuta-przestrzeni-99960f70-source"
+      ],
+      "rationale": "Usługa wykorzystuje posiadane zasoby; nie obiecuje rozwiązania wszystkich barier."
+    },
+    {
+      "id": "partial-lonely",
+      "kind": "partial",
+      "description": "W świetlicy planujemy spotkania samotnych seniorów. Nie ma komputerów ani budżetu na aplikację; potrzebujemy wspólnej aktywności i tematów rozmów.",
+      "expectedIds": [
+        "rops-senior-cuder-3e4f7869",
+        "rops-edu-gra-hahaha-d9f9be93"
+      ],
+      "expectedSourceIds": [
+        "rops-senior-cuder-3e4f7869-source",
+        "rops-edu-gra-hahaha-d9f9be93-source"
+      ],
+      "rationale": "Narzędzia wspólnej aktywności są częścią celu, nie gwarancją zmniejszenia samotności."
+    },
+    {
+      "id": "partial-height",
+      "kind": "partial",
+      "description": "Starszy użytkownik wózka boi się ekranu paczkomatu i nie dosięga wysokich skrytek. Szukamy sposobu nauczenia obsługi, ale potrzebne jest też rozwiązanie problemu wysokości.",
+      "expectedIds": [
+        "rops-merkury-4f7b04cf"
+      ],
+      "expectedSourceIds": [
+        "rops-merkury-4f7b04cf-source"
+      ],
+      "rationale": "Symulator może pomóc w obsłudze; nie usuwa fizycznej bariery wysokości."
+    },
+    {
+      "id": "partial-health",
+      "kind": "partial",
+      "description": "Przychodnia chce wyjaśnić ubezpieczonym cudzoziemcom zasady korzystania z publicznej opieki. Potrzebny jest przewodnik, ale również osobiste tłumaczenie wizyt.",
+      "expectedIds": [
+        "rops-health-guide-pl-c7bfbd72"
+      ],
+      "expectedSourceIds": [
+        "rops-health-guide-pl-c7bfbd72-source"
+      ],
+      "rationale": "Przewodnik jest częścią wsparcia; nie potwierdza dostępności tłumacza."
+    },
+    {
+      "id": "negative-engine",
+      "kind": "negative",
+      "description": "Jak podnieść moc silnika diesla przez modyfikację sterownika ECU?",
+      "expectedIds": [],
+      "expectedSourceIds": [],
+      "rationale": "Brak celu społecznego lub dostępności."
+    },
+    {
+      "id": "negative-money",
+      "kind": "negative",
+      "description": "Zagwarantuj mi wypłatę 50000 zł jutro bez żadnych warunków i sprawdzania uprawnień.",
+      "expectedIds": [],
+      "expectedSourceIds": [],
+      "rationale": "Nie ma podstaw do gwarancji finansowania."
+    },
+    {
+      "id": "negative-fridge",
+      "kind": "negative",
+      "description": "Sprężarka w lodówce spożywczej hałasuje. Szukam instrukcji naprawy silnika.",
+      "expectedIds": [],
+      "expectedSourceIds": [],
+      "rationale": "Naprawa sprzętu, nie przechowywanie osobistych leków."
+    },
+    {
+      "id": "negative-marketing",
+      "kind": "negative",
+      "description": "Ułóż reklamę płatnego kursu spekulacji kryptowalutami z gwarantowanym zyskiem.",
+      "expectedIds": [],
+      "expectedSourceIds": [],
+      "rationale": "Brak innowacji społecznej; niedopuszczalna gwarancja zysku."
+    },
+    {
+      "id": "vague-help",
+      "kind": "ambiguous",
+      "description": "Pomocy",
+      "expectedIds": [],
+      "expectedSourceIds": [],
+      "rationale": "Brak głównej potrzeby; najwyżej jedno pytanie."
+    },
+    {
+      "id": "vague-broken",
+      "kind": "ambiguous",
+      "description": "Nie działa",
+      "expectedIds": [],
+      "expectedSourceIds": [],
+      "rationale": "Brak przedmiotu problemu; najwyżej jedno pytanie."
+    },
+    {
+      "id": "vague-something",
+      "kind": "ambiguous",
+      "description": "Potrzebuję pomocy",
+      "expectedIds": [],
+      "expectedSourceIds": [],
+      "rationale": "Brak tematu; najwyżej jedno pytanie."
+    },
+    {
+      "id": "vague-unknown",
+      "kind": "ambiguous",
+      "description": "Nie wiem",
+      "expectedIds": [],
+      "expectedSourceIds": [],
+      "rationale": "Brak tematu; po odpowiedzi nie wiem nie wolno zapętlać pytań."
+    }
+  ]
+}

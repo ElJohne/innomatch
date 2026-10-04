@@ -1,6 +1,8 @@
 import "server-only";
+import type { AdaptationPlan } from "@/lib/contracts/adaptation";
 export type ThreadRow = {
   adaptation_id?: string | null;
+  adaptation_snapshot?: AdaptationPlan | null;
   idea_id?: string | null;
   id: string;
   owner_id: string;

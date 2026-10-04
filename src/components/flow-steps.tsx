@@ -5,8 +5,8 @@ export function FlowSteps({ current }: { current: number }) {
         {[
           "Opisz potrzebę",
           "Potwierdź opis",
-          "Wybierz organizację",
-          "Zrób kolejny krok",
+          "Sprawdź propozycje",
+          "Zaplanuj działanie",
         ].map((label, i) => (
           <li
             key={label}

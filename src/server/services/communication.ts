@@ -97,15 +97,22 @@ export async function getThread(id: string, a: Actor) {
   const innovation = row.innovation_id
     ? (await listInnovations()).find((i) => i.id === row.innovation_id)
     : null;
-  const adaptation = row.adaptation_id
+  const currentPlan = row.adaptation_id
     ? await getPlan(row.adaptation_id, row.owner_id)
     : null;
+  const adaptation =
+    currentPlan &&
+    row.adaptation_snapshot?.sourceVersion === currentPlan.sourceVersion
+      ? structuredClone(row.adaptation_snapshot)
+      : null;
   return {
     id: row.id,
     idea: row.idea_id ? await getIdea(row.idea_id, row.owner_id) : null,
     // Thread authorization above is the only staff path to a shared plan.
     adaptation,
     adaptationUnavailable: Boolean(row.adaptation_id) && !adaptation,
+    // Never return an unshared revision to staff, even as a convenience DTO.
+    privatePlanRevision: !a.staff && currentPlan ? currentPlan.revision : null,
     needId: row.need_id,
     need: need
       ? {
@@ -131,6 +138,12 @@ export async function createThread(a: Actor, input: ThreadInput) {
     ? await getPlan(input.adaptationId, a.ownerId)
     : null;
   if (input.adaptationId && !plan) throw missing();
+  if (plan && plan.revision !== input.adaptationRevision)
+    throw new HttpError(
+      409,
+      "REVISION",
+      "Plan zmienił się. Przejrzyj aktualną wersję przed udostępnieniem.",
+    );
   const needId = plan?.needId ?? input.needId;
   if (needId && !(await getNeed(needId, a.ownerId))) throw missing();
   if (
@@ -156,6 +169,7 @@ export async function createThread(a: Actor, input: ThreadInput) {
       owner_id: a.ownerId,
       need_id: needId ?? null,
       adaptation_id: input.adaptationId ?? null,
+      adaptation_snapshot: plan ? structuredClone(plan) : null,
       innovation_id: input.innovationId ?? null,
       context_key: context,
       user_read: 0,
@@ -177,8 +191,8 @@ export async function createThread(a: Actor, input: ThreadInput) {
   return sqlClient().begin(async (tx) => {
     const rows = await tx<
       { id: string }[]
-    >`insert into threads (id,owner_id,need_id,innovation_id,context_key,adaptation_id)
-      values (${randomUUID()},${a.ownerId},${needId ?? null},${input.innovationId ?? null},${context},${input.adaptationId ?? null})
+    >`insert into threads (id,owner_id,need_id,innovation_id,context_key,adaptation_id,adaptation_snapshot)
+      values (${randomUUID()},${a.ownerId},${needId ?? null},${input.innovationId ?? null},${context},${input.adaptationId ?? null},${plan ? tx.json(plan) : null})
       on conflict (owner_id,context_key) do nothing returning id`;
     if (!rows.length)
       return (
@@ -190,6 +204,69 @@ export async function createThread(a: Actor, input: ThreadInput) {
     await tx`insert into messages (id,thread_id,author_id,author_role,body,request_key)
       values (${randomUUID()},${id},${a.ownerId},'USER',${input.body},${input.requestKey})`;
     return id;
+  });
+}
+export async function sharePlan(
+  id: string,
+  a: Actor,
+  input: { expectedRevision: number; requestKey: string },
+) {
+  const row = await accessibleThread(id, a);
+  if (a.staff || row.owner_id !== a.ownerId || !row.adaptation_id)
+    throw missing();
+  const plan = await getPlan(row.adaptation_id, a.ownerId);
+  if (!plan) throw missing();
+  const changed = () =>
+    new HttpError(
+      409,
+      "REVISION",
+      "Plan zmienił się. Przejrzyj aktualną wersję przed udostępnieniem.",
+    );
+  const body = `Autor udostępnił wersję ${input.expectedRevision} planu adaptacji.`;
+  if (fixtures()) {
+    const m = memory();
+    if (
+      m.messages.some(
+        (message) =>
+          message.thread_id === id &&
+          message.author_id === a.ownerId &&
+          message.request_key === input.requestKey,
+      )
+    )
+      return;
+    if (plan.revision !== input.expectedRevision) throw changed();
+    if (row.adaptation_snapshot?.revision === plan.revision) return;
+    if (m.messages.length >= 10000) throw new Error("DEMO_CAPACITY");
+    row.adaptation_snapshot = structuredClone(plan);
+    row.updated_at = new Date();
+    m.messages.push({
+      id: randomUUID(),
+      sequence: ++m.sequence,
+      thread_id: id,
+      author_id: a.ownerId,
+      author_role: "USER",
+      body,
+      request_key: input.requestKey,
+      created_at: row.updated_at,
+    });
+    return;
+  }
+  await sqlClient().begin(async (tx) => {
+    const [locked] = await tx<
+      ThreadRow[]
+    >`select * from threads where id=${id} and owner_id=${a.ownerId} for update`;
+    if (!locked) throw missing();
+    if (
+      (
+        await tx`select id from messages where thread_id=${id} and author_id=${a.ownerId} and request_key=${input.requestKey}`
+      ).length
+    )
+      return;
+    if (plan.revision !== input.expectedRevision) throw changed();
+    // Never let a delayed request replace a more recently shared revision.
+    if ((locked.adaptation_snapshot?.revision ?? 0) >= plan.revision) return;
+    await tx`update threads set adaptation_snapshot=${tx.json(plan)}, updated_at=now() where id=${id}`;
+    await tx`insert into messages (id,thread_id,author_id,author_role,body,request_key) values (${randomUUID()},${id},${a.ownerId},'USER',${body},${input.requestKey})`;
   });
 }
 export async function sendMessage(id: string, a: Actor, input: MessageInput) {

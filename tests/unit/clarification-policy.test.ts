@@ -212,7 +212,13 @@ it("keeps a source-validated match while dropping fabricated optional materials"
     })
     .mockImplementation(async (_task, input) => {
       const candidate = (
-        input as { candidates: typeof fixtures }
+        input as {
+          candidates: {
+            id: string;
+            sourceIds: string[];
+            evidenceFragments: { fragmentId: string }[];
+          }[];
+        }
       ).candidates.find((r) => r.id === record.id)!;
       return {
         status: "partial",
@@ -222,7 +228,8 @@ it("keeps a source-validated match while dropping fabricated optional materials"
             rank: 1,
             reasons: ["Wspólny cel."],
             limitations: ["Do sprawdzenia."],
-            sourceIds: [candidate.sources[0].id],
+            sourceIds: [candidate.sourceIds[0]],
+            evidenceIds: [candidate.evidenceFragments[0].fragmentId],
           },
         ],
         clarifyingQuestions: [],

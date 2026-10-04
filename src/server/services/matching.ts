@@ -1,4 +1,7 @@
 import "server-only";
+import { randomUUID } from "node:crypto";
+import { canRetryMatch } from "@/lib/match-state";
+import { evidenceFragments, resolveEvidence } from "@/server/search/evidence";
 import { z } from "zod";
 import {
   urgentSignal,
@@ -34,6 +37,7 @@ import {
   compatible,
   cosine,
   validateExplanation,
+  selectEvidence,
 } from "@/server/search/ranking";
 
 export async function visibleMatch(
@@ -52,7 +56,16 @@ export async function visibleMatch(
           (match.catalogVersions?.[`innovation:${r.id}`]
             ? match.catalogVersions[`innovation:${r.id}`] === catalogVersion(r)
             : !managed.includes(`innovation:${r.id}`)) &&
-          m.sourceIds.every((id) => r.sources.some((s) => s.id === id)),
+          m.sourceIds.every((id) => r.sources.some((s) => s.id === id)) &&
+          (m.evidence ?? []).every((e) =>
+            evidenceFragments(r).some(
+              (f) =>
+                f.fragmentId === e.fragmentId &&
+                f.sourceId === e.sourceId &&
+                f.excerpt === e.excerpt &&
+                m.sourceIds.includes(f.sourceId),
+            ),
+          ),
       ),
     )
     .map((m, i) => ({ ...m, rank: i + 1 }));
@@ -72,15 +85,28 @@ export async function visibleMatch(
     ...match,
     matches,
     relatedResources,
-    status: matches.length ? (changed ? "partial" : match.status) : "no_match",
+    status: matches.length
+      ? changed
+        ? "partial"
+        : match.status
+      : match.status === "unavailable" || changed
+        ? "unavailable"
+        : "no_match",
     warnings: changed
       ? [...match.warnings, "Część wyników jest już niedostępna."]
       : match.warnings,
   };
 }
-export async function matchNeed(need: Need): Promise<MatchResponse> {
-  if (need.match?.matchingVersion === MATCHING_VERSION)
-    return visibleMatch(need.match);
+export async function matchNeed(
+  need: Need,
+  retryOf?: string,
+): Promise<MatchResponse> {
+  if (need.match?.matchingVersion === MATCHING_VERSION) {
+    const visible = await visibleMatch(need.match);
+    // Publication changes can invalidate an otherwise successful saved run.
+    // Authorize retry against the same view that the user actually sees.
+    if (!canRetryMatch(visible, retryOf)) return visible;
+  }
   const c = config();
   const clarificationAllowed =
     !need.skipClarification && !need.clarifications?.length;
@@ -106,6 +132,7 @@ export async function matchNeed(need: Need): Promise<MatchResponse> {
     warnings: string[] = [],
   ) {
     const response: MatchResponse = {
+      runId: randomUUID(),
       matchingVersion: MATCHING_VERSION,
       guidance,
       ...(guidance === "emergency"
@@ -141,6 +168,8 @@ export async function matchNeed(need: Need): Promise<MatchResponse> {
   let query = original;
   let assumptions: string[] = [];
   const warnings: string[] = [];
+  let retrievalUnavailable = false;
+  let verificationUnavailable = false;
   if (ai) {
     try {
       const intake = intakeSchema.parse(
@@ -224,6 +253,18 @@ export async function matchNeed(need: Need): Promise<MatchResponse> {
         .sort((a, b) => b.score - a.score);
       related = relatedRanked.slice(0, 3).map((x) => x.record);
       const index = await listEmbeddings();
+      if (
+        records.some(
+          (record) =>
+            !index.some(
+              (e) =>
+                e.recordId === record.id &&
+                compatible(e, record, ai.embeddingDeployment, vector.length),
+            ),
+        )
+      ) {
+        retrievalUnavailable = true;
+      }
       const ranked = records
         .map((record) => {
           const e = index.find(
@@ -249,6 +290,7 @@ export async function matchNeed(need: Need): Promise<MatchResponse> {
           "Brak zgodnego indeksu lub dostatecznej zgodności semantycznej. Użyto słów kluczowych.",
         );
     } catch {
+      retrievalUnavailable = true;
       warnings.push(
         "Wyszukiwanie semantyczne jest chwilowo niedostępne. Użyto słów kluczowych.",
       );
@@ -266,6 +308,7 @@ export async function matchNeed(need: Need): Promise<MatchResponse> {
           ...r.requirements.slice(0, 2).map((x) => `Do sprawdzenia: ${x}`),
         ],
         sourceIds: r.sources.map((s) => s.id),
+        evidence: selectEvidence(original, r).slice(0, 1),
       })),
       clarifyingQuestions: [],
     },
@@ -277,9 +320,10 @@ export async function matchNeed(need: Need): Promise<MatchResponse> {
       const schema = explanationSchema.extend({
         matches: z
           .array(
-            matchSchema.extend({
-              reasons: z.array(z.string().max(220)).min(1).max(2),
-              limitations: z.array(z.string().max(220)).min(1).max(2),
+            matchSchema.omit({ evidence: true }).extend({
+              evidenceIds: z.array(z.string().min(1).max(100)).max(3),
+              reasons: z.array(z.string().min(10).max(400)).min(1).max(2),
+              limitations: z.array(z.string().min(10).max(400)).min(1).max(2),
             }),
           )
           .max(3),
@@ -297,7 +341,8 @@ export async function matchNeed(need: Need): Promise<MatchResponse> {
       });
       const generated = schema.parse(
         await ai.generateStructured(
-          rerankTask,
+          rerankTask +
+            " Każdy powód i ograniczenie zapisz jako jedno krótkie, pełne zdanie po polsku (cel: do 150 znaków). Nie urywaj zdań. Nazwy pól JSON, takie jak sourceIds i evidenceIds, nigdy nie są treścią wyjaśnienia dla użytkownika.",
           {
             need: {
               description: need.description,
@@ -305,14 +350,56 @@ export async function matchNeed(need: Need): Promise<MatchResponse> {
               targetGroups: need.targetGroups,
               clarifications: need.clarifications ?? [],
             },
-            candidates,
-            relatedCandidates: related,
+            candidates: candidates.map((r) => ({
+              id: r.id,
+              title: r.title,
+              problem: r.problem.slice(0, 450),
+              solution: r.solution.slice(0, 650),
+              targetGroups: r.targetGroups
+                .slice(0, 4)
+                .map((t) => t.slice(0, 100)),
+              requirements: r.requirements
+                .slice(0, 3)
+                .map((t) => t.slice(0, 200)),
+              sourceIds: r.sources.slice(0, 10).map((s) => s.id),
+              evidenceFragments: selectEvidence(original, r),
+            })),
+            relatedCandidates: related.map((r) => ({
+              id: r.id,
+              title: r.title,
+              description: r.description.slice(0, 900),
+            })),
           },
           schema,
         ),
       );
       const { relatedResources: selected, ...explanationResult } = generated;
-      result = validateExplanation(explanationResult, candidates);
+      result = validateExplanation(
+        {
+          ...explanationResult,
+          matches: explanationResult.matches.map(({ evidenceIds, ...m }) => {
+            const record = candidates.find((r) => r.id === m.innovationId);
+            if (!record) throw new Error("INVALID_AI_REFERENCE");
+            const offered = selectEvidence(original, record);
+            if (
+              evidenceIds.some(
+                (id) => !offered.some((f) => f.fragmentId === id),
+              )
+            )
+              throw new Error("INVALID_AI_EVIDENCE");
+            const available = offered.filter((f) =>
+              m.sourceIds.includes(f.sourceId),
+            );
+            if (available.length && !evidenceIds.length)
+              throw new Error("INVALID_AI_EVIDENCE");
+            return {
+              ...m,
+              evidence: resolveEvidence(record, evidenceIds, m.sourceIds),
+            };
+          }),
+        },
+        candidates,
+      );
       // Optional material IDs must not discard independently validated matches.
       // Drop unknown/duplicate references, never widen the allowlist.
       const allowedResources = selected.filter(
@@ -328,10 +415,12 @@ export async function matchNeed(need: Need): Promise<MatchResponse> {
       relatedResources = result.matches.length ? allowedResources : [];
       explanation = c.AI_PROVIDER === "openai" ? "openai" : "azure";
     } catch (error) {
+      verificationUnavailable = true;
       const safeReasons = [
         "AI_INPUT_LIMIT",
         "AI_RESPONSE_INCOMPLETE",
         "INVALID_AI_REFERENCE",
+        "INVALID_AI_EVIDENCE",
         "INVALID_AI_STATUS",
         "INVALID_RESOURCES",
       ];
@@ -361,6 +450,7 @@ export async function matchNeed(need: Need): Promise<MatchResponse> {
   const corpus = [...records, ...knowledge];
   const synthetic = corpus.filter((r) => r.origin === "SYNTHETIC").length;
   const response: MatchResponse = {
+    runId: randomUUID(),
     matchingVersion: MATCHING_VERSION,
     assumptions,
     catalogVersions: Object.fromEntries([
@@ -372,6 +462,11 @@ export async function matchNeed(need: Need): Promise<MatchResponse> {
         .map((r) => [`knowledge:${r.id}`, catalogVersion(r)]),
     ]),
     ...result,
+    status:
+      verificationUnavailable ||
+      (retrievalUnavailable && !result.matches.length)
+        ? "unavailable"
+        : result.status,
     needId: need.id,
     relatedResources,
     mode: {

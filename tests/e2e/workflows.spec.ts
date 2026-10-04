@@ -26,6 +26,29 @@ test("idea editor saves, applies mock assistance explicitly, reloads and submits
   await page.getByRole("button", { name: "Zapisz prywatny szkic" }).click();
   await expect(page).toHaveURL(/\/pomysly\/[a-f0-9-]{36}$/);
   const id = new URL(page.url()).pathname.split("/").at(-1)!;
+  await page.getByRole("button", { name: "Rozwiń w Canvas" }).click();
+  const canvasNote =
+    "Syntetyczny przykład: spotkania co tydzień dla małej grupy seniorów z jednej okolicy.";
+  await page.getByLabel("Skala i częstotliwość problemu").fill(canvasNote);
+  await page
+    .getByLabel("Koszty stałe", { exact: true })
+    .fill("Sala do uzgodnienia z biblioteką; koszt nie jest jeszcze znany.");
+  await page
+    .getByText("3. Dotarcie, partnerzy i wpływ", { exact: true })
+    .click();
+  await page
+    .getByLabel("Wpływ i sposób sprawdzenia")
+    .fill(
+      "Hipoteza: łatwiejszy kontakt z sąsiadami. Zbierzemy anonimowe uwagi po spotkaniu.",
+    );
+  await page.getByRole("button", { name: "Zapisz zmiany karty" }).click();
+  await expect(
+    page.getByRole("button", { name: "Zapisz zmiany karty" }),
+  ).toBeDisabled();
+  await page.reload();
+  await expect(page.getByLabel("Skala i częstotliwość problemu")).toHaveValue(
+    canvasNote,
+  );
   const before = await (await page.request.get(`/api/ideas/${id}`)).json();
   await page
     .getByRole("button", { name: "Poproś o propozycję rozwoju" })
@@ -47,6 +70,9 @@ test("idea editor saves, applies mock assistance explicitly, reloads and submits
   await expect(
     page.getByLabel("Jak można sprawdzić pomysł w małej skali?"),
   ).toHaveValue(/Propozycja demonstracyjna/);
+  await expect(page.getByLabel("Skala i częstotliwość problemu")).toHaveValue(
+    canvasNote,
+  );
   expect(
     (
       await new AxeBuilder({ page })
@@ -54,6 +80,31 @@ test("idea editor saves, applies mock assistance explicitly, reloads and submits
         .analyze()
     ).violations,
   ).toEqual([]);
+  await page
+    .getByRole("link", { name: "Podgląd i druk zapisanej karty" })
+    .click();
+  await expect(
+    page.getByRole("heading", { name: "Canvas pomysłu", exact: true }),
+  ).toBeVisible();
+  await expect(page.getByText(canvasNote, { exact: true })).toBeVisible();
+  await page.setViewportSize({ width: 390, height: 844 });
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth,
+    ),
+  ).toBe(true);
+  await page.screenshot({
+    path: "test-results/canvas-preview-mobile.png",
+    fullPage: true,
+  });
+  await page.emulateMedia({ media: "print" });
+  await expect(
+    page.getByRole("button", { name: "Drukuj lub zapisz PDF" }),
+  ).toBeHidden();
+  await expect(page.locator(".header")).toBeHidden();
+  await expect(page.getByText(canvasNote, { exact: true })).toBeVisible();
+  await page.emulateMedia({ media: "screen" });
+  await page.getByRole("link", { name: "Wróć do edycji" }).click();
   const other = await browser.newContext();
   try {
     expect(
@@ -78,6 +129,8 @@ test("idea editor saves, applies mock assistance explicitly, reloads and submits
     await expect(page).toHaveURL(/\/wiadomosci\/[a-f0-9-]{36}$/);
     const saved = await (await page.request.get(`/api/ideas/${id}`)).json();
     expect(saved.status).toBe("SUBMITTED");
+    await page.getByText(/Pomysł udostępniony koordynatorowi — wersja/).click();
+    await expect(page.getByText(canvasNote, { exact: true })).toBeVisible();
     expect(
       (
         await other.request.get(`${baseURL}/api/threads/${saved.threadId}`)

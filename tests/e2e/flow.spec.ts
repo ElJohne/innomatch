@@ -67,7 +67,7 @@ test("confirmation edits preserve every field; failed submission can be retried"
   await page.unroute("**/api/needs");
   await confirm(page);
   await expect(
-    page.getByRole("heading", { name: "Wybierz organizację", exact: true }),
+    page.getByRole("heading", { name: "Rozwiązania pasujące do części potrzeby", exact: true }),
   ).toBeVisible();
 });
 test("four steps, immediate plan, evidence, copy, reload and private access", async ({
@@ -82,7 +82,7 @@ test("four steps, immediate plan, evidence, copy, reload and private access", as
   });
   await confirm(page);
   await expect(
-    page.getByRole("heading", { name: "Wybierz organizację", exact: true }),
+    page.getByRole("heading", { name: "Rozwiązania pasujące do części potrzeby", exact: true }),
   ).toBeVisible();
   await expect(
     page.getByRole("link", { name: /Wybierz organizację/ }),

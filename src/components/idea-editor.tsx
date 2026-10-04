@@ -10,6 +10,8 @@ import {
   type IdeaSuggestion,
 } from "@/lib/contracts/idea";
 import { IdeaView } from "./idea-view";
+import { CanvasFields } from "./idea-canvas";
+import { emptyCanvas } from "@/lib/contracts/canvas";
 const empty: IdeaCard = {
   title: "",
   problem: "",
@@ -199,6 +201,41 @@ export function IdeaEditor({ initial }: { initial?: Idea }) {
             </select>
           </div>
         </fieldset>
+        {card.canvas ? (
+          <fieldset disabled={busy} className="canvas-fieldset">
+            <legend className="sr-only">Rozwinięcie pomysłu w Canvas</legend>
+            <CanvasFields
+              value={card.canvas}
+              onChange={(field, value) => {
+                setCard((c) => ({
+                  ...c,
+                  canvas: { ...(c.canvas ?? emptyCanvas()), [field]: value },
+                }));
+                setDirty(true);
+                setMessage("");
+              }}
+            />
+          </fieldset>
+        ) : (
+          <div className="note">
+            <h2>Od pomysłu do działania</h2>
+            <p>
+              Dodaj Canvas, aby uporządkować partnerów, koszty, finansowanie i
+              sposób sprawdzenia efektów. Możesz zacząć od jednego pola.
+            </p>
+            <button
+              type="button"
+              className="secondary"
+              disabled={busy}
+              onClick={() => {
+                setCard((c) => ({ ...c, canvas: emptyCanvas() }));
+                setDirty(true);
+              }}
+            >
+              Rozwiń w Canvas
+            </button>
+          </div>
+        )}
         <button disabled={busy || (!dirty && Boolean(idea))}>
           {busy
             ? "Zapisywanie…"
@@ -207,6 +244,22 @@ export function IdeaEditor({ initial }: { initial?: Idea }) {
               : "Zapisz prywatny szkic"}
         </button>
       </form>
+      {idea && (
+        <div className="actions">
+          <Link
+            className="button secondary"
+            href={`/pomysly/${idea.id}/podglad`}
+          >
+            Podgląd i druk zapisanej karty
+          </Link>
+          {dirty && (
+            <p className="help">
+              Podgląd pokazuje ostatnią zapisaną wersję. Zapisz zmiany, aby je
+              uwzględnić.
+            </p>
+          )}
+        </div>
+      )}
       {idea && (
         <section className="card">
           <h2>Rozwiń pomysł z pomocą AI</h2>

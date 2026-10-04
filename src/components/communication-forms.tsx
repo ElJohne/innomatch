@@ -115,15 +115,19 @@ export function MessageForm({
   needId,
   innovationId,
   adaptationId,
+  adaptationRevision,
+  initialBody = "",
 }: {
   threadId?: string;
   needId?: string;
   innovationId?: string;
   adaptationId?: string;
+  adaptationRevision?: number;
+  initialBody?: string;
 }) {
   const router = useRouter();
   const key = useRef("");
-  const [body, setBody] = useState("");
+  const [body, setBody] = useState(initialBody);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   return (
@@ -142,7 +146,9 @@ export function MessageForm({
             {
               body,
               requestKey: key.current,
-              ...(threadId ? {} : { needId, innovationId, adaptationId }),
+              ...(threadId
+                ? {}
+                : { needId, innovationId, adaptationId, adaptationRevision }),
             },
           );
           setBody("");
@@ -229,5 +235,50 @@ export function RefreshMessages() {
     <button className="secondary small" onClick={() => router.refresh()}>
       Odśwież wiadomości
     </button>
+  );
+}
+export function SharePlanButton({
+  threadId,
+  revision,
+}: {
+  threadId: string;
+  revision: number;
+}) {
+  const router = useRouter();
+  const key = useRef("");
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState("");
+  return (
+    <div>
+      <button
+        disabled={busy}
+        onClick={async () => {
+          if (busy) return;
+          setBusy(true);
+          setError("");
+          key.current ||= crypto.randomUUID();
+          try {
+            await post(`/api/threads/${threadId}/plan`, {
+              expectedRevision: revision,
+              requestKey: key.current,
+            });
+            router.refresh();
+          } catch (error) {
+            setError(errorText(error));
+          } finally {
+            setBusy(false);
+          }
+        }}
+      >
+        {busy
+          ? "Udostępnianie…"
+          : `Udostępnij wersję ${revision} koordynatorowi`}
+      </button>
+      {error && (
+        <p role="alert" className="error">
+          {error}
+        </p>
+      )}
+    </div>
   );
 }

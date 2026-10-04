@@ -5,6 +5,8 @@ import { getPlan } from "@/server/services/adaptations";
 import { listInnovations } from "@/server/services/repository";
 import { AdaptationView } from "@/components/adaptation-view";
 import { AdaptationEditor } from "@/components/adaptation-editor";
+import { FlowSteps } from "@/components/flow-steps";
+import { listThreads } from "@/server/services/communication";
 export default async function PlanPage({
   params,
 }: {
@@ -18,8 +20,12 @@ export default async function PlanPage({
     (r) => r.id === plan.innovationId,
   );
   if (!innovation) notFound();
+  const conversation = (await listThreads({ ownerId: s.ownerId })).find(
+    (t) => t.adaptationId === plan.id,
+  );
   return (
     <section className="narrow">
+      <FlowSteps current={4} />
       <Link href="/moje-sprawy">← Moje sprawy</Link>
       <p className="eyebrow detail-label">Prywatna adaptacja</p>
       <h1>Twój szkic usługi</h1>
@@ -44,6 +50,36 @@ export default async function PlanPage({
         ))}
       </details>
       <AdaptationView plan={plan} />
+      <aside className="note">
+        <h2>
+          {conversation
+            ? "Rozmowa o tym planie"
+            : "Omów pierwszy krok z koordynatorem"}
+        </h2>
+        <p>
+          {conversation
+            ? "W rozmowie znajdziesz przekazaną wersję i odpowiedź koordynatora. Późniejsze poprawki pozostają prywatne. Nową wersję możesz udostępnić w tej samej rozmowie."
+            : "Plan pozostaje prywatny. Na kolejnym ekranie przejrzysz i zmienisz pytanie przed wysłaniem. Dopiero wysłanie udostępni personelowi plan i potrzebę."}
+        </p>
+        {conversation && conversation.unread > 0 && (
+          <p role="status">Nowe wiadomości: {conversation.unread}</p>
+        )}
+        <Link
+          className="button"
+          href={
+            conversation
+              ? `/wiadomosci/${conversation.id}`
+              : `/wiadomosci/nowa?adaptationId=${plan.id}`
+          }
+        >
+          {conversation ? "Wróć do rozmowy" : "Zapytaj koordynatora"}
+        </Link>
+        <p className="help">
+          Plan i odpowiedzi znajdziesz w{" "}
+          <Link href="/moje-sprawy">Moich sprawach</Link>. Zapisz tam prywatny
+          kod powrotu. Wysłanie pytania nie oznacza zatwierdzenia planu.
+        </p>
+      </aside>
       <section className="card">
         <h2>Materiał źródłowy — oddzielony od propozycji</h2>
         {innovation.origin === "SYNTHETIC" && (
@@ -69,19 +105,6 @@ export default async function PlanPage({
           ))}
       </section>
       <AdaptationEditor initial={plan} sources={innovation.sources} />
-      <aside className="note">
-        <h2>Omów plan z koordynatorem</h2>
-        <p>
-          Plan jest prywatny. Na kolejnym ekranie możesz napisać pytanie i
-          świadomie udostępnić zapisany plan oraz potrzebę personelowi.
-        </p>
-        <Link
-          className="button"
-          href={`/wiadomosci/nowa?adaptationId=${plan.id}`}
-        >
-          Zapytaj koordynatora
-        </Link>
-      </aside>
     </section>
   );
 }

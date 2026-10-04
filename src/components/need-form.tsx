@@ -81,8 +81,8 @@ export function NeedForm() {
               Czy dobrze opisaliśmy Twoją potrzebę?
             </h1>
             <p className="lead">
-              Potwierdź informacje. Potem poszukamy pasujących rozwiązań i
-              organizacji.
+              Potwierdź informacje. Potem poszukamy rozwiązań i sprawdzimy ich
+              ograniczenia.
             </p>
           </div>
         </div>

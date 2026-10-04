@@ -4,6 +4,7 @@ import { readFile, readdir } from "node:fs/promises";
 import { randomUUID } from "node:crypto";
 import fixtures from "../../data/demo/innovations.json";
 import { innovationSchema } from "@/lib/contracts";
+import { emptyCanvas } from "@/lib/contracts/canvas";
 import type { Actor } from "@/lib/contracts/communication";
 import {
   createNeed,
@@ -24,6 +25,7 @@ import {
   sendMessage,
   listThreads,
   markRead,
+  sharePlan,
 } from "@/server/services/communication";
 import {
   requestParticipation,
@@ -118,7 +120,13 @@ describe.skipIf(!process.env.TEST_DATABASE_URL)(
     });
 
     it("keeps ideas private, caches assist, rejects stale edits and submits once under concurrency", async () => {
-      const input = { card, requestKey: randomUUID() };
+      const canvas = {
+        ...emptyCanvas(),
+        problemContext:
+          "Syntetyczny problem występuje co tydzień w małej grupie.",
+        partners: "Biblioteka — potencjalny partner, bez ustaleń.",
+      };
+      const input = { card: { ...card, canvas }, requestKey: randomUUID() };
       const [idea, duplicate] = await Promise.all([
         createIdea(actor.ownerId, input),
         createIdea(actor.ownerId, input),
@@ -132,10 +140,14 @@ describe.skipIf(!process.env.TEST_DATABASE_URL)(
       expect(await assistIdea(idea.id, actor.ownerId, 1)).toEqual(assisted);
       expect(assisted.mode).toBe("mock");
       expect(assisted.card.stage).toBe("CONCEPT");
+      expect(assisted.card.canvas).toEqual(canvas);
       const edited = await editIdea(idea.id, actor.ownerId, {
         card: assisted.card,
         expectedRevision: 1,
       });
+      expect((await getIdea(idea.id, actor.ownerId))?.card.canvas).toEqual(
+        canvas,
+      );
       await expect(
         editIdea(idea.id, actor.ownerId, { card, expectedRevision: 1 }),
       ).rejects.toMatchObject({ status: 409 });
@@ -147,6 +159,7 @@ describe.skipIf(!process.env.TEST_DATABASE_URL)(
       expect(submitted.status).toBe("SUBMITTED");
       const thread = await getThread(submitted.threadId!, expert);
       expect(thread.idea?.id).toBe(idea.id);
+      expect(thread.idea?.card.canvas).toEqual(canvas);
       expect(thread.messages).toHaveLength(1);
       await expect(
         getThread(submitted.threadId!, stranger),
@@ -180,6 +193,10 @@ describe.skipIf(!process.env.TEST_DATABASE_URL)(
         status: 404,
       });
       const plan = await createPlan(actor.ownerId, input);
+      expect(plan.draft.firstStep?.action).toBeTruthy();
+      expect((await getPlan(plan.id, actor.ownerId))?.draft.firstStep).toEqual(
+        plan.draft.firstStep,
+      );
       expect((await createPlan(actor.ownerId, input)).id).toBe(plan.id);
       expect(await getPlan(plan.id, stranger.ownerId)).toBeNull();
       const edited = await editPlan(plan.id, actor.ownerId, {
@@ -187,6 +204,10 @@ describe.skipIf(!process.env.TEST_DATABASE_URL)(
         draft: {
           ...plan.draft,
           summary: "Syntetyczny plan po korekcie autora.",
+          firstStep: {
+            ...plan.draft.firstStep!,
+            responsible: "Koordynator syntetycznego pilotażu — do uzgodnienia.",
+          },
         },
       });
       expect(edited.revision).toBe(2);
@@ -198,10 +219,62 @@ describe.skipIf(!process.env.TEST_DATABASE_URL)(
       ).rejects.toMatchObject({ status: 409 });
       const id = await createThread(actor, {
         adaptationId: plan.id,
+        adaptationRevision: edited.revision,
         body: "Syntetyczna konsultacja planu.",
         requestKey: randomUUID(),
       });
       expect((await getThread(id, expert)).adaptation?.revision).toBe(2);
+      expect(
+        (await getThread(id, expert)).adaptation?.draft.firstStep?.responsible,
+      ).toBe("Koordynator syntetycznego pilotażu — do uzgodnienia.");
+      const privateRevision = await editPlan(plan.id, actor.ownerId, {
+        expectedRevision: edited.revision,
+        draft: {
+          ...edited.draft,
+          summary: "Prywatna korekta, jeszcze nieudostępniona.",
+        },
+      });
+      expect((await getThread(id, expert)).adaptation?.revision).toBe(2);
+      expect((await getThread(id, expert)).privatePlanRevision).toBeNull();
+      const share = {
+        expectedRevision: privateRevision.revision,
+        requestKey: randomUUID(),
+      };
+      await expect(sharePlan(id, stranger, share)).rejects.toMatchObject({
+        status: 404,
+      });
+      await expect(sharePlan(id, expert, share)).rejects.toMatchObject({
+        status: 404,
+      });
+      await expect(
+        sharePlan(id, actor, { ...share, expectedRevision: 2 }),
+      ).rejects.toMatchObject({ status: 409 });
+      await Promise.all([
+        sharePlan(id, actor, share),
+        sharePlan(id, actor, share),
+      ]);
+      const shared = await getThread(id, expert);
+      expect(shared.adaptation?.revision).toBe(3);
+      expect(
+        shared.messages.filter((m) => m.body.includes("udostępnił wersję 3")),
+      ).toHaveLength(1);
+      // Upgrade an existing conversation, then reapply: do not replace the
+      // frozen snapshot with later private edits during migration replay.
+      await sql`update threads set adaptation_snapshot=null where id=${id}`;
+      const snapshotMigration = await readFile(
+        "src/server/db/migrations/0008_shared_plan_snapshot.sql",
+        "utf8",
+      );
+      await sql.unsafe(snapshotMigration);
+      await editPlan(plan.id, actor.ownerId, {
+        expectedRevision: 3,
+        draft: {
+          ...privateRevision.draft,
+          summary: "Prywatna czwarta wersja.",
+        },
+      });
+      await sql.unsafe(snapshotMigration);
+      expect((await getThread(id, expert)).adaptation?.revision).toBe(3);
       const reply = await sendMessage(id, expert, {
         body: "Syntetyczna odpowiedź koordynatora.",
         requestKey: randomUUID(),
@@ -318,6 +391,19 @@ describe.skipIf(!process.env.TEST_DATABASE_URL)(
       await sql`update needs set created_at=${baseline.period.from}::timestamptz where id=${need.id}`;
       const report = await needAnalytics(admin, { days: "7" });
       expect(report.total).toBe(baseline.total + 1);
+      await sql`update needs set match=${sql.json({ status: "unavailable" })} where id=${need.id}`;
+      const failures = await needAnalytics(admin, { days: "7" });
+      expect(
+        failures.searchStatuses.find((s) => s.status === "unavailable")!.count,
+      ).toBe(
+        baseline.searchStatuses.find((s) => s.status === "unavailable")!.count +
+          1,
+      );
+      expect(
+        failures.searchStatuses.find((s) => s.status === "no_match")!.count,
+      ).toBe(
+        baseline.searchStatuses.find((s) => s.status === "no_match")!.count,
+      );
       expect(report.withMunicipality).toBe(baseline.withMunicipality + 1);
       for (const label of ["Seniorzy", "Inne grupy"])
         expect(report.audiences.find((g) => g.label === label)!.count).toBe(
