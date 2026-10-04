@@ -5,110 +5,81 @@ import { getPlan } from "@/server/services/adaptations";
 import { listInnovations } from "@/server/services/repository";
 import { AdaptationView } from "@/components/adaptation-view";
 import { AdaptationEditor } from "@/components/adaptation-editor";
-import { FlowSteps } from "@/components/flow-steps";
+import { AdaptationHelp } from "@/components/adaptation-help";
 import { listThreads } from "@/server/services/communication";
 export default async function PlanPage({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) {
-  const s = await session();
-  if (!s.ownerId) notFound();
-  const plan = await getPlan((await params).id, s.ownerId);
+  const owner = await session();
+  if (!owner.ownerId) notFound();
+  const plan = await getPlan((await params).id, owner.ownerId);
   if (!plan) notFound();
   const innovation = (await listInnovations()).find(
-    (r) => r.id === plan.innovationId,
+    (record) => record.id === plan.innovationId,
   );
   if (!innovation) notFound();
-  const conversation = (await listThreads({ ownerId: s.ownerId })).find(
-    (t) => t.adaptationId === plan.id,
+  const conversation = (await listThreads({ ownerId: owner.ownerId })).find(
+    (thread) => thread.adaptationId === plan.id,
   );
   return (
-    <section className="narrow">
-      <FlowSteps current={4} />
+    <section className="narrow stack">
       <Link href="/moje-sprawy">← Moje sprawy</Link>
-      <p className="eyebrow detail-label">Prywatna adaptacja</p>
-      <h1>Twój szkic usługi</h1>
-      <p className="lead">{innovation.title}</p>
-      <p>
-        <Link href={`/adaptacje/${plan.id}/podglad`}>
-          Przejrzyj cały plan i zapisz PDF →
-        </Link>
-      </p>
-      <p>
-        <Link href={`/potrzeby/${plan.needId}`}>
-          Potrzeba, dla której powstał plan
-        </Link>
-      </p>
+      <header>
+        <p className="eyebrow detail-label">Plan dla instytucji</p>
+        <h1>Możesz zacząć działać</h1>
+        <p className="lead">{innovation.title}</p>
+      </header>
+      <AdaptationView plan={plan} />
+      <AdaptationHelp
+        planId={plan.id}
+        revision={plan.revision}
+        conversationId={conversation?.id}
+      />
+      {conversation && conversation.unread > 0 && (
+        <p role="status">Nowe wiadomości: {conversation.unread}</p>
+      )}
+      <div className="actions">
+        <Link href={`/adaptacje/${plan.id}/podglad`}>Cały plan i PDF →</Link>
+        <Link href={`/potrzeby/${plan.needId}`}>Wróć do wybranej potrzeby</Link>
+      </div>
       <details className="card">
-        <summary>Warunki podane przez autora</summary>
+        <summary>Warunki i źródła</summary>
         {Object.entries({
           Instytucja: plan.constraints.institution,
           Zasoby: plan.constraints.resources,
           Zasięg: plan.constraints.scope,
-          Termin: plan.constraints.timeline || "Nieustalony",
-          Budżet: plan.constraints.budget || "Nieustalony",
-        }).map(([k, v]) => (
-          <p key={k}>
-            <strong>{k}:</strong> {v}
-          </p>
-        ))}
-      </details>
-      <AdaptationView plan={plan} />
-      <aside className="note">
-        <h2>
-          {conversation
-            ? "Rozmowa o tym planie"
-            : "Omów pierwszy krok z koordynatorem"}
-        </h2>
-        <p>
-          {conversation
-            ? "W rozmowie znajdziesz przekazaną wersję i odpowiedź koordynatora. Późniejsze poprawki pozostają prywatne. Nową wersję możesz udostępnić w tej samej rozmowie."
-            : "Plan pozostaje prywatny. Na kolejnym ekranie przejrzysz i zmienisz pytanie przed wysłaniem. Dopiero wysłanie udostępni personelowi plan i potrzebę."}
-        </p>
-        {conversation && conversation.unread > 0 && (
-          <p role="status">Nowe wiadomości: {conversation.unread}</p>
-        )}
-        <Link
-          className="button"
-          href={
-            conversation
-              ? `/wiadomosci/${conversation.id}`
-              : `/wiadomosci/nowa?adaptationId=${plan.id}`
-          }
-        >
-          {conversation ? "Wróć do rozmowy" : "Zapytaj koordynatora"}
-        </Link>
-        <p className="help">
-          Plan i odpowiedzi znajdziesz w{" "}
-          <Link href="/moje-sprawy">Moich sprawach</Link>. Zapisz tam prywatny
-          kod powrotu. Wysłanie pytania nie oznacza zatwierdzenia planu.
-        </p>
-      </aside>
-      <section className="card">
-        <h2>Materiał źródłowy — oddzielony od propozycji</h2>
+          Termin: plan.constraints.timeline,
+          Budżet: plan.constraints.budget,
+        })
+          .filter(([, value]) => value)
+          .map(([label, value]) => (
+            <p key={label}>
+              <strong>{label}:</strong> {value}
+            </p>
+          ))}
+        <h2>Materiały źródłowe</h2>
         {innovation.origin === "SYNTHETIC" && (
-          <p className="notice">
-            Źródła syntetyczne, bez potwierdzenia skuteczności.
-          </p>
+          <p className="help">Źródła demonstracyjne — dane syntetyczne.</p>
         )}
         {innovation.sources
-          .filter((s) => plan.draft.sourceIds.includes(s.id))
-          .map((s) => (
-            <div className="source" key={s.id}>
-              <h3>{s.sourceTitle}</h3>
-              {s.evidenceExcerpt && (
-                <blockquote>{s.evidenceExcerpt}</blockquote>
+          .filter((source) => plan.draft.sourceIds.includes(source.id))
+          .map((source) => (
+            <div className="source" key={source.id}>
+              <h3>{source.sourceTitle}</h3>
+              {source.evidenceExcerpt && (
+                <blockquote>{source.evidenceExcerpt}</blockquote>
               )}
-              <p>{s.sourceRef}</p>
-              {s.sourceUrl && (
-                <a href={s.sourceUrl} target="_blank" rel="noreferrer">
+              <p>{source.sourceRef}</p>
+              {source.sourceUrl && (
+                <a href={source.sourceUrl} target="_blank" rel="noreferrer">
                   Otwórz źródło ↗
                 </a>
               )}
             </div>
           ))}
-      </section>
+      </details>
       <AdaptationEditor initial={plan} sources={innovation.sources} />
     </section>
   );

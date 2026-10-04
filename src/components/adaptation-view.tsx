@@ -12,11 +12,12 @@ export function AdaptationView({
   plan: AdaptationPlan;
   expanded?: boolean;
 }) {
+  const first = firstStepFor(plan.draft);
   const show = (value: string | string[]) =>
     Array.isArray(value) ? (
       <ul>
-        {value.map((x, i) => (
-          <li key={i}>{x}</li>
+        {value.map((item, index) => (
+          <li key={index}>{item}</li>
         ))}
       </ul>
     ) : (
@@ -24,44 +25,45 @@ export function AdaptationView({
     );
   return (
     <div className="stack">
-      <p className="notice">
-        {plan.mode === "mock"
-          ? "Szkic demonstracyjny — bez wywołania AI. "
-          : "Szkic wygenerowany przez AI — wymaga oceny. "}
-        Wersja {plan.revision}
-        {plan.editedByOwner ? ", zmieniona przez autora" : ""}. Propozycje i
-        założenia poniżej nie są faktami potwierdzonymi przez źródła ani
-        zatwierdzeniem ROPS.
-      </p>
+      {plan.mode === "mock" && (
+        <p className="help">Plan demonstracyjny — bez wywołania AI.</p>
+      )}
       <section className="card" aria-label="Pierwszy krok planu">
-        <p className="eyebrow">Od czego zacząć</p>
+        <p className="eyebrow">Co zrobić teraz</p>
         <h2>Twój pierwszy krok</h2>
-        <dl className="first-step-grid">
-          {Object.entries(firstStepLabels).map(([key, label]) => (
-            <div key={key}>
-              <dt>{label}</dt>
-              <dd>
-                {firstStepFor(plan.draft)[key as keyof typeof firstStepLabels]}
-              </dd>
-            </div>
-          ))}
-          <div>
-            <dt>Budżet podany przez Ciebie</dt>
-            <dd>
-              {plan.constraints.budget ||
-                "Nieustalony — przed działaniem trzeba oszacować koszty."}
-            </dd>
-          </div>
-          <div>
-            <dt>Termin podany przez Ciebie</dt>
-            <dd>
-              {plan.constraints.timeline || "Nieustalony — do uzgodnienia."}
-            </dd>
-          </div>
-        </dl>
+        <p className="message-body">{first.action}</p>
+        <details open={expanded}>
+          <summary>Kto, z czym i jaki efekt?</summary>
+          <dl className="first-step-grid">
+            {Object.entries(firstStepLabels)
+              .filter(([key]) => key !== "action")
+              .map(([key, label]) => (
+                <div key={key}>
+                  <dt>{label}</dt>
+                  <dd>{first[key as keyof typeof firstStepLabels]}</dd>
+                </div>
+              ))}
+            {plan.constraints.budget && (
+              <div>
+                <dt>Twój budżet</dt>
+                <dd>{plan.constraints.budget}</dd>
+              </div>
+            )}
+            {plan.constraints.timeline && (
+              <div>
+                <dt>Twój termin</dt>
+                <dd>{plan.constraints.timeline}</dd>
+              </div>
+            )}
+          </dl>
+        </details>
       </section>
       <details className="plan-details" open={expanded}>
-        <summary>Pełny szkic: uzasadnienie, zasoby, ryzyka i pilotaż</summary>
+        <summary>Pełny plan: kroki, zasoby i pilotaż</summary>
+        <p className="help">
+          Prywatny plan roboczy · wersja {plan.revision}
+          {plan.editedByOwner ? " · zmieniona przez autora" : ""}.
+        </p>
         {Object.entries(draftLabels).map(([key, label]) => (
           <section className="card" key={key}>
             <h2>{label}</h2>

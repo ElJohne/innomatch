@@ -14,6 +14,8 @@ export function AdaptationForm({
     key = useRef("");
   const [busy, setBusy] = useState(false),
     [error, setError] = useState("");
+  const fixedNeed =
+    selectedNeedId ?? (needs.length === 1 ? needs[0].id : undefined);
   return (
     <form
       className="form card stack"
@@ -21,10 +23,12 @@ export function AdaptationForm({
       onChange={() => {
         key.current = "";
       }}
-      onSubmit={async (e) => {
-        e.preventDefault();
+      onSubmit={async (event) => {
+        event.preventDefault();
         if (busy) return;
-        const form = new FormData(e.currentTarget);
+        const form = new FormData(event.currentTarget);
+        const needId = String(form.get("needId") ?? "");
+        const value = (name: string) => String(form.get(name) ?? "").trim();
         key.current ||= crypto.randomUUID();
         setBusy(true);
         setError("");
@@ -33,95 +37,106 @@ export function AdaptationForm({
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-              needId: form.get("needId"),
+              needId,
               innovationId,
               requestKey: key.current,
-              constraints: Object.fromEntries(
-                ["institution", "resources", "scope", "timeline", "budget"].map(
-                  (k) => [k, form.get(k)],
-                ),
-              ),
+              constraints: {
+                institution: value("institution"),
+                resources:
+                  value("resources") || "Nie podano zasobów — do ustalenia.",
+                scope:
+                  value("scope") ||
+                  needs
+                    .find((need) => need.id === needId)
+                    ?.description.slice(0, 600) ||
+                  "Zakres do ustalenia.",
+                timeline: value("timeline"),
+                budget: value("budget"),
+              },
             }),
           });
           const data = await response.json();
           if (!response.ok) throw new Error(data.message);
           router.push(`/adaptacje/${data.id}`);
-        } catch (e) {
+        } catch (caught) {
           setError(
-            e instanceof Error ? e.message : "Nie udało się przygotować planu.",
+            caught instanceof Error
+              ? caught.message
+              : "Nie udało się przygotować planu.",
           );
           setBusy(false);
         }
       }}
     >
       <fieldset disabled={busy} className="stack">
-        <legend>Potrzeba i warunki instytucji</legend>
-        <label htmlFor="plan-need">Twoja zapisana potrzeba</label>
-        <select
-          id="plan-need"
-          name="needId"
-          required
-          defaultValue={selectedNeedId ?? needs[0]?.id}
-        >
-          {needs.map((n) => (
-            <option value={n.id} key={n.id}>
-              {n.description.slice(0, 120)}
-            </option>
-          ))}
-        </select>
-        <p className="help">
-          Nie wpisuj danych osobowych ani danych zdrowotnych. Wystarczy typ
-          instytucji i ogólny opis warunków. Podane informacje posłużą do
-          przygotowania szkicu AI.
-        </p>
-        <label htmlFor="plan-institution">Typ instytucji i jej rola</label>
-        <p className="help">
-          Działasz prywatnie? Wpisz „osoba prywatna” lub rodzaj grupy — bez
-          nazwisk. Jeśli zasoby nie są jeszcze znane, napisz „do ustalenia”.
-        </p>
+        <legend>Plan dla Twojej instytucji</legend>
+        {fixedNeed ? (
+          <input type="hidden" name="needId" value={fixedNeed} />
+        ) : (
+          <>
+            <label htmlFor="plan-need">Której potrzeby dotyczy plan?</label>
+            <select
+              id="plan-need"
+              name="needId"
+              required
+              defaultValue={needs[0]?.id}
+            >
+              {needs.map((need) => (
+                <option value={need.id} key={need.id}>
+                  {need.description.slice(0, 120)}
+                </option>
+              ))}
+            </select>
+          </>
+        )}
+        <label htmlFor="plan-institution">
+          Jaka instytucja będzie działać?
+        </label>
         <input
           id="plan-institution"
           name="institution"
           required
           minLength={3}
           maxLength={300}
-          placeholder="Np. gminny ośrodek kultury"
+          placeholder="Np. biblioteka lub ośrodek pomocy"
         />
-        <label htmlFor="plan-resources">Dostępne zasoby i ograniczenia</label>
-        <textarea
-          id="plan-resources"
-          name="resources"
-          required
-          minLength={3}
-          maxLength={1500}
-          rows={4}
-          placeholder="Miejsce, zespół, dostępność, ograniczenia…"
-        />
-        <label htmlFor="plan-scope">Dla kogo i jaki zasięg usługi?</label>
-        <textarea
-          id="plan-scope"
-          name="scope"
-          required
-          minLength={3}
-          maxLength={600}
-          rows={3}
-        />
-        <label htmlFor="plan-timeline">Termin — jeśli znany</label>
-        <input id="plan-timeline" name="timeline" maxLength={300} />
-        <label htmlFor="plan-budget">Budżet — jeśli znany</label>
-        <input id="plan-budget" name="budget" maxLength={300} />
+        <details>
+          <summary>Dodatkowe warunki — opcjonalnie</summary>
+          <div className="stack">
+            <label htmlFor="plan-resources">Co macie do dyspozycji?</label>
+            <textarea
+              id="plan-resources"
+              name="resources"
+              minLength={3}
+              maxLength={1500}
+              rows={2}
+              placeholder="Np. sala i dwie osoby do pomocy"
+            />
+            <label htmlFor="plan-scope">
+              Dla kogo? — jeśli chcesz doprecyzować
+            </label>
+            <textarea
+              id="plan-scope"
+              name="scope"
+              minLength={3}
+              maxLength={600}
+              rows={2}
+            />
+            <label htmlFor="plan-timeline">Termin — jeśli znany</label>
+            <input id="plan-timeline" name="timeline" maxLength={300} />
+            <label htmlFor="plan-budget">Budżet — jeśli znany</label>
+            <input id="plan-budget" name="budget" maxLength={300} />
+          </div>
+        </details>
       </fieldset>
-      <p className="notice">
-        Otrzymasz prywatną, edytowalną propozycję do oceny. To nie jest
-        zatwierdzenie ROPS ani obietnica finansowania.
-      </p>
       {error && (
         <p role="alert" className="error">
           {error}
         </p>
       )}
-      {busy && <p role="status">Przygotowujemy i zapisujemy szkic…</p>}
-      <button disabled={busy}>Przygotuj szkic adaptacji</button>
+      <button disabled={busy}>
+        {busy ? "Przygotowujemy plan…" : "Przygotuj plan →"}
+      </button>
     </form>
   );
 }

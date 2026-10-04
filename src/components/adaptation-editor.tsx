@@ -41,10 +41,8 @@ export function AdaptationEditor({
       <details className="card">
         <summary>Edytuj szkic</summary>
         <p className="help">
-          Lista: jedna pozycja w wierszu, od 1 do 8 pozycji, każda do 600
-          znaków. Pozostałe pola: do 1200 znaków. Zmiany zapisujesz bez
-          ponownego wywołania AI. Zapisane zmiany pozostają prywatne, dopóki
-          nie udostępnisz nowej wersji w rozmowie z koordynatorem.
+          Listy: jedna pozycja w wierszu. Zapisane poprawki pozostają prywatne.
+          Nową wersję udostępnisz w rozmowie z koordynatorem.
         </p>
         <form
           className="form stack"
