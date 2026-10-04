@@ -1,0 +1,21 @@
+.search {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1rem;
+  align-items: end;
+}
+.search > details {
+  grid-column: 1 / -1;
+}
+.extra {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+@media (max-width: 600px) {
+  .search,
+  .extra {
+    grid-template-columns: 1fr;
+  }
+}

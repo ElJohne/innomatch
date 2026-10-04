@@ -2,6 +2,7 @@ import { listInnovations } from "@/server/services/repository";
 import { normalize, content } from "@/server/search/ranking";
 import { InnovationCard } from "@/components/innovation-card";
 import Link from "next/link";
+import styles from "./discovery.module.css";
 export default async function Catalog({
   searchParams,
 }: {
@@ -44,19 +45,13 @@ export default async function Catalog({
   return (
     <section className="section innovation-catalog">
       <div className="catalog-heading">
-        <p className="eyebrow">Biblioteka inspiracji</p>
-        <h1>Znajdź punkt wyjścia do zmiany.</h1>
-        <p className="lead">
-          Poznaj rozwiązania, ich źródła i warunki zastosowania.
-        </p>
+        <h1>Znajdź rozwiązanie</h1>
         <p className="help">
           Nie znasz nazwy rozwiązania?{" "}
-          <Link href="/potrzeby/nowa">
-            Opisz potrzebę — pomożemy dobrać propozycje →
-          </Link>
+          <Link href="/potrzeby/nowa">Opisz potrzebę →</Link>
         </p>
       </div>
-      <form className="filters card">
+      <form className={`card ${styles.search}`}>
         <div>
           <label htmlFor="q">Szukaj w katalogu</label>
           <input
@@ -67,37 +62,44 @@ export default async function Catalog({
             maxLength={200}
           />
         </div>
-        <div>
-          <label htmlFor="group">Odbiorcy</label>
-          <select name="group" id="group" defaultValue={p.group}>
-            <option value="">Wszyscy</option>
-            {[...new Set(all.flatMap((r) => r.targetGroups))]
-              .sort()
-              .map((g) => (
-                <option key={g}>{g}</option>
-              ))}
-          </select>
-        </div>
-        <div>
-          <label htmlFor="category">Temat</label>
-          <select name="category" id="category" defaultValue={p.category}>
-            <option value="">Wszystkie</option>
-            {[...new Set(all.flatMap((r) => r.categories))].sort().map((g) => (
-              <option key={g}>{g}</option>
-            ))}
-          </select>
-        </div>
-        <div>
-          <label htmlFor="stage">Etap</label>
-          <select name="stage" id="stage" defaultValue={p.stage}>
-            <option value="">Wszystkie</option>
-            <option value="CONCEPT">Koncepcja</option>
-            <option value="PILOT">Pilotaż</option>
-            <option value="TESTED">Przetestowane</option>
-            <option value="UNKNOWN">Nieustalony</option>
-          </select>
-        </div>
         <button type="submit">Szukaj</button>
+        <details open={Boolean(p.group || p.category || p.stage)}>
+          <summary>Dodatkowe filtry</summary>
+          <div className={styles.extra}>
+            <div>
+              <label htmlFor="group">Odbiorcy</label>
+              <select name="group" id="group" defaultValue={p.group}>
+                <option value="">Wszyscy</option>
+                {[...new Set(all.flatMap((r) => r.targetGroups))]
+                  .sort()
+                  .map((g) => (
+                    <option key={g}>{g}</option>
+                  ))}
+              </select>
+            </div>
+            <div>
+              <label htmlFor="category">Temat</label>
+              <select name="category" id="category" defaultValue={p.category}>
+                <option value="">Wszystkie</option>
+                {[...new Set(all.flatMap((r) => r.categories))]
+                  .sort()
+                  .map((g) => (
+                    <option key={g}>{g}</option>
+                  ))}
+              </select>
+            </div>
+            <div>
+              <label htmlFor="stage">Etap</label>
+              <select name="stage" id="stage" defaultValue={p.stage}>
+                <option value="">Wszystkie</option>
+                <option value="CONCEPT">Koncepcja</option>
+                <option value="PILOT">Pilotaż</option>
+                <option value="TESTED">Przetestowane</option>
+                <option value="UNKNOWN">Nieustalony</option>
+              </select>
+            </div>
+          </div>
+        </details>
       </form>
       <div className="catalog-results-bar">
         <p className="muted">

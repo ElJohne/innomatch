@@ -9,86 +9,135 @@ import { listPlans } from "@/server/services/adaptations";
 import { listIdeas } from "@/server/services/ideas";
 import { listPilotCases } from "@/server/services/pilots";
 import { feedbackStatusLabels } from "@/lib/contracts/pilot";
+
 export default async function Cases() {
   const s = await session();
-  const records = s.ownerId ? await listNeeds(s.ownerId) : [];
-  const plans = s.ownerId ? await listPlans(s.ownerId) : [];
-  const ideas = s.ownerId ? await listIdeas(s.ownerId) : [];
   const a = s.ownerId ? await actor() : null;
-  const threads = a && !a.staff ? await listThreads(a) : [];
-  const pilots =
+  const [records, plans, ideas, threads, pilots] = await Promise.all([
+    s.ownerId ? listNeeds(s.ownerId) : [],
+    s.ownerId ? listPlans(s.ownerId) : [],
+    s.ownerId ? listIdeas(s.ownerId) : [],
+    a && !a.staff ? listThreads(a) : [],
     a && !a.staff
-      ? await listPilotCases(a.ownerId)
-      : { participations: [], feedback: [] };
+      ? listPilotCases(a.ownerId)
+      : { participations: [], feedback: [] },
+  ]);
+  const otherThreads = threads.filter(
+    (t) => !t.needId || t.adaptationId || t.ideaId,
+  );
   return (
     <section className="narrow">
-      <p className="eyebrow">Twoja przestrzeń</p>
       <h1>Moje sprawy</h1>
-      <p className="lead">
-        Twoje potrzeby, plany adaptacji i odpowiedzi koordynatora. Zachowaj
-        prywatny kod dostępu, aby wrócić do spraw także z innej przeglądarki.
-      </p>
-      {!a?.staff && <RecoveryPanel canIssue={Boolean(s.ownerId)} />}
-      <h2>Rozmowy z koordynatorem</h2>
-      {a?.staff ? (
+      <p className="lead">Tutaj wrócisz do pomocy i odpowiedzi koordynatora.</p>
+      {a?.staff && (
         <p>
-          <Link href="/admin">Otwórz skrzynkę personelu</Link>
+          <Link href="/admin">Otwórz skrzynkę personelu →</Link>
         </p>
-      ) : (
-        <ThreadList items={threads} />
       )}
-      <details className="card">
-        <summary>Twoje szkice adaptacji ({plans.length})</summary>
+      <div className="stack">
+        {records.map((r) => {
+          const conversation = threads.find(
+            (t) => t.needId === r.id && !t.adaptationId,
+          );
+          return (
+            <article className="card" key={r.id}>
+              <p className="help">
+                {new Date(r.createdAt).toLocaleDateString("pl-PL", {
+                  timeZone: "Europe/Warsaw",
+                })}
+              </p>
+              <h2>
+                {r.description.slice(0, 100)}
+                {r.description.length > 100 ? "…" : ""}
+              </h2>
+              <p>
+                {conversation ? (
+                  conversation.unread > 0 ? (
+                    <strong>Nowa odpowiedź ({conversation.unread})</strong>
+                  ) : (
+                    "Prośba wysłana do koordynatora"
+                  )
+                ) : (
+                  "Możesz wybrać pomoc dla siebie"
+                )}
+              </p>
+              <Link
+                className="button"
+                href={
+                  conversation
+                    ? `/wiadomosci/${conversation.id}`
+                    : `/potrzeby/${r.id}`
+                }
+              >
+                {conversation ? "Otwórz rozmowę →" : "Wybierz pomoc →"}
+              </Link>
+              {conversation && (
+                <p>
+                  <Link href={`/potrzeby/${r.id}`}>
+                    Zobacz znalezione rozwiązania
+                  </Link>
+                </p>
+              )}
+            </article>
+          );
+        })}
+      </div>
+      {!records.length && <p>Nie masz jeszcze zapisanych potrzeb.</p>}
+      <Link className="button detail-label" href="/potrzeby/nowa">
+        Znajdź nową pomoc →
+      </Link>
+      {otherThreads.length > 0 && (
+        <section className="stack detail-label">
+          <h2>Pozostałe rozmowy</h2>
+          <ThreadList items={otherThreads} />
+        </section>
+      )}
+      <details className="card detail-label">
+        <summary>Plany dla instytucji ({plans.length})</summary>
         {plans.length ? (
           plans.map((p) => (
             <p key={p.id}>
-              <Link href={`/adaptacje/${p.id}`}>
-                {p.title} — wersja {p.revision}
-              </Link>
+              <Link href={`/adaptacje/${p.id}`}>{p.title}</Link>
             </p>
           ))
         ) : (
-          <p>
-            Nie masz dostępnych planów. Rozpocznij od wybranej innowacji. Plany
-            oparte na zmienionych lub ukrytych materiałach nie są wyświetlane.
-          </p>
+          <p>Nie masz jeszcze dostępnych planów.</p>
         )}
       </details>
-      <details className="card">
-        <summary>Twoje pomysły ({ideas.length})</summary>
+      <details className="card detail-label">
+        <summary>Pomysły ({ideas.length})</summary>
         {ideas.map((i) => (
           <p key={i.id}>
             <Link href={`/pomysly/${i.id}`}>{i.title}</Link> —{" "}
             {i.status === "DRAFT"
               ? "szkic prywatny"
               : "przekazany do konsultacji"}
-            , wersja {i.revision}
           </p>
         ))}
         <Link className="text-link" href="/pomysly/nowy">
           Zapisz nowy pomysł →
         </Link>
       </details>
-      <details className="card">
+      <details className="card detail-label">
         <summary>
           Testowanie i opinie (
           {pilots.participations.length + pilots.feedback.length})
         </summary>
-        <h3>Zgłoszone zainteresowanie testowaniem</h3>
-        {!pilots.participations.length && (
-          <p>Nie zgłoszono jeszcze zainteresowania.</p>
-        )}
+        <h3>Testowanie</h3>
+        {!pilots.participations.length && <p>Nie masz jeszcze zgłoszeń.</p>}
         {pilots.participations.map((p) => (
           <p key={p.id}>
-            {p.title ?? "Niedostępna innowacja"} — zgłoszono zainteresowanie.{" "}
+            {p.title ?? "Niedostępna innowacja"}
             {p.title && (
-              <Link href={`/wiadomosci/${p.threadId}`}>
-                Uzgodnij warunki z koordynatorem →
-              </Link>
+              <>
+                {" "}
+                ·{" "}
+                <Link href={`/wiadomosci/${p.threadId}`}>Otwórz rozmowę →</Link>
+              </>
             )}
           </p>
         ))}
-        <h3>Twoje opinie</h3>
+        <h3>Opinie</h3>
         {!pilots.feedback.length && <p>Nie masz jeszcze opinii.</p>}
         {pilots.feedback.map((f) => (
           <p key={f.id}>
@@ -104,28 +153,11 @@ export default async function Cases() {
           </p>
         ))}
       </details>
-      <h2 className="detail-label">Twoje potrzeby</h2>
-      <div className="stack">
-        {records.map((r) => (
-          <article className="card" key={r.id}>
-            <p className="help">
-              {new Date(r.createdAt).toLocaleDateString("pl-PL", {
-                timeZone: "Europe/Warsaw",
-              })}
-            </p>
-            <h2>
-              <Link href={`/potrzeby/${r.id}`}>
-                {r.description.slice(0, 100)}
-                {r.description.length > 100 ? "…" : ""}
-              </Link>
-            </h2>
-          </article>
-        ))}
-      </div>
-      {!records.length && <p>Nie masz jeszcze zgłoszeń w tej sesji.</p>}
-      <Link className="button" href="/potrzeby/nowa">
-        Opisz nową potrzebę →
-      </Link>
+      {!a?.staff && (
+        <div className="detail-label">
+          <RecoveryPanel canIssue={Boolean(s.ownerId)} />
+        </div>
+      )}
     </section>
   );
 }

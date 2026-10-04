@@ -1,13 +1,19 @@
 import Link from "next/link";
 import type { Innovation } from "@/lib/contracts";
 export function InnovationCard({ item }: { item: Innovation }) {
+  const first =
+    item.solution.match(/^.*?[.!?](?:\s|$)/)?.[0]?.trim() || item.solution;
+  const summary =
+    first.length > 180
+      ? `${first.slice(0, 179).replace(/\s+\S*$/, "")}…`
+      : first;
   return (
     <article className="card">
       <div className="eyebrow">{item.categories[0]}</div>
       <h2>
         <Link href={`/innowacje/${item.id}`}>{item.title}</Link>
       </h2>
-      <p>{item.problem}</p>
+      <p>{summary}</p>
       <div className="tags">
         {item.targetGroups.map((g) => (
           <span key={g}>{g}</span>
