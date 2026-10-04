@@ -1,5 +1,17 @@
 # Стан — 2026-10-04
 
+## Автономна робота та підготовка rollout — 02:48 Europe/Warsaw
+
+Власник прямо дозволив автономні push, production deploy і необхідні дії для
+полірування MVP; пріоритет — M1–M7 і ручні сценарії журі, без розширення тестових
+пайплайнів. Поточний пакет об'єднано з origin/master 8bc5329, збережено нову форму
+ідеї та скасування глобальної AI-квоти, уже розгорнуте іншою ітерацією.
+Історичні цифри quota=300 нижче стосуються попередніх перевірок.
+MatchingVersion піднято до 5, оскільки production вже використовує 4 для оновлення
+старого AI-кешу. Build і lint об'єднаного коду PASS.
+Backup job backup-quality-20261004-0246 Complete; migration 0008 чекає штатного
+auto-deploy цього пакета. Rollout ще не підтверджений у цьому записі.
+
 ## Конкурентний пакет: основні сценарії завершено локально — 02:30 Europe/Warsaw
 
 Фокус за вказівкою власника — функціональність і звичайні шляхи користувача.
@@ -44,6 +56,34 @@ keyword/template fallback, тому це не новий доказ якості
 опис» + посилання описати знову. Код застосунку й конфігурація не змінювалися.
 П'ять синтетичних приватних needs цього окремого аудиту (1 до повтору, 4 після)
 залишено; координатору не надсилалися. Деталі фактичних перевірок — QA.md.
+
+## AI на production відновлено — 2026-10-04
+
+За явним підтвердженням власника прибрано глобальну добову AI-квоту й розгорнуто
+реліз `4e5554c78275e0fedc1db155f437efb0e0efe7d7-37159479316-1`.
+Кластер: rollout успішний, migration/corpus jobs Complete, readiness ok.
+GitHub CLI повертав 404 для Actions; deployment підтверджено безпосередньо
+за release mount, статусом rollout і фактичним production API.
+
+3/3 синтетичні production HTTPS запити: Cold Box, Biustspinka, Głuchy czytelnik
+w bibliotece — semantic/openai/source_backed, без warnings і без питань.
+Усі результати matchingVersion=4; тестові needs прибрано, usage збережено.
+Ліміт AI_DAILY_REQUEST_LIMIT повністю вилучено, а не підвищено чи скинуто.
+Повторне відкриття старих v3 результатів запускає актуальний пошук.
+Залишені timeout/concurrency та окремі сесійні API-ліміти; квот провайдера ця
+зміна не змінює. Паралельні незавершені зміни основної папки не включалися.
+
+## Вилучення глобальної AI-квоти — 2026-10-04, підготовлено до rollout
+
+Власник прямо доручив прибрати ліміт, який блокував production запити.
+Підтверджено configured=300 / used=375; це внутрішня квота застосунку.
+Видалено перевірку добової квоти для OpenAI/Azure і AI_DAILY_REQUEST_LIMIT
+із конфігурації. Облік ai_usage, timeout і concurrency збережено.
+MatchingVersion=4 оновлює старі кешовані відповіді після квоти.
+Ізольований worktree зберіг незавершені зміни основної робочої папки;
+інтегровано останній origin/master 31c20c1 зі змінами форми ідеї.
+Lint/typecheck/build PASS; 60 unit, 8 PostgreSQL integration, 22 Chrome E2E PASS.
+Production rollout і live smoke ще не підтверджені на момент цього запису.
 
 ## Цикл уточнень — розгорнуто на production
 
@@ -599,3 +639,9 @@ Header navigation — 2026-10-03: added Strona główna; Mam pomysł now shares 
 Yellow accent cleanup — 2026-10-03: unified home heading colour, removed underline and yellow backgrounds behind Małopolska / Biblioteka inspiracji; removed confirmation decorative symbol. Build, lint, typecheck, 40 unit and 20 E2E PASS; 8 integration skipped without TEST_DATABASE_URL. Local browser reviewed. Local only.
 
 Active header navigation — 2026-10-03: pathname-aware client navigation with persistent underline and aria-current (page/location), including nested catalog/idea pages. Build, lint, typecheck, 40 unit and 21 E2E PASS; 8 integration skipped without TEST_DATABASE_URL. Added navigation regression covering client transitions, filtered catalog, details and four contrast palettes. Local only.
+
+Mam pomysł guidance — 2026-10-04: homepage-style blue/mint hero and form, single-colour heading, social-initiative explanation with two examples, help-for-yourself link to home, field-specific accessible hints, audience/stage explanation and explicit private-until-consultation guidance. Save/AI/consultation behavior unchanged. Build, lint, typecheck, 40 unit and 21 E2E PASS; 8 integration skipped without TEST_DATABASE_URL. Built-in browser reviewed; contrast and mobile 200% checks PASS. Local only.
+
+Mam pomysł cleanup — 2026-10-04: removed initial draft notice, reassurance tip and resources/grants panel from new-idea page at owner request. Saved-idea status messaging remains. Build, lint, typecheck, 40 unit and 21 E2E PASS; 8 integration skipped without TEST_DATABASE_URL. Absence of requested blocks verified in built-in browser. Local only.
+
+Release verification — 2026-10-04: merged origin/master 9a0f8ba with Mam pomysł design and content cleanup. Build, lint, typecheck, 58 unit and 22 E2E PASS. Eight integration tests skipped without TEST_DATABASE_URL. No live AI or database changes.

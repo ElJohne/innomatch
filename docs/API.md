@@ -79,7 +79,7 @@ false за відсутності). Один раунд / одне питанн�
 питань. До 6 старих відповідей залишаються сумісними. Короткий опис сам по собі
 не є причиною уточнення; завершений пошук, no_match і збій AI не додають питань.
 
-MatchResponse v3: `matchingVersion:3`, optional `assumptions:string[]` (до 3 × 300
+MatchResponse v4: `matchingVersion:4`, optional `assumptions:string[]` (до 3 × 300
 символів, видимі як припущення), optional `guidance: emergency|support|clarify`,
 optional allowlisted `contacts:[112,999]` (рядки), retrieval додатково `none`,
 explanation додатково `rules`. Термінове скерування не містить інновацій/матеріалів.

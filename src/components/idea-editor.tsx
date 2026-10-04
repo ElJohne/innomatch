@@ -35,6 +35,15 @@ const minimums = {
   resources: 3,
   pilotOutline: 3,
 };
+const fieldHints = {
+  title: "Jak nazywa się Twoja inicjatywa?",
+  problem: "Co chcesz zmienić i dlaczego ten problem jest ważny?",
+  essence: "Jak miałoby działać rozwiązanie? Opisz, co będziecie robić.",
+  resources:
+    "Czym dysponujesz, czego potrzebujesz i jakie przeszkody przewidujesz?",
+  pilotOutline:
+    "Jak sprawdzisz pomysł w małej skali, np. z kilkoma uczestnikami?",
+};
 async function request(url: string, method: string, body: unknown) {
   const response = await fetch(url, {
     method,
@@ -46,7 +55,13 @@ async function request(url: string, method: string, body: unknown) {
     throw new Error(data.message || "Operacja nie powiodła się.");
   return data;
 }
-export function IdeaEditor({ initial }: { initial?: Idea }) {
+export function IdeaEditor({
+  initial,
+  hideDraftNotice = false,
+}: {
+  initial?: Idea;
+  hideDraftNotice?: boolean;
+}) {
   const router = useRouter(),
     key = useRef("");
   const [idea, setIdea] = useState(initial),
@@ -83,12 +98,14 @@ export function IdeaEditor({ initial }: { initial?: Idea }) {
   };
   return (
     <div className="stack idea-editor">
-      <p className="notice">
-        {submitted
-          ? "Pomysł przekazany do konsultacji. Personel widzi kartę oraz późniejsze zapisane zmiany. Karta nie jest publiczna."
-          : "Szkic prywatny. Personel zobaczy kartę dopiero po użyciu „Przekaż pomysł do konsultacji”."}{" "}
-        {idea && `Wersja ${idea.revision}.`}
-      </p>
+      {(!hideDraftNotice || submitted) && (
+        <p className="notice">
+          {submitted
+            ? "Pomysł przekazany do konsultacji. Personel widzi kartę oraz późniejsze zapisane zmiany. Karta nie jest publiczna."
+            : "Szkic prywatny. Personel zobaczy kartę dopiero po użyciu „Przekaż pomysł do konsultacji”."}{" "}
+          {idea && `Wersja ${idea.revision}.`}
+        </p>
+      )}
       {idea?.origin === "SYNTHETIC" && (
         <p className="help">
           Karta demonstracyjna, przechowywana tylko w lokalnej pamięci procesu.
@@ -142,9 +159,13 @@ export function IdeaEditor({ initial }: { initial?: Idea }) {
             return (
               <div key={key} className="idea-field">
                 <label htmlFor={`idea-${key}`}>{label}</label>
+                <p className="help" id={`idea-${key}-hint`}>
+                  {fieldHints[k]}
+                </p>
                 {k === "title" ? (
                   <input
                     id={`idea-${key}`}
+                    aria-describedby={`idea-${key}-hint`}
                     required
                     minLength={minimums[k]}
                     maxLength={limits[k]}
@@ -154,6 +175,7 @@ export function IdeaEditor({ initial }: { initial?: Idea }) {
                 ) : (
                   <textarea
                     id={`idea-${key}`}
+                    aria-describedby={`idea-${key}-hint`}
                     required
                     rows={4}
                     minLength={minimums[k]}
@@ -169,6 +191,7 @@ export function IdeaEditor({ initial }: { initial?: Idea }) {
             <label htmlFor="idea-groups">Dla kogo? Jedna grupa w wierszu</label>
             <textarea
               id="idea-groups"
+              aria-describedby="idea-groups-hint"
               required
               rows={3}
               maxLength={2009}
@@ -178,12 +201,16 @@ export function IdeaEditor({ initial }: { initial?: Idea }) {
                 setDirty(true);
               }}
             />
-            <p className="help">Od 1 do 10 grup, każda od 2 do 200 znaków.</p>
+            <p className="help" id="idea-groups-hint">
+              Komu ma pomóc inicjatywa? Wpisz od 1 do 10 grup, każdą w osobnym
+              wierszu (od 2 do 200 znaków).
+            </p>
           </div>
           <div>
             <label htmlFor="idea-stage">Na jakim etapie jest pomysł?</label>
             <select
               id="idea-stage"
+              aria-describedby="idea-stage-hint"
               value={card.stage}
               onChange={(e) => {
                 setCard((c) => ({
@@ -199,6 +226,10 @@ export function IdeaEditor({ initial }: { initial?: Idea }) {
                 </option>
               ))}
             </select>
+            <p className="help" id="idea-stage-hint">
+              Wybierz etap według własnej oceny: koncepcja, trwający pilotaż lub
+              pomysł po testach. To deklaracja autora.
+            </p>
           </div>
         </fieldset>
         {card.canvas ? (

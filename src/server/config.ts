@@ -20,12 +20,6 @@ export function config() {
         .max(60000)
         .default(20000),
       AI_MAX_CONCURRENCY: z.coerce.number().int().min(1).max(10).default(2),
-      AI_DAILY_REQUEST_LIMIT: z.coerce
-        .number()
-        .int()
-        .min(1)
-        .max(10000)
-        .default(300),
     })
     .parse(process.env);
 }

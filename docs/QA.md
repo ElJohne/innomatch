@@ -67,6 +67,34 @@
 - Desktop UI оглянуто; mobile не підтверджено. Suite lint/typecheck/unit/build/
   integration/E2E повторно не запускалися: змінено лише документацію аналізу.
 
+## Відновлення live AI — production, 2026-10-04
+
+- Власник явно підтвердив видалення ліміту та push з production auto-deploy.
+  Реліз `4e5554c78275e0fedc1db155f437efb0e0efe7d7-37159479316-1`.
+- Release mount містить цей SHA/run ID; rollout успішний, jobs
+  migrate-37159479316-1 і corpus-37159479316-1 мають succeeded=1. Readiness ok.
+  GitHub CLI Actions lookup давав 404; фінальний статус workflow через API
+  не отримано, результат перевірено безпосередньо в кластері та через HTTPS.
+- 3 live HTTP пошуки: short-medicine → Cold Box / matched / 8719 ms;
+  one-hand → Biustspinka / matched / 7019 ms; deaf-library → Głuchy czytelnik
+  w bibliotece / partial / 5764 ms. Усі semantic/openai/source_backed,
+  matchingVersion=4, questions=[], warnings=[]. Це справжні AI-відповіді після
+  видалення внутрішньої квоти, не keyword/template fallback.
+- Докази: tests/search-quality/quota-removed-live-2026-10-04.json. Синтетична
+  агентська перевірка, не незалежне приймання. Runner cleanup PASS; його needs
+  видалено, фактичні ai_usage збережено. Shared corpus і чужі needs не змінено.
+
+## Вилучення глобальної AI-квоти — 2026-10-04, локальна перевірка
+
+- Production read-only підтвердив внутрішню квоту 300 і використання 375.
+- Ізольований реліз видаляє consumeLimit для AI, не облік usage. Стара env
+  AI_DAILY_REQUEST_LIMIT і старі request_counters більше не блокують провайдера.
+- 2 нові unit-кейси (OpenAI/Azure): стара квота=1, reservation повертав би false;
+  3 послідовні виклики успішні, reservation не викликається, usage записано 3 рази.
+- Фінальні lint/typecheck/build PASS, 60 unit PASS, 8 PostgreSQL integration PASS
+  на окремому postgres:17.11-alpine (після тестів прибрано), 22 Chrome E2E PASS.
+  Live production-перевірку буде записано після rollout. Нових міграцій немає.
+
 ## Production rollout — 2026-10-04
 
 - Власник явно дозволив push з автоматичним deployment. Коміт виправлення
@@ -707,3 +735,9 @@ Header navigation — 2026-10-03: added Strona główna; Mam pomysł now shares 
 Yellow accent cleanup — 2026-10-03: unified home heading colour, removed underline and yellow backgrounds behind Małopolska / Biblioteka inspiracji; removed confirmation decorative symbol. Build, lint, typecheck, 40 unit and 20 E2E PASS; 8 integration skipped without TEST_DATABASE_URL. Local browser reviewed. Local only.
 
 Active header navigation — 2026-10-03: pathname-aware client navigation with persistent underline and aria-current (page/location), including nested catalog/idea pages. Build, lint, typecheck, 40 unit and 21 E2E PASS; 8 integration skipped without TEST_DATABASE_URL. Added navigation regression covering client transitions, filtered catalog, details and four contrast palettes. Local only.
+
+Mam pomysł guidance — 2026-10-04: homepage-style blue/mint hero and form, single-colour heading, social-initiative explanation with two examples, help-for-yourself link to home, field-specific accessible hints, audience/stage explanation and explicit private-until-consultation guidance. Save/AI/consultation behavior unchanged. Build, lint, typecheck, 40 unit and 21 E2E PASS; 8 integration skipped without TEST_DATABASE_URL. Built-in browser reviewed; contrast and mobile 200% checks PASS. Local only.
+
+Mam pomysł cleanup — 2026-10-04: removed initial draft notice, reassurance tip and resources/grants panel from new-idea page at owner request. Saved-idea status messaging remains. Build, lint, typecheck, 40 unit and 21 E2E PASS; 8 integration skipped without TEST_DATABASE_URL. Absence of requested blocks verified in built-in browser. Local only.
+
+Release verification — 2026-10-04: merged origin/master 9a0f8ba with Mam pomysł design and content cleanup. Build, lint, typecheck, 58 unit and 22 E2E PASS. Eight integration tests skipped without TEST_DATABASE_URL. No live AI or database changes.
