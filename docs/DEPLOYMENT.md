@@ -1,5 +1,18 @@
 # Запуск і підключення
 
+## Перший пріоритет — підготовка production, 2026-10-04
+
+Пакет навігації та прямих звернень об'єднано з `origin/master` 1c1bf41;
+функціональні виправлення та пагінація черг збережені. Потрібна міграція
+`0009_support_entry`, readiness перевіряє її. Контекст старих розмов збережено,
+нові приватні coordinator requests можуть мати лише мету підтримки.
+Перед міграцією `deploy/release.sh` тепер створює окремий backup Job через
+`deploy/render.mjs backup`, зберігає custom-format pg_dump у чинний backups PVC,
+перевіряє читання його змісту через pg_restore --list й чекає Complete.
+Невдалий backup зупиняє реліз до зміни схеми; нові права runner не потрібні.
+Цей backup доповнює чинний щоденний CronJob. Синтаксис bash та JSON manifest
+перевірено локально; фактичний backup підтверджується лише production Job.
+
 Актуальний функціональний реліз 04.10.2026 09:33: `d16ed07`,
 [Actions37185993820](https://github.com/ElJohne/innomatch/actions/runs/37185993820)
 SUCCESS. Збережено актуальний redesign master; нових migrations немає.
