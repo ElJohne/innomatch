@@ -1,5 +1,26 @@
 # Перевірки — 2026-10-03, поточна ітерація та історія
 
+## Final production manual checks — 2026-10-04, 08:23
+
+- f30862b / Actions 37182338134 SUCCESS.
+- Real OpenAI, own synthetic examples: bankomat→Merkury→one next step→actual
+  private thread PASS; shopping→Zakupy bez barier→short action/material link PASS.
+- New idea: single description→automatic create/assist/save→revision2 card with
+  short overview/action; editor shows 13/13 Canvas fields PASS.
+- Grant from that card: propose→preview→apply→save; 10/10 fields, “Zapisano szkic
+  grantowy”, printable saved-card link PASS. Budget figures were tested locally
+  by agent, not re-entered on live (no invented costs).
+- Institution: same owned synthetic need + “Biblioteka — QA syntetyczny”,
+  only institution field entered; real AI generated saved plan and one brief action.
+  Full plan/editor/source blocks collapsed by default PASS.
+- Catalog read-only: seniorzy bankomat→1 Merkury→short solution + help button,
+  source/institution/test/opinions folded PASS. Actual catalog request/reopen was
+  exercised locally by separate agent.
+- Combined lint/typecheck/Turbopack build/68 existing unit PASS. Full legacy E2E
+  and PostgreSQL integration not run; no new test suite/schema/dependencies.
+- Screenshots: live-minimal-shopping-final-20261004.png,
+  live-simple-idea-final-20261004.png, live-minimal-institution-final-20261004.png.
+
 ## Integrated minimal journeys — 2026-10-04, 08:16
 
 - 3683bc5 / Actions 37181883691 SUCCESS. Production manual OpenAI:
