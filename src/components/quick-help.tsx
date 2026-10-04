@@ -7,7 +7,7 @@ export function QuickHelp({
   existingThread,
 }: {
   needId: string;
-  solution: string;
+  solution?: string;
   existingThread?: string;
 }) {
   const router = useRouter(),
@@ -30,7 +30,9 @@ export function QuickHelp({
         body: JSON.stringify({
           needId,
           requestKey: key.current,
-          body: `Proszę o pomoc w mojej zapisanej sprawie. Wybrałem rozwiązanie „${solution}”. Proszę o wskazanie, jak mogę z niego skorzystać.`,
+          body: solution
+            ? `Proszę o pomoc w mojej zapisanej sprawie. Wybrałem rozwiązanie „${solution}”. Proszę o wskazanie, jak mogę z niego skorzystać.`
+            : "Proszę o pomoc w mojej zapisanej sprawie. W katalogu nie znalazłem odpowiedniego rozwiązania. Proszę o wskazanie innych możliwości wsparcia.",
         }),
       });
       const data = await r.json();
@@ -48,6 +50,13 @@ export function QuickHelp({
   }
   return (
     <div className="stack">
+      {!existingThread && (
+        <p className="help">
+          {solution
+            ? "Wyślesz koordynatorowi swój opis i wybrane rozwiązanie."
+            : "Wyślesz koordynatorowi swój opis potrzeby."}
+        </p>
+      )}
       <button onClick={send} disabled={busy}>
         {busy
           ? "Wysyłamy…"
@@ -55,11 +64,6 @@ export function QuickHelp({
             ? "Otwórz moją rozmowę →"
             : "Poproś o pomoc →"}
       </button>
-      <p className="help">
-        {existingThread
-          ? "Odpowiedź znajdziesz w tej rozmowie."
-          : "Twój opis i wybrane rozwiązanie trafią do koordynatora."}
-      </p>
       {error && (
         <p role="alert" className="error">
           {error}

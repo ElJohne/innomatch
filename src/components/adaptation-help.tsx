@@ -60,7 +60,7 @@ export function AdaptationHelp({
       <p className="help">
         {conversationId
           ? "Odpowiedź i udostępniony plan znajdziesz w rozmowie."
-          : "Wyślesz koordynatorowi plan i opis potrzeby."}
+          : "Wyślesz tę wersję planu, warunki instytucji i opis potrzeby."}
       </p>
       {error && (
         <p role="alert" className="error">

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Innovation } from "@/lib/contracts";
+import styles from "@/app/innowacje/discovery.module.css";
 export function InnovationCard({ item }: { item: Innovation }) {
   const first =
     item.solution.match(/^.*?[.!?](?:\s|$)/)?.[0]?.trim() || item.solution;
@@ -8,7 +9,7 @@ export function InnovationCard({ item }: { item: Innovation }) {
       ? `${first.slice(0, 179).replace(/\s+\S*$/, "")}…`
       : first;
   return (
-    <article className="card">
+    <article className={`card ${styles.card}`}>
       <div className="eyebrow">{item.categories[0]}</div>
       <h2>
         <Link href={`/innowacje/${item.id}`}>{item.title}</Link>
@@ -18,12 +19,10 @@ export function InnovationCard({ item }: { item: Innovation }) {
         {item.targetGroups.map((g) => (
           <span key={g}>{g}</span>
         ))}
-        <span>
-          {item.origin === "SYNTHETIC"
-            ? "Przykład syntetyczny"
-            : "Z materiału źródłowego"}
-        </span>
       </div>
+      {item.origin === "SYNTHETIC" && (
+        <p className="help">Przykład syntetyczny · dane demonstracyjne</p>
+      )}
       <Link className="text-link" href={`/innowacje/${item.id}`}>
         Poznaj rozwiązanie <span aria-hidden="true">↗</span>
       </Link>

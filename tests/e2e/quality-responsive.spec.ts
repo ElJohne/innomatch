@@ -62,7 +62,7 @@ async function reviewSurface(page: Page, name: string) {
   await page.setViewportSize({ width: 1280, height: 900 });
 }
 
-test("five core screens reflow at 320/390/1280 and 200% text, with four accessible contrast themes", async ({
+test("core screens reflow at 320/390/1280 and 200% text, with four accessible contrast themes", async ({
   page,
   baseURL,
 }) => {
@@ -75,17 +75,8 @@ test("five core screens reflow at 320/390/1280 and 200% text, with four accessib
       "Seniorzy potrzebują regularnych spotkań w świetlicy z wolontariuszami.",
     );
   await reviewSurface(page, "form");
-  await page.getByRole("button", { name: "Znajdź wsparcie" }).focus();
+  await page.getByRole("button", { name: "Znajdź pomoc" }).focus();
   await page.keyboard.press("Enter");
-  await expect(
-    page.getByRole("heading", {
-      name: "Czy dobrze opisaliśmy Twoją potrzebę?",
-    }),
-  ).toBeFocused();
-  await reviewSurface(page, "confirmation");
-  await page
-    .getByRole("button", { name: "Tak, wszystko się zgadza →" })
-    .click();
   await expect(page.locator(".match-card").first()).toBeVisible();
   const needId = new URL(page.url()).pathname.split("/").at(-1)!;
   await reviewSurface(page, "matches");
@@ -106,8 +97,7 @@ test("five core screens reflow at 320/390/1280 and 200% text, with four accessib
   });
   expect(response.ok()).toBe(true);
   const plan = await response.json();
-  await page.goto(`/adaptacje/${plan.id}`);
-  await page.getByText("Edytuj szkic", { exact: true }).click();
+  await page.goto(`/adaptacje/${plan.id}/edycja`);
   await reviewSurface(page, "plan-editor");
   const threadResponse = await page.request.post("/api/threads", {
     headers: { origin },
@@ -120,8 +110,6 @@ test("five core screens reflow at 320/390/1280 and 200% text, with four accessib
   });
   expect(threadResponse.ok()).toBe(true);
   await page.goto(`/wiadomosci/${(await threadResponse.json()).id}`);
-  await page
-    .getByText("Plan udostępniony koordynatorowi — wersja 1", { exact: true })
-    .click();
+
   await reviewSurface(page, "conversation");
 });

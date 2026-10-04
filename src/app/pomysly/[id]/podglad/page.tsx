@@ -33,10 +33,6 @@ export default async function IdeaPreview({
         {idea.origin === "SYNTHETIC" && (
           <p className="notice">Karta demonstracyjna — dane syntetyczne.</p>
         )}
-        <p className="help">
-          Roboczy materiał autora do rozmowy o pomyśle. Nie jest zweryfikowaną
-          innowacją ani złożonym wnioskiem grantowym.
-        </p>
       </header>
       <IdeaView card={idea.card} />
       {idea.grantDraft && <GrantView draft={idea.grantDraft} />}

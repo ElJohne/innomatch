@@ -8,6 +8,7 @@ import { listOrganizations } from "@/server/services/organizations";
 import { organizationOptions } from "@/lib/organizations";
 import { FlowSteps } from "@/components/flow-steps";
 import { QuickHelp } from "@/components/quick-help";
+import styles from "@/components/matching.module.css";
 export default async function PlanPage({
   params,
   searchParams,
@@ -84,36 +85,11 @@ export default async function PlanPage({
           </Link>
         </p>
       )}
-      <details className="card plan-evidence">
-        <summary>Szczegóły i źródła</summary>
-        <p>{innovation.solution}</p>
-        <h3>Dlaczego ta propozycja?</h3>
-        <ul>
-          {match.reasons.map((t) => (
-            <li key={t}>{t}</li>
-          ))}
-        </ul>
-        <h3>Warunki</h3>
-        <ul>
-          {[...match.limitations, ...innovation.requirements].map((t) => (
-            <li key={t}>{t}</li>
-          ))}
-        </ul>
-        {innovation.sources
-          .filter((source) => match.sourceIds.includes(source.id))
-          .map((source) => (
-            <p key={source.id}>
-              {source.sourceUrl ? (
-                <a href={source.sourceUrl} target="_blank" rel="noreferrer">
-                  {source.sourceTitle} ↗
-                </a>
-              ) : (
-                source.sourceTitle
-              )}
-            </p>
-          ))}
-        <Link href={`/innowacje/${innovation.id}`}>Pełny opis rozwiązania</Link>
-      </details>
+      <p className={styles.sources}>
+        <Link href={`/innowacje/${innovation.id}`}>
+          Opis, warunki i źródła rozwiązania →
+        </Link>
+      </p>
     </section>
   );
 }

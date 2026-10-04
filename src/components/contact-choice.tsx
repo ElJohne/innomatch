@@ -1,9 +1,12 @@
 "use client";
-import {
-  contactHints,
-  contactLabels,
-  type ContactPurpose,
-} from "@/lib/contact-purpose";
+import { contactLabels, type ContactPurpose } from "@/lib/contact-purpose";
+const hints: Record<ContactPurpose, string> = {
+  CONSULTATION: "Jaką decyzję chcesz omówić?",
+  MENTORSHIP:
+    "W czym potrzebujesz pomocy mentora? Koordynator sprawdzi możliwości.",
+  PARTNERSHIP:
+    "Jakiego partnera szukasz i co możesz zaoferować? To prośba o kontakt.",
+};
 export function ContactChoice({
   id,
   value,
@@ -39,9 +42,7 @@ export function ContactChoice({
         </select>
       </div>
       <p className="help" id={`${id}-hint`}>
-        {value
-          ? contactHints[value]
-          : "Odpowiedz w istniejącej sprawie albo wybierz inny rodzaj wsparcia."}
+        {value ? hints[value] : "Możesz też poprosić o mentora lub partnera."}
       </p>
     </div>
   );

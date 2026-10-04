@@ -189,13 +189,12 @@ export function MessageForm({
         {threadId ? "Nowa wiadomość" : "O co chcesz zapytać koordynatora?"}
       </label>
       <p className="help" id="message-help">
-        Nie wpisuj danych osobowych ani danych zdrowotnych. Rozmowę widzisz Ty i
-        upoważniony personel.
+        Tylko Ty i upoważniony personel. Bez danych osobowych i zdrowotnych.
       </p>
       <textarea
         id="message-body"
         aria-describedby="message-help"
-        rows={5}
+        rows={3}
         required
         maxLength={showContactOptions && purpose ? 3900 : 4000}
         value={body}

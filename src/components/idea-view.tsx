@@ -16,10 +16,9 @@ export function IdeaView({
       <div className="stack">
         <h3>{card.title}</h3>
         <p>{card.essence.split(/(?<=[.!?])\s/)[0].slice(0, 220)}</p>
-        <details>
-          <summary>Pełna karta i Canvas</summary>
-          <IdeaView card={card} />
-        </details>
+        <p>
+          {card.targetGroups.join(", ")} · {ideaStageLabels[card.stage]}
+        </p>
       </div>
     );
   return (
@@ -37,10 +36,7 @@ export function IdeaView({
             <li key={i}>{group}</li>
           ))}
         </ul>
-        <p>
-          Etap: {ideaStageLabels[card.stage]}. Informacja zadeklarowana przez
-          autora, bez weryfikacji ROPS.
-        </p>
+        <p>Etap: {ideaStageLabels[card.stage]} (według autora).</p>
       </div>
       {card.canvas && <CanvasView value={card.canvas} />}
     </div>

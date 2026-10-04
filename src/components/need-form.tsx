@@ -50,7 +50,9 @@ export function NeedForm() {
       router.push(`/potrzeby/${body.id}`);
     } catch (e) {
       setError(
-        e instanceof Error ? e.message : "Brak połączenia. Spróbuj ponownie.",
+        e instanceof Error
+          ? e.message
+          : "Brak połączenia. Spróbuj ponownie.",
       );
       setBusy(false);
     }
@@ -69,13 +71,9 @@ export function NeedForm() {
           />
         </div>
         <div className="hero-copy">
-          <p className="eyebrow">Małopolska · Blisko ludzi</p>
           <h1>
             Potrzebujesz <span>pomocy?</span>
           </h1>
-          <p className="lead">
-            Napisz, co sprawia Ci trudność. Podpowiemy, co zrobić.
-          </p>
         </div>
         <form
           onSubmit={submit}
@@ -106,7 +104,11 @@ export function NeedForm() {
               Instytucja
             </button>
           </div>
-          <label htmlFor="description">Jakiej pomocy potrzebujesz?</label>
+          <label htmlFor="description">
+            {draft.audience === "INSTITUTION"
+              ? "Jaki problem chcesz rozwiązać w swojej instytucji?"
+              : "Jakiej pomocy potrzebujesz?"}
+          </label>
           <textarea
             id="description"
             name="description"
@@ -116,13 +118,23 @@ export function NeedForm() {
             maxLength={4000}
             value={draft.description}
             disabled={busy}
-            placeholder="Np. trudno mi zrobić zakupy lub obsłużyć bankomat…"
+            aria-describedby={
+              error ? "description-help description-error" : "description-help"
+            }
+            aria-invalid={!!error}
+            placeholder={
+              draft.audience === "INSTITUTION"
+                ? "Np. chcemy pomóc seniorom samodzielnie korzystać z bankomatu…"
+                : "Np. trudno mi zrobić zakupy lub obsłużyć bankomat…"
+            }
             onChange={(e) => change({ description: e.target.value })}
           />
-          <p className="help">Bez nazwisk i danych osobowych.</p>
+          <p id="description-help" className="help">
+            Bez nazwisk i danych osobowych.
+          </p>
           {urgentSignal(draft.description) && <UrgentHelp prominent />}
           {error && (
-            <p className="error" role="alert">
+            <p id="description-error" className="error" role="alert">
               {error}
             </p>
           )}

@@ -91,16 +91,13 @@ export function IdeaStart() {
           key.current = "";
         }}
       />
-      <p className="help">
-        Bez nazwisk i danych osobowych. Kartę i Canvas przygotujemy z Twojego
-        opisu.
-      </p>
+      <p className="help">Bez nazwisk i danych osobowych.</p>
       <button disabled={busy}>
         {busy
           ? "Przygotowujemy Twój pomysł…"
           : saved
             ? "Dokończ przygotowanie"
-            : "Przygotuj kartę i Canvas →"}
+            : "Przygotuj kartę pomysłu →"}
       </button>
       {error && (
         <p className="error" role="alert">

@@ -4,18 +4,127 @@
   gap: 1rem;
   align-items: end;
 }
-.search > details {
-  grid-column: 1 / -1;
-}
 .extra {
+  grid-column: 1 / -1;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1rem;
-  margin-top: 1rem;
+}
+.navigation {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 1.75rem;
+}
+.navigation a {
+  padding: 0.75rem 0;
+  text-decoration: none;
+  border-bottom: 3px solid transparent;
+}
+.navigation a[aria-current="page"] {
+  border-color: currentColor;
+  font-weight: 700;
+}
+.detailLayout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.8fr) minmax(15rem, 1fr);
+  gap: 2rem;
+  margin: 2rem 0;
+}
+.detailLayout > * {
+  min-width: 0;
+}
+.section {
+  border-top: 1px solid var(--line);
+  padding-top: 1.5rem;
+  margin-top: 1.5rem;
+}
+.section h2 {
+  margin-top: 0;
+}
+.actions {
+  align-self: start;
+  padding: 1.5rem;
+  border: 1px solid var(--line);
+  border-radius: 1rem;
+  background: var(--paper);
+}
+.actions h2 {
+  margin-top: 0;
+}
+.actions > a {
+  display: block;
+  margin-top: 1.25rem;
+}
+.sources {
+  padding-left: 1.25rem;
+}
+.sources li {
+  margin-bottom: 0.75rem;
+  overflow-wrap: anywhere;
+}
+.materials {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+.material {
+  min-width: 0;
+}
+.material h2 {
+  font-size: 1.15rem;
+}
+.material a {
+  overflow-wrap: anywhere;
+}
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+.metric {
+  border: 1px solid var(--line);
+  border-radius: 0.75rem;
+  padding: 1.25rem;
+  min-width: 0;
+}
+.metric h3 {
+  margin-top: 0;
+}
+.metric strong {
+  font-size: 1.8rem;
+}
+.metric p {
+  margin: 0.5rem 0;
+}
+.metric button {
+  margin-top: 0.75rem;
+}
+.county {
+  max-width: 30rem;
+  margin: 1.5rem 0;
+}
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  min-width: 0;
+}
+.card h2,
+.card p {
+  margin: 0;
+}
+.card > a:last-child {
+  margin-top: auto;
+  padding-top: 0.5rem;
 }
 @media (max-width: 600px) {
   .search,
-  .extra {
+  .extra,
+  .detailLayout,
+  .materials,
+  .metrics {
     grid-template-columns: 1fr;
   }
 }

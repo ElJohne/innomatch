@@ -56,6 +56,52 @@ save/reload PASS. Нових production записів, повідомлень �
 початковим. Наступна дія: формальний пакет і вузькі дефекти, потім приймання
 короткого наскрізного шляху. Жодне заплановане виправлення тут не оголошене виконаним.
 
+## Seven-module redesign deployed — 2026-10-04
+
+Owner authorized push to master and deployment. Release `6127baa` deployed by
+[Actions 37184858152](https://github.com/ElJohne/innomatch/actions/runs/37184858152):
+build SUCCESS, deploy SUCCESS. Existing migration/corpus/rollout/readiness pipeline
+completed; this change adds no schema migration.
+
+Post-deploy read-only HTTPS checks on https://pomocnypunkt.pl: `/api/health`,
+`/api/ready`, `/`, `/innowacje`, `/innowacje/region`, `/innowacje/materialy`,
+`/pomysly/nowy`, `/moje-sprawy`, `/personel/logowanie` all HTTP 200 with expected
+content. New regional/material pages confirm the deployed design. No production
+private records or live AI requests were created for these smoke checks.
+Local pre-release validation remains 68 unit and 28 E2E PASS; PostgreSQL integration
+suite was skipped without TEST_DATABASE_URL, as recorded below.
+
+
+## Переробка семи модулів у окремому worktree — 2026-10-04
+
+Локальна гілка `codex/product-design-cleanup`, база `5728d1b`, worktree
+`product-design-cleanup/InnoMatch`. Сім агентів, по одному на кожний модуль.
+За прямою вказівкою власника основа рішень — оригінальні RULES і CRITERIA PDF;
+SPEC прочитано як контекст реалізації, а не як безумовний дизайн.
+Зайві пояснення видалені; потрібні документи й редактори мають окремі зрозумілі
+екрани. Це замінює попередній підхід із численними згорнутими блоками.
+
+- M1 Matching: короткі результати, одна наступна дія, розділені відсутність
+  збігів і недоступність пошуку; форма потреби вище на мобільному екрані.
+- M2 Knowledge: відкриті фільтри й джерела, компактний каталог; окремі
+  вкладки рішень, регіональних показників і матеріалів.
+- M3 Ideas: коротка картка, окремі редагування, Canvas і порівняння;
+  відкриті поля грантового чернеткового документа та бюджет автора.
+- M4 Testing: виразне приєднання до тестування, шкала оцінки 1–5,
+  коротка форма відгуку, статус модерації та повторна модерація змін.
+- M5 Communication: актуальне повідомлення й відповідь першими;
+  непрочитані розмови вгорі, відновлення доступу на окремій сторінці.
+- M6 Admin: постійна навігація, фільтри каталогу, черга відгуків
+  за замовчуванням; явні дії публікації та приховування.
+- M7 Adaptation: відкрита форма умов, стислий збережений план із першим
+  кроком, окремі редактор і повний документ; компактні відступи.
+
+Польська UI, видимі synthetic/mock-позначення, джерела, server ownership,
+publication checks, revision і snapshot sharing збережені. LICENSE, PDFs,
+залежності та схема БД не змінені. Deploy/push і міграції не виконувалися.
+Lint/typecheck/build PASS, 68 unit PASS, повний E2E 28/28 PASS. PostgreSQL: 8 тестів пропущено без TEST_DATABASE_URL. Деталі — у найновішому записі QA.
+
+
 ## Спрощені сценарії на production — 2026-10-04, 08:23
 
 f30862b / Actions 37182338134 SUCCESS: усі три агентські пакети та основний

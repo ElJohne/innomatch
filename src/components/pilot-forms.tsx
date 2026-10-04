@@ -6,8 +6,8 @@ import {
   type Feedback,
   type Participation,
   feedbackStatusLabels,
-  experienceLabels,
 } from "@/lib/contracts/pilot";
+import styles from "./pilot-forms.module.css";
 
 async function send(url: string, method: string, body: unknown) {
   const response = await fetch(url, {
@@ -35,10 +35,14 @@ export function PilotForms({
   const [participation, setParticipation] = useState(initialParticipation);
   const [feedback, setFeedback] = useState(initialFeedback);
   const [busy, setBusy] = useState<"interest" | "feedback" | null>(null);
-  const [message, setMessage] = useState("");
+  const [interestMessage, setInterestMessage] = useState("");
+  const [feedbackMessage, setFeedbackMessage] = useState("");
+  const [failed, setFailed] = useState<"interest" | "feedback" | null>(null);
   async function interest() {
+    if (busy || participation) return;
     setBusy("interest");
-    setMessage("");
+    setInterestMessage("");
+    setFailed(null);
     try {
       setParticipation(
         await send(
@@ -47,12 +51,11 @@ export function PilotForms({
           {},
         ),
       );
-      setMessage(
-        "Zapisano zgłoszenie i wiadomość do koordynatora. Uzgodnij z nim dalsze kroki w rozmowie.",
-      );
+      setInterestMessage("Zgłoszenie wysłane. Ustal szczegóły w rozmowie.");
       router.refresh();
     } catch (error) {
-      setMessage(
+      setFailed("interest");
+      setInterestMessage(
         error instanceof Error ? error.message : "Nie udało się zapisać.",
       );
     } finally {
@@ -60,63 +63,72 @@ export function PilotForms({
     }
   }
   return (
-    <div className="stack">
-      <section className="card">
-        <h2>Chcę testować innowację</h2>
-        <p>
-          Zgłoszenie jest prywatne. Wyślemy koordynatorowi wiadomość z
-          kontekstem tej innowacji. Warunki, dostępność i udział wymagają
-          osobnego uzgodnienia.
-        </p>
+    <div className={styles.pilot}>
+      <section
+        className={`card ${styles.interest}`}
+        aria-labelledby="pilot-interest-heading"
+      >
+        <div>
+          <h2 id="pilot-interest-heading">
+            {participation
+              ? "Twoje zgłoszenie do testów"
+              : "Chcę testować innowację"}
+          </h2>
+          <p>Udział i warunki ustalisz z koordynatorem w prywatnej rozmowie.</p>
+        </div>
         {participation ? (
-          <p>
-            Zgłoszono zainteresowanie.{" "}
-            <Link href={`/wiadomosci/${participation.threadId}`}>
-              Otwórz rozmowę z koordynatorem →
-            </Link>
-          </p>
+          <Link
+            className="button secondary"
+            href={`/wiadomosci/${participation.threadId}`}
+          >
+            Otwórz rozmowę z koordynatorem →
+          </Link>
         ) : (
           <button type="button" disabled={Boolean(busy)} onClick={interest}>
             {busy === "interest" ? "Zapisuję…" : "Zgłoś chęć udziału"}
           </button>
         )}
-        <p className="help">
-          Zgłoszenie nie potwierdza przeprowadzenia pilotażu ani skuteczności
-          rozwiązania.
-        </p>
+        {interestMessage && (
+          <p
+            className={styles.message}
+            role={failed === "interest" ? "alert" : "status"}
+          >
+            {interestMessage}
+          </p>
+        )}
       </section>
-      <section className="card">
+      <section className={`card ${styles.feedback}`}>
         <h2>{feedback ? "Twoja opinia" : "Oceń i podziel się opinią"}</h2>
         {feedback && (
           <p>
-            Status:{" "}
             <strong>
               {sourceCurrent
                 ? feedbackStatusLabels[feedback.status]
-                : "Wymaga aktualizacji materiału"}
-            </strong>{" "}
-            · wersja {feedback.revision}
+                : "Zaktualizuj opinię"}
+            </strong>
           </p>
         )}
         {!sourceCurrent && (
           <p className="notice">
-            Materiał o innowacji zmienił się. Twoja opinia nie jest publiczna.
-            Sprawdź aktualny opis i zapisz opinię ponownie do moderacji.
+            Opis innowacji zmienił się. Przeczytaj go i zaktualizuj opinię, aby
+            mogła wrócić do publikacji.
           </p>
         )}
-        <p>
-          Opinia pojawi się publicznie po moderacji. Zmiana treści wycofa
-          dotychczasową publikację do ponownego sprawdzenia. Nie podawaj danych
-          osobowych ani poufnych informacji o uczestnikach.
-        </p>
+        {feedback?.status === "PUBLISHED" && sourceCurrent && (
+          <p className="help">
+            Po zmianie opinii ponownie sprawdzimy ją przed publikacją.
+          </p>
+        )}
         <form
-          className="form"
+          className={`form ${styles.form}`}
           onSubmit={async (event) => {
             event.preventDefault();
+            if (busy) return;
             const form = event.currentTarget;
             const values = new FormData(form);
             setBusy("feedback");
-            setMessage("");
+            setFeedbackMessage("");
+            setFailed(null);
             try {
               const saved: Feedback = await send(
                 `/api/innovations/${innovationId}/feedback`,
@@ -131,14 +143,15 @@ export function PilotForms({
                 },
               );
               setFeedback(saved);
-              setMessage(
+              setFeedbackMessage(
                 saved.status === "IN_REVIEW"
-                  ? "Zapisano opinię do moderacji. Nie jest jeszcze publiczna."
-                  : "Opinia nie zmieniła się; zachowano jej dotychczasowy status.",
+                  ? "Opinia zapisana. Czeka na moderację."
+                  : "Brak zmian. Twoja opinia jest już zapisana.",
               );
               router.refresh();
             } catch (error) {
-              setMessage(
+              setFailed("feedback");
+              setFeedbackMessage(
                 error instanceof Error
                   ? error.message
                   : "Nie udało się zapisać.",
@@ -148,36 +161,42 @@ export function PilotForms({
             }
           }}
         >
-          <label>
-            Podstawa opinii
-            <select
-              name="experience"
-              defaultValue={initialFeedback?.experience ?? "DESCRIPTION"}
+          <div className={styles.formRow}>
+            <label>
+              Skąd znasz rozwiązanie?
+              <select
+                name="experience"
+                defaultValue={initialFeedback?.experience ?? "DESCRIPTION"}
+              >
+                <option value="DESCRIPTION">Z opisu</option>
+                <option value="USED">Z własnego doświadczenia</option>
+              </select>
+            </label>
+            <fieldset
+              className={styles.rating}
+              aria-describedby="pilot-rating-hint"
             >
-              {Object.entries(experienceLabels).map(([value, label]) => (
-                <option value={value} key={value}>
-                  {label}
-                </option>
-              ))}
-            </select>
-          </label>
-          <label>
-            Ocena (1 — najniższa, 5 — najwyższa)
-            <select
-              name="rating"
-              required
-              defaultValue={initialFeedback?.rating ?? ""}
-            >
-              <option value="" disabled>
-                Wybierz ocenę
-              </option>
-              {[1, 2, 3, 4, 5].map((value) => (
-                <option key={value} value={value}>
-                  {value}
-                </option>
-              ))}
-            </select>
-          </label>
+              <legend>Twoja ocena</legend>
+              <div className={styles.ratingOptions}>
+                {[1, 2, 3, 4, 5].map((value) => (
+                  <label key={value}>
+                    <input
+                      type="radio"
+                      name="rating"
+                      value={value}
+                      required
+                      defaultChecked={initialFeedback?.rating === value}
+                      aria-label={`${value} z 5`}
+                    />
+                    {value}
+                  </label>
+                ))}
+              </div>
+              <p id="pilot-rating-hint" className="help">
+                1 — najniższa, 5 — najwyższa
+              </p>
+            </fieldset>
+          </div>
           <label>
             Twoja opinia
             <textarea
@@ -185,32 +204,41 @@ export function PilotForms({
               required
               minLength={20}
               maxLength={2000}
-              rows={5}
+              rows={3}
+              placeholder="Co działa dobrze, a co sprawia trudność?"
+              aria-describedby="pilot-comment-hint"
               defaultValue={initialFeedback?.comment ?? ""}
             />
           </label>
+          <p className="help" id="pilot-comment-hint">
+            Minimum 20 znaków. Bez danych osobowych uczestników.
+          </p>
           <label>
             Propozycje ulepszeń (opcjonalnie)
             <textarea
               name="improvements"
               maxLength={1500}
-              rows={3}
+              rows={2}
               defaultValue={initialFeedback?.improvements ?? ""}
             />
           </label>
           <label className="checkbox-label">
             <input type="checkbox" name="consent" required /> Zgadzam się na
-            publiczne pokazanie oceny i treści opinii po moderacji, bez
-            identyfikatora mojej sesji.
+            publikację mojej oceny, opinii i propozycji ulepszeń po moderacji.
           </label>
           <button disabled={Boolean(busy)}>
             {busy === "feedback" ? "Zapisuję…" : "Zapisz opinię do moderacji"}
           </button>
+          {feedbackMessage && (
+            <p
+              className={styles.message}
+              role={failed === "feedback" ? "alert" : "status"}
+            >
+              {feedbackMessage}
+            </p>
+          )}
         </form>
       </section>
-      <p role="status" aria-live="polite">
-        {message}
-      </p>
     </div>
   );
 }

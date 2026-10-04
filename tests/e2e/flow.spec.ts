@@ -1,20 +1,13 @@
 import { test, expect, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
-const base = "http://127.0.0.1:3100";
+const base = `http://127.0.0.1:${process.env.MI_E2E_PORT || "3300"}`;
 const description =
   "Seniorzy mieszkający samotnie rzadko uczestniczą w spotkaniach. Mamy świetlicę i wolontariuszy.";
 async function review(page: Page, text = description) {
   await page.goto("/");
   await page.getByLabel("Jakiej pomocy potrzebujesz?").fill(text);
-  await page.getByRole("button", { name: "Znajdź wsparcie" }).click();
-  await expect(
-    page.getByRole("heading", {
-      name: "Czy dobrze opisaliśmy Twoją potrzebę?",
-    }),
-  ).toBeVisible();
-}
-async function confirm(page: Page) {
-  await page.getByRole("button", { name: "Tak, wszystko się zgadza" }).click();
+  await page.getByRole("button", { name: "Znajdź pomoc" }).click();
+  await expect(page).toHaveURL(/\/potrzeby\/[a-f0-9-]{36}$/);
 }
 async function accessible(page: Page) {
   expect(
@@ -40,123 +33,79 @@ test("home has the problem field, no category picker and accessible design", asy
   });
   await accessible(page);
 });
-test("confirmation edits preserve every field; failed submission can be retried", async ({
+test("failed submission preserves the description and retries without a confirmation step", async ({
   page,
 }) => {
-  await review(page);
-  await page.getByRole("button", { name: "Zmień informacje" }).click();
-  await expect(page.getByLabel("Jakiej pomocy potrzebujesz?")).toHaveValue(
-    description,
-  );
-  await page.getByText("Dodaj szczegóły").click();
-  await page.getByLabel("Gmina", { exact: true }).fill("Kraków");
-  await page.getByLabel("Zasoby i ograniczenia").fill("Mamy świetlicę.");
-  await page.getByRole("button", { name: "Znajdź wsparcie" }).click();
+  await page.goto("/");
+  await page.getByLabel("Jakiej pomocy potrzebujesz?").fill(description);
   await page.route("**/api/needs", (route) =>
     route.fulfill({
       status: 503,
-      contentType: "application/json",
-      body: JSON.stringify({ message: "Usługa jest niedostępna." }),
+      json: { message: "Usługa jest niedostępna." },
     }),
   );
-  await confirm(page);
+  await page.getByRole("button", { name: "Znajdź pomoc" }).click();
   await expect(page.locator("main").getByRole("alert")).toContainText(
     "niedostępna",
   );
-  await expect(page.getByText(description, { exact: true })).toBeVisible();
+  await expect(page.getByLabel("Jakiej pomocy potrzebujesz?")).toHaveValue(
+    description,
+  );
   await page.unroute("**/api/needs");
-  await confirm(page);
+  await page.getByRole("button", { name: "Znajdź pomoc" }).click();
   await expect(
-    page.getByRole("heading", { name: "Rozwiązania pasujące do części potrzeby", exact: true }),
+    page.getByRole("heading", { name: "Wybierz pomoc" }),
   ).toBeVisible();
 });
-test("four steps, immediate plan, evidence, copy, reload and private access", async ({
+test("three steps lead to a saved private conversation and reject another owner", async ({
   page,
   browser,
 }) => {
   await review(page);
+  await expect(page.locator(".match-card").first()).toBeVisible();
   await accessible(page);
-  await page.screenshot({
-    path: "test-results/confirmation-desktop.png",
-    fullPage: true,
-  });
-  await confirm(page);
-  await expect(
-    page.getByRole("heading", { name: "Rozwiązania pasujące do części potrzeby", exact: true }),
-  ).toBeVisible();
-  await expect(
-    page.getByRole("link", { name: /Wybierz organizację/ }),
-  ).toHaveCount(3);
-  await expect(
-    page.getByRole("link", { name: /Zatelefonuj|Napisz wiadomość/ }),
-  ).toHaveCount(0);
-  await accessible(page);
-  await page.screenshot({
-    path: "test-results/organizations-desktop.png",
-    fullPage: true,
-  });
   const needUrl = page.url();
-  await page.reload();
   await page
-    .getByRole("link", { name: "Wybierz organizację Fundacja Blisko Siebie" })
+    .locator(".match-card")
+    .first()
+    .getByRole("link", { name: /Wybieram/ })
     .click();
   await expect(
-    page.getByRole("heading", { name: "Co zrobić dalej?" }),
+    page.getByRole("heading", { name: "Co zrobić teraz?" }),
   ).toBeVisible();
   const planUrl = page.url();
   await expect(
-    page.getByLabel("Twój tekst do rozmowy lub wiadomości"),
-  ).toContainText("Sąsiedzki stół");
-  await page.getByRole("button", { name: "Kopiuj tekst" }).click();
-  await expect(
-    page.locator(".message-draft").getByRole("status"),
-  ).toContainText(/skopiowany|Zaznaczyliśmy/);
+    page.getByRole("link", { name: /Przygotuj plan dla instytucji/ }),
+  ).toHaveCount(0);
   await accessible(page);
-  await page.screenshot({
-    path: "test-results/plan-desktop.png",
-    fullPage: true,
-  });
-  await page.reload();
-  await expect(
-    page.getByRole("heading", { name: "Co zrobić dalej?" }),
-  ).toBeVisible();
-  const second = await browser.newContext();
-  const other = await second.newPage();
-  for (const url of [needUrl, planUrl]) {
-    await other.goto(url);
+  await page.getByRole("button", { name: "Poproś o pomoc →" }).click();
+  await expect(page).toHaveURL(/\/wiadomosci\/[a-f0-9-]{36}/);
+  const threadUrl = page.url();
+  await page.goto(planUrl);
+  await page.getByRole("button", { name: "Otwórz moją rozmowę →" }).click();
+  await expect(page).toHaveURL(threadUrl.split("?")[0]);
+  const other = await browser.newContext();
+  const stranger = await other.newPage();
+  for (const url of [needUrl, planUrl, threadUrl]) {
+    await stranger.goto(url);
     await expect(
-      other.getByRole("heading", { name: "Nie znaleziono tej strony." }),
+      stranger.getByRole("heading", { name: "Nie znaleziono tej strony." }),
     ).toBeVisible();
   }
-  await second.close();
+  await other.close();
   await page.goto(`${needUrl}/plan?organizacja=unknown`);
   await expect(
     page.getByRole("heading", { name: "Nie znaleziono tej strony." }),
   ).toBeVisible();
-  await page.goto(planUrl);
-  await page
-    .getByText(
-      "Dlaczego ta propozycja? Zobacz rozwiązanie, źródła i ograniczenia",
-    )
-    .click();
-  await expect(
-    page.getByRole("heading", { name: "Pasujące aspekty" }),
-  ).toBeVisible();
-  await page.getByRole("link", { name: "Poznaj pełny opis innowacji" }).click();
-  await expect(
-    page.getByRole("heading", { name: "Źródła i pochodzenie" }),
-  ).toBeVisible();
-  await accessible(page);
 });
 test("no match and empty catalog remain explicit", async ({ page }) => {
   await review(
     page,
     "Naprawa silnika rakietowego na orbicie Marsa jest niemożliwa.",
   );
-  await confirm(page);
   await expect(
     page.getByRole("heading", {
-      name: "Nie znaleźliśmy wystarczającego dopasowania",
+      name: "Nie znaleźliśmy pasującego rozwiązania",
     }),
   ).toBeVisible();
   await expect(
@@ -201,12 +150,9 @@ test("mobile complete flow, keyboard skip, text 200% and high contrast", async (
     .click();
   await page.getByRole("button", { name: "Standardowy kontrast" }).click();
   await page.getByLabel("Jakiej pomocy potrzebujesz?").fill(description);
-  await page.getByRole("button", { name: "Znajdź wsparcie" }).click();
+  await page.getByRole("button", { name: "Znajdź pomoc" }).click();
   await reflow();
-  await confirm(page);
-  await page
-    .getByRole("link", { name: "Wybierz organizację Fundacja Blisko Siebie" })
-    .click();
+  await page.getByRole("link", { name: /Wybieram — Sąsiedzki stół/ }).click();
   await reflow();
   await accessible(page);
   await page.screenshot({
@@ -378,10 +324,12 @@ test("voice input appends editable Polish dictation, stops and handles denial", 
   await page.getByRole("button", { name: "Stop — zakończ dyktowanie" }).click();
   await expect(page.locator(".voice-status")).toContainText("zakończone");
   await field.fill(description);
-  await page.getByRole("button", { name: "Znajdź wsparcie" }).click();
-  await expect(page.locator(".confirmed-description")).toContainText(
-    description,
-  );
+  await page.getByRole("button", { name: "Znajdź pomoc" }).click();
+  await expect(page).toHaveURL(/\/potrzeby\/[a-f0-9-]{36}$/);
+  const saved = await (
+    await page.request.get(`/api/needs/${page.url().split("/").at(-1)}`)
+  ).json();
+  expect(saved.description).toBe(description);
   await page.goto("/?denied");
   await page.getByRole("button", { name: "Powiedz głosem" }).click();
   await expect(page.locator(".voice-status")).toContainText(

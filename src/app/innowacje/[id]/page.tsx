@@ -13,6 +13,7 @@ import { PilotForms } from "@/components/pilot-forms";
 import { CatalogHelp } from "@/components/catalog-help";
 import { experienceLabels, feedbackQueueQuery } from "@/lib/contracts/pilot";
 import { catalogVersion } from "@/server/services/catalog";
+import styles from "../discovery.module.css";
 
 export default async function Detail({
   params,
@@ -39,95 +40,96 @@ export default async function Detail({
   const existing = threads.find(
     (t) => t.innovationId === id && !t.needId && !t.adaptationId && !t.ideaId,
   );
-  const first =
-    r.solution.match(/^.*?[.!?](?:\s|$)/)?.[0]?.trim() || r.solution;
-  const summary =
-    first.length > 220
-      ? `${first.slice(0, 219).replace(/\s+\S*$/, "")}…`
-      : first;
   return (
-    <section className="narrow">
+    <section className="section">
       <Link className="text-link" href="/innowacje">
         ← Katalog innowacji
       </Link>
       <p className="eyebrow detail-label">{r.categories.join(" · ")}</p>
       <h1>{r.title}</h1>
-      <p className="lead">{summary}</p>
       <div className="tags">
         {r.targetGroups.map((g) => (
           <span key={g}>{g}</span>
         ))}
+        <span>
+          Etap:{" "}
+          {
+            {
+              CONCEPT: "koncepcja",
+              PILOT: "pilotaż",
+              TESTED: "przetestowane",
+              UNKNOWN: "nieustalony",
+            }[r.maturity]
+          }
+        </span>
       </div>
       {r.origin === "SYNTHETIC" && (
         <p className="help">Przykład syntetyczny — dane demonstracyjne.</p>
       )}
-      <aside className="note">
-        <h2>Co zrobić teraz?</h2>
-        {a?.staff ? (
-          <Link className="button" href="/admin">
-            Otwórz skrzynkę koordynatora →
-          </Link>
-        ) : (
-          <CatalogHelp
-            innovationId={id}
-            title={r.title}
-            existingThread={existing?.id}
-          />
-        )}
-      </aside>
-      <details className="card detail-label">
-        <summary>Opis, warunki i źródła</summary>
-        <div className="detail">
-          <h2>Na jaką potrzebę odpowiada?</h2>
-          <p>{r.problem}</p>
-          <h2>Na czym polega rozwiązanie?</h2>
-          <p>{r.solution}</p>
-          <h2>Warunki zastosowania</h2>
-          <ul>
-            {r.requirements.map((t) => (
-              <li key={t}>{t}</li>
-            ))}
-          </ul>
-          <p className="help">
-            Etap:{" "}
-            {
-              {
-                CONCEPT: "koncepcja",
-                PILOT: "pilotaż",
-                TESTED: "przetestowane",
-                UNKNOWN: "nieustalony",
-              }[r.maturity]
-            }
-          </p>
-          <h2>Źródła</h2>
-          {r.sources.map((source) => (
-            <div className="source" key={source.id}>
-              <h3>{source.sourceTitle}</h3>
-              {source.evidenceExcerpt && (
-                <blockquote>{source.evidenceExcerpt}</blockquote>
-              )}
-              <p className="help">Odniesienie: {source.sourceRef}</p>
-              {source.sourceUrl && (
-                <a href={source.sourceUrl} rel="noreferrer" target="_blank">
-                  Otwórz źródło (nowa karta) ↗
-                </a>
-              )}
-            </div>
-          ))}
+      <div className={styles.detailLayout}>
+        <div>
+          <p className="lead">{r.solution}</p>
+          <section className={styles.section}>
+            <h2>Na jaką potrzebę odpowiada?</h2>
+            <p>{r.problem}</p>
+          </section>
+          {r.requirements.length > 0 && (
+            <section className={styles.section}>
+              <h2>Przed wdrożeniem</h2>
+              <ul>
+                {r.requirements.map((requirement) => (
+                  <li key={requirement}>{requirement}</li>
+                ))}
+              </ul>
+            </section>
+          )}
+          <section className={styles.section}>
+            <h2>Materiały źródłowe</h2>
+            <ul className={styles.sources}>
+              {r.sources.map((source) => (
+                <li key={source.id}>
+                  {source.sourceUrl ? (
+                    <a href={source.sourceUrl} rel="noreferrer" target="_blank">
+                      {source.sourceTitle}{" "}
+                      <span className="help">(nowa karta) ↗</span>
+                    </a>
+                  ) : (
+                    <span>
+                      {source.sourceTitle} · {source.sourceRef}
+                    </span>
+                  )}
+                  {source.sourceDate && (
+                    <span className="help"> · {source.sourceDate}</span>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </section>
         </div>
-      </details>
-      <details className="card detail-label">
-        <summary>Dla instytucji: przygotuj plan wdrożenia</summary>
-        <p>Dostosuj rozwiązanie do potrzeb swojej instytucji.</p>
-        <Link
-          className="button secondary"
-          href={`/adaptacje/nowa?innovationId=${r.id}`}
-        >
-          Dostosuj do mojej instytucji →
-        </Link>
-      </details>
-      <details className="card detail-label">
-        <summary>Testowanie i Twoja opinia</summary>
+        <aside className={styles.actions}>
+          <h2>Skorzystaj z rozwiązania</h2>
+          {a?.staff ? (
+            <Link className="button" href="/admin">
+              Otwórz skrzynkę koordynatora →
+            </Link>
+          ) : (
+            <CatalogHelp
+              innovationId={id}
+              title={r.title}
+              existingThread={existing?.id}
+            />
+          )}
+          <Link href={`/adaptacje/nowa?innovationId=${r.id}`}>
+            Dostosuj do mojej instytucji →
+          </Link>
+          <a href="#testowanie">Testowanie i opinia ↓</a>
+        </aside>
+      </div>
+      <section
+        id="testowanie"
+        className={styles.section}
+        aria-label="Testowanie i Twoja opinia"
+      >
         {a?.staff ? (
           <p>
             Wyloguj konto personelu, aby dodać własne zgłoszenie lub opinię.
@@ -142,26 +144,13 @@ export default async function Detail({
             }
           />
         )}
-      </details>
-      <details
-        className="card detail-label"
-        id="opinie"
-        open={opinionPage.page > 1}
-      >
-        <summary>Opinie użytkowników ({opinionPage.total})</summary>
-        <p className="help">
-          Opublikowane po moderacji, dotyczą aktualnej wersji materiału.
-        </p>
-        {!opinions.length && (
-          <p>
-            {opinionPage.total
-              ? "Brak opinii na tej stronie."
-              : "Nie ma jeszcze opinii."}
-          </p>
-        )}
+      </section>
+      <section className={styles.section} id="opinie">
+        <h2>Opinie użytkowników ({opinionPage.total})</h2>
+        {!opinions.length && <p>Nie ma jeszcze opinii.</p>}
         {opinions.map((opinion) => (
           <article className="card" key={opinion.id}>
-            <h2>Ocena {opinion.rating}/5</h2>
+            <h3>Ocena {opinion.rating}/5</h3>
             <p className="help">{experienceLabels[opinion.experience]}</p>
             {opinion.origin === "SYNTHETIC" && (
               <p className="help">Opinia syntetyczna — dane demonstracyjne.</p>
@@ -169,7 +158,7 @@ export default async function Detail({
             <p className="message-body">{opinion.comment}</p>
             {opinion.improvements && (
               <>
-                <h3>Propozycje ulepszeń</h3>
+                <h4>Propozycje ulepszeń</h4>
                 <p className="message-body">{opinion.improvements}</p>
               </>
             )}
@@ -191,7 +180,7 @@ export default async function Detail({
             </Link>
           )}
         </nav>
-      </details>
+      </section>
     </section>
   );
 }

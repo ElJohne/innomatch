@@ -10,6 +10,8 @@ import {
 } from "@/lib/contracts/catalog";
 import { config } from "@/server/config";
 import { CatalogEditor } from "@/components/catalog-editor";
+import { AdminNavigation } from "../../../admin-navigation";
+import styles from "../../../admin.module.css";
 export default async function EditorPage({
   params,
 }: {
@@ -68,12 +70,13 @@ export default async function EditorPage({
     entry = (await listCatalog(a, kind)).find((e) => e.record.id === route.id);
   if (!entry) notFound();
   return (
-    <section className="narrow wide">
+    <section className={styles.page}>
+      <AdminNavigation active="catalog" />
       <Link href={`/admin/katalog?kind=${kind}`}>← Katalog i wiedza</Link>
       <p className="eyebrow detail-label">
         {kind === "innovation" ? "Innowacja" : "Materiał wiedzy"}
       </p>
-      <h1>{isNew ? "Nowy wpis" : "Edytuj i zweryfikuj"}</h1>
+      <h1>{isNew ? "Nowy wpis" : "Edytuj wpis"}</h1>
       <CatalogEditor
         initial={entry}
         isNew={isNew}

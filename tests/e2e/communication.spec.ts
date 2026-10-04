@@ -16,7 +16,7 @@ test("private need → coordinator inbox → reply → unread receipt; other ses
   expect(created.status()).toBe(201);
   const { id: needId } = await created.json();
   await page.goto(`/potrzeby/${needId}`);
-  await page.getByRole("link", { name: "Zapytaj koordynatora" }).click();
+  await page.getByRole("link", { name: "Potrzebuję innej pomocy" }).click();
   await page
     .getByLabel("O co chcesz zapytać koordynatora?")
     .fill("Jak rozpocząć współpracę? To wiadomość syntetyczna.");
@@ -40,9 +40,7 @@ test("private need → coordinator inbox → reply → unread receipt; other ses
     staffPage.getByRole("heading", { name: "Skrzynka zgłoszeń" }),
   ).toBeVisible();
   await expect(staffPage.getByRole("status").first()).toContainText("1");
-  await staffPage
-    .getByRole("link", { name: new RegExp(threadId.slice(0, 8)) })
-    .click();
+  await staffPage.locator(`a[href="/wiadomosci/${threadId}"]`).click();
   await staffPage.getByText("Potrzeba udostępniona koordynatorowi").click();
   await expect(staffPage.getByText(description, { exact: true })).toBeVisible();
   await staffPage
@@ -58,17 +56,13 @@ test("private need → coordinator inbox → reply → unread receipt; other ses
     .click();
   expect((await replySaved).status()).toBe(201);
   await expect(
-    staffPage
-      .locator(".message-body")
-      .filter({
-        hasText: "Zacznijmy od rozmowy o zasobach. Odpowiedź syntetyczna.",
-      }),
+    staffPage.locator(".message-body").filter({
+      hasText: "Zacznijmy od rozmowy o zasobach. Odpowiedź syntetyczna.",
+    }),
   ).toBeVisible();
   await page.goto("/moje-sprawy");
   await expect(page.getByText("Nowe wiadomości: 1")).toBeVisible();
-  await page
-    .getByRole("link", { name: new RegExp(threadId.slice(0, 8)) })
-    .click();
+  await page.locator(`a[href="/wiadomosci/${threadId}"]`).click();
   await expect(
     page.getByText("Zacznijmy od rozmowy o zasobach. Odpowiedź syntetyczna."),
   ).toBeVisible();

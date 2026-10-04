@@ -55,11 +55,9 @@ export function CatalogHelp({
   return (
     <div>
       <button type="button" disabled={busy} onClick={requestHelp}>
-        {busy ? "Wysyłam…" : "Poproś o pomoc →"}
+        {busy ? "Wysyłam…" : "Zapytaj koordynatora →"}
       </button>
-      <p className="help">
-        Koordynator otrzyma prośbę dotyczącą tego rozwiązania.
-      </p>
+      <p className="help">Wyślesz prośbę o pomoc z tym rozwiązaniem.</p>
       {error && (
         <p className="error" role="alert">
           {error}

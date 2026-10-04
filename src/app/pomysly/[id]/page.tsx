@@ -4,7 +4,6 @@ import { notFound } from "next/navigation";
 import { session } from "@/server/auth/session";
 import { getIdea } from "@/server/services/ideas";
 import { IdeaEditor } from "@/components/idea-editor";
-import { IdeaResources } from "@/components/idea-resources";
 export default async function IdeaPage({
   params,
 }: {
@@ -19,10 +18,6 @@ export default async function IdeaPage({
       <Link href="/moje-sprawy">← Moje sprawy</Link>
       <h1>Twoja karta pomysłu</h1>
       <IdeaEditor initial={idea} />
-      <details className="card">
-        <summary>Materiały źródłowe i nabory</summary>
-        <IdeaResources />
-      </details>
     </section>
   );
 }

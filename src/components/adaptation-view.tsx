@@ -5,12 +5,15 @@ import {
   firstStepLabels,
   type AdaptationPlan,
 } from "@/lib/contracts/adaptation";
+import styles from "./adaptation.module.css";
 export function AdaptationView({
   plan,
-  expanded = false,
+  expanded = true,
+  showMode = true,
 }: {
   plan: AdaptationPlan;
   expanded?: boolean;
+  showMode?: boolean;
 }) {
   const first = firstStepFor(plan.draft);
   const show = (value: string | string[]) =>
@@ -24,62 +27,52 @@ export function AdaptationView({
       <p className="message-body">{value}</p>
     );
   return (
-    <div className="stack">
-      {plan.mode === "mock" && (
+    <div className={`stack ${styles.body}`}>
+      {showMode && plan.mode === "mock" && (
         <p className="help">Plan demonstracyjny — bez wywołania AI.</p>
       )}
-      <section className="card" aria-label="Pierwszy krok planu">
-        <p className="eyebrow">Co zrobić teraz</p>
+      {!expanded && (
+        <section>
+          <h2>Propozycja usługi</h2>
+          <p className="message-body">{plan.draft.serviceDescription}</p>
+        </section>
+      )}
+      <section
+        className={`card ${styles.step}`}
+        aria-label="Pierwszy krok planu"
+      >
         <h2>Twój pierwszy krok</h2>
         <p className="message-body">{first.action}</p>
-        <details open={expanded}>
-          <summary>Kto, z czym i jaki efekt?</summary>
-          <dl className="first-step-grid">
-            {Object.entries(firstStepLabels)
-              .filter(([key]) => key !== "action")
-              .map(([key, label]) => (
-                <div key={key}>
-                  <dt>{label}</dt>
-                  <dd>{first[key as keyof typeof firstStepLabels]}</dd>
-                </div>
-              ))}
-            {plan.constraints.budget && (
-              <div>
-                <dt>Twój budżet</dt>
-                <dd>{plan.constraints.budget}</dd>
+        <dl className={styles.facts}>
+          {Object.entries(firstStepLabels)
+            .filter(([key]) => key !== "action")
+            .map(([key, label]) => (
+              <div key={key}>
+                <dt>{label}</dt>
+                <dd>{first[key as keyof typeof firstStepLabels]}</dd>
               </div>
-            )}
-            {plan.constraints.timeline && (
-              <div>
-                <dt>Twój termin</dt>
-                <dd>{plan.constraints.timeline}</dd>
-              </div>
-            )}
-          </dl>
-        </details>
+            ))}
+        </dl>
       </section>
-      <details className="plan-details" open={expanded}>
-        <summary>Pełny plan: kroki, zasoby i pilotaż</summary>
-        <p className="help">
-          Prywatny plan roboczy · wersja {plan.revision}
-          {plan.editedByOwner ? " · zmieniona przez autora" : ""}.
-        </p>
-        {Object.entries(draftLabels).map(([key, label]) => (
-          <section className="card" key={key}>
-            <h2>{label}</h2>
-            {show(plan.draft[key as keyof typeof draftLabels])}
-          </section>
-        ))}
-        <section className="card">
-          <h2>Propozycja pilotażu</h2>
-          {Object.entries(pilotLabels).map(([key, label]) => (
-            <div key={key}>
-              <h3>{label}</h3>
-              {show(plan.draft.pilot[key as keyof typeof pilotLabels])}
-            </div>
+      {expanded && (
+        <div>
+          {Object.entries(draftLabels).map(([key, label]) => (
+            <section className={styles.section} key={key}>
+              <h2>{label}</h2>
+              {show(plan.draft[key as keyof typeof draftLabels])}
+            </section>
           ))}
-        </section>
-      </details>
+          <section className={styles.section}>
+            <h2>Propozycja pilotażu</h2>
+            {Object.entries(pilotLabels).map(([key, label]) => (
+              <div key={key}>
+                <h3>{label}</h3>
+                {show(plan.draft.pilot[key as keyof typeof pilotLabels])}
+              </div>
+            ))}
+          </section>
+        </div>
+      )}
     </div>
   );
 }

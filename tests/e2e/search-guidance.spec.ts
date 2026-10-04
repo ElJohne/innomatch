@@ -17,10 +17,9 @@ test("three-character input, preserved clarification and urgent help before subm
     fullPage: true,
   });
   await page.getByLabel("Jakiej pomocy potrzebujesz?").fill("abc");
-  await page.getByRole("button", { name: "Znajdź wsparcie" }).click();
-  await page.getByRole("button", { name: "Tak, wszystko się zgadza" }).click();
+  await page.getByRole("button", { name: "Znajdź pomoc" }).click();
   await expect(
-    page.getByRole("heading", { name: "Pomóż nam lepiej zrozumieć" }),
+    page.getByRole("heading", { name: "Powiedz nam trochę więcej" }),
   ).toBeVisible();
   const originalUrl = page.url();
   const answer =
@@ -28,12 +27,10 @@ test("three-character input, preserved clarification and urgent help before subm
   await page
     .getByLabel("Co się wydarzyło lub w czym najbardziej potrzebujesz pomocy?")
     .fill(answer);
-  await page
-    .getByRole("button", { name: "Uwzględnij odpowiedź i szukaj" })
-    .click();
+  await page.getByRole("button", { name: "Szukaj →" }).click();
   await expect(page).not.toHaveURL(originalUrl);
   await expect(
-    page.getByRole("heading", { name: "Rozwiązania pasujące do części potrzeby", exact: true }),
+    page.getByRole("heading", { name: "Wybierz pomoc", exact: true }),
   ).toBeVisible();
   const id = page.url().split("/").at(-1);
   const body = await (await page.request.get(`/api/needs/${id}`)).json();
@@ -46,7 +43,7 @@ test("three-character input, preserved clarification and urgent help before subm
   expect((await request.get(`/api/needs/${id}`)).status()).toBe(404);
   await page.reload();
   await expect(
-    page.getByRole("heading", { name: "Rozwiązania pasujące do części potrzeby", exact: true }),
+    page.getByRole("heading", { name: "Wybierz pomoc", exact: true }),
   ).toBeVisible();
 });
 
@@ -55,14 +52,11 @@ test("skip clarification reaches a saved result and stays there on refresh", asy
 }) => {
   await page.goto("/");
   await page.getByLabel("Jakiej pomocy potrzebujesz?").fill("Pomocy");
-  await page.getByRole("button", { name: "Znajdź wsparcie" }).click();
-  await page.getByRole("button", { name: "Tak, wszystko się zgadza" }).click();
-  await page
-    .getByRole("button", { name: "Pokaż wyniki bez dodatkowych odpowiedzi" })
-    .click();
+  await page.getByRole("button", { name: "Znajdź pomoc" }).click();
+  await page.getByRole("button", { name: "Pomiń pytanie" }).click();
   await expect(
     page.getByRole("heading", {
-      name: "Nie znaleźliśmy wystarczającego dopasowania",
+      name: "Nie znaleźliśmy pasującego rozwiązania",
     }),
   ).toBeVisible();
   const id = page.url().split("/").at(-1);
@@ -75,7 +69,7 @@ test("skip clarification reaches a saved result and stays there on refresh", asy
     page.getByRole("heading", { name: "Doprecyzujmy razem" }),
   ).toHaveCount(0);
   await expect(
-    page.getByRole("link", { name: "Zapytaj koordynatora" }),
+    page.getByRole("button", { name: "Poproś o pomoc →" }),
   ).toBeVisible();
 });
 

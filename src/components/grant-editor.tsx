@@ -21,6 +21,7 @@ import {
   type GrantSuggestion,
 } from "@/lib/contracts/grant";
 import { GrantSource, GrantView } from "./grant-view";
+import { IdeaNav } from "./idea-nav";
 
 async function request(url: string, method: string, body: unknown) {
   const response = await fetch(url, {
@@ -117,6 +118,7 @@ export function GrantEditor({
           Szkic demonstracyjny — dane syntetyczne, zapisywane w pamięci procesu.
         </p>
       )}
+      <IdeaNav id={idea.id} current="grant" disabled={dirty} />
       <GrantSource />
       <p className="help">
         Uzupełnione pola: {completed}/{Object.keys(grantFields).length}. Możesz
@@ -168,20 +170,16 @@ export function GrantEditor({
           </legend>
           <GrantFormal draft={draft} onChange={change} />
           {groups.map((group) => (
-            <details className="canvas-section" key={group.title}>
-              <summary>{group.title}</summary>
+            <section className="canvas-section" key={group.title}>
+              <h2>{group.title}</h2>
               <div className="stack">
                 {group.keys.map((key) => (
                   <div key={key}>
                     <label htmlFor={`grant-${key}`}>
                       {grantFields[key].label}
                     </label>
-                    <p className="help" id={`grant-${key}-hint`}>
-                      {grantFields[key].hint}
-                    </p>
                     <textarea
                       id={`grant-${key}`}
-                      aria-describedby={`grant-${key}-hint`}
                       rows={key === "title" ? 2 : 5}
                       maxLength={grantFields[key].maxLength}
                       value={draft.sections[key]}
@@ -198,10 +196,10 @@ export function GrantEditor({
                   </div>
                 ))}
               </div>
-            </details>
+            </section>
           ))}
-          <details className="canvas-section">
-            <summary>Dane i źródła diagnozy</summary>
+          <section className="canvas-section">
+            <h2>Dane i źródła diagnozy</h2>
             <GrantResources
               items={resources}
               diagnosis={draft.sections.diagnosis}
@@ -211,9 +209,9 @@ export function GrantEditor({
               diagnosis={draft.sections.diagnosis}
               onAppend={appendDiagnosis}
             />
-          </details>
-          <details className="canvas-section">
-            <summary>Plan kosztów i wnioskowana kwota</summary>
+          </section>
+          <section className="canvas-section">
+            <h2>Plan kosztów</h2>
             <div className="stack">
               <p className="help">
                 Czas całych okresów z formularza: przygotowanie do 3 miesięcy,
@@ -376,7 +374,7 @@ export function GrantEditor({
                   "Uzupełnij działania, terminy i koszty, aby ustalić pełną kwotę."}
               </p>
             </div>
-          </details>
+          </section>
         </fieldset>
         <button disabled={busy || !dirty}>
           {busy ? "Zapisywanie…" : "Zapisz szkic grantowy"}
@@ -408,11 +406,7 @@ export function GrantEditor({
             {suggestion.mode === "mock" && (
               <p className="help">Propozycja demonstracyjna.</p>
             )}
-            <p>{suggestion.sections.description.split(/(?<=[.!?])\s/)[0]}</p>
-            <details>
-              <summary>Cały proponowany szkic</summary>
-              <GrantView draft={{ ...draft, sections: suggestion.sections }} />
-            </details>
+            <GrantView draft={{ ...draft, sections: suggestion.sections }} />
             <button
               disabled={busy}
               onClick={() => {
@@ -426,7 +420,7 @@ export function GrantEditor({
           </div>
         )}
       </section>
-      {initial.grantDraft && (
+      {idea.grantDraft && !dirty && (
         <Link className="button secondary" href={`/pomysly/${idea.id}/podglad`}>
           Podgląd i druk zapisanej karty ze szkicem
         </Link>
@@ -449,9 +443,6 @@ export function GrantEditor({
           {error}
         </p>
       )}
-      <Link href={`/pomysly/${idea.id}`}>
-        Wróć do karty i konsultacji pomysłu
-      </Link>
     </div>
   );
 }

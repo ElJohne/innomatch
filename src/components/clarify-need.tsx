@@ -28,7 +28,7 @@ export function ClarifyNeed({
       .map((question, i) => ({ question, answer: answers[i]?.trim() ?? "" }))
       .filter((x) => x.answer);
     if (!extra.length && !skip) {
-      setError("Odpowiedz na przynajmniej jedno pytanie.");
+      setError("Wpisz odpowiedź lub wybierz „Pomiń pytanie”.");
       return;
     }
     setBusy(true);
@@ -69,21 +69,15 @@ export function ClarifyNeed({
         void submit();
       }}
     >
-      <details>
-        <summary>Twój dotychczasowy opis</summary>
-        <p>{input.description}</p>
-        {input.clarifications?.map((x, i) => (
-          <p key={i}>
-            {x.question} {x.answer}
-          </p>
-        ))}
-      </details>
       {shown.map((q, i) => (
         <div key={q}>
           <label htmlFor={`answer-${i}`}>{q}</label>
           <textarea
             id={`answer-${i}`}
             maxLength={500}
+            disabled={busy}
+            aria-invalid={!!error}
+            aria-describedby={error ? "clarification-error" : undefined}
             value={answers[i] ?? ""}
             onChange={(e) => {
               setAnswers((a) => {
@@ -98,7 +92,7 @@ export function ClarifyNeed({
       ))}
       {urgentSignal(answers.join("\n")) && <UrgentHelp prominent />}
       {error && (
-        <p role="alert" className="error">
+        <p id="clarification-error" role="alert" className="error">
           {error}
         </p>
       )}

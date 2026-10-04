@@ -12,27 +12,23 @@ import {
   type GrantKey,
 } from "@/lib/contracts/grant";
 
-export function GrantSource({ compact = true }: { compact?: boolean }) {
+export function GrantSource() {
   return (
     <div className="note">
       <p>
         <strong>{grantTemplate.title} — nabór zakończony.</strong>
       </p>
-      <details open={!compact}>
-        <summary>Formularz i aktualne nabory</summary>
-        <p className="help">
-          Szablon archiwalny: 13.11–13.12.2024. Wersja {grantTemplate.version}.
-          Zapis szkicu nie jest złożeniem wniosku.
-        </p>
-        <div className="actions">
-          <a href={grantTemplate.sourceUrl} target="_blank" rel="noreferrer">
-            Formularz ROPS (PDF) ↗
-          </a>
-          <a href={grantTemplate.callsUrl} target="_blank" rel="noreferrer">
-            Aktualne nabory ↗
-          </a>
-        </div>
-      </details>
+      <p className="help">
+        Szablon archiwalny z 2024 r. Zapis szkicu nie jest złożeniem wniosku.
+      </p>
+      <div className="actions">
+        <a href={grantTemplate.sourceUrl} target="_blank" rel="noreferrer">
+          Formularz ROPS (PDF) ↗
+        </a>
+        <a href={grantTemplate.callsUrl} target="_blank" rel="noreferrer">
+          Aktualne nabory ↗
+        </a>
+      </div>
     </div>
   );
 }
@@ -41,7 +37,7 @@ export function GrantView({ draft }: { draft: GrantDraft }) {
   return (
     <section className="stack grant-preview">
       <h2>Szkic formularza grantowego</h2>
-      <GrantSource compact={false} />
+      <GrantSource />
       {draft.applicant && (
         <section className="stack">
           <h3>2. Dane pomysłodawcy</h3>

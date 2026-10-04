@@ -5,10 +5,9 @@ import { session } from "@/server/auth/session";
 import { threadQueue } from "@/server/services/communication";
 import { queueQuery } from "@/lib/contracts/communication";
 import { ThreadList } from "@/components/thread-list";
-import {
-  LogoutButton,
-  RefreshMessages,
-} from "@/components/communication-forms";
+import { RefreshMessages } from "@/components/communication-forms";
+import { AdminNavigation } from "./admin-navigation";
+import styles from "./admin.module.css";
 export default async function AdminPage({
   searchParams,
 }: {
@@ -25,22 +24,22 @@ export default async function AdminPage({
   });
   const { items, unreadMessages: unread } = result;
   return (
-    <section className="narrow">
-      <p className="eyebrow">Panel koordynatora</p>
-      <h1>Skrzynka zgłoszeń</h1>
-      <p className="lead">
-        Wspólna skrzynka upoważnionego personelu. Otwarcie rozmowy oznacza
-        widoczne wiadomości jako przeczytane dla zespołu.
-      </p>
-      <p role="status">
-        Nieprzeczytane wiadomości we wszystkich rozmowach:{" "}
-        <strong>{unread}</strong>
-      </p>
-      <p className="help">
-        Rozmowy: {result.total}. Strona {result.page}. Odśwież skrzynkę, aby
-        sprawdzić nowe zgłoszenia.
-      </p>
-      <nav className="actions" aria-label="Filtr rozmów">
+    <section className={styles.page}>
+      <AdminNavigation active="inbox" isAdmin={a.staff.role === "ADMIN"} />
+      <header className={styles.heading}>
+        <h1>Skrzynka zgłoszeń</h1>
+        <RefreshMessages />
+      </header>
+      <div className={styles.toolbar}>
+        <p role="status">
+          <strong>{unread}</strong> nieprzeczytanych wiadomości · {result.total}{" "}
+          rozmów
+        </p>
+        <p className="help">
+          Otwarcie rozmowy oznacza ją jako przeczytaną dla zespołu.
+        </p>
+      </div>
+      <nav className={styles.tabs} aria-label="Filtr rozmów">
         <Link
           href="/admin"
           aria-current={query.unread === "0" ? "page" : undefined}
@@ -54,25 +53,6 @@ export default async function AdminPage({
           Tylko nieprzeczytane
         </Link>
       </nav>
-      <div className="actions">
-        {a.staff.role === "ADMIN" && (
-          <Link className="button secondary" href="/admin/statystyki">
-            Statystyki potrzeb
-          </Link>
-        )}
-        {a.staff.role === "ADMIN" && (
-          <Link className="button secondary" href="/admin/opinie">
-            Moderacja opinii
-          </Link>
-        )}
-        {a.staff.role === "ADMIN" && (
-          <Link className="button" href="/admin/katalog">
-            Katalog i wiedza
-          </Link>
-        )}
-        <RefreshMessages />
-        <LogoutButton />
-      </div>
       <ThreadList items={items} />
       <nav className="actions" aria-label="Strony rozmów">
         {result.page > 1 && (

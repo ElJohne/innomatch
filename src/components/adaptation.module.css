@@ -1,0 +1,86 @@
+.heading {
+  padding-block: 1rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.field {
+  min-width: 0;
+}
+
+.step {
+  border-left: 4px solid var(--green);
+}
+
+.facts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin-bottom: 0;
+}
+
+.facts dt {
+  font-weight: 700;
+}
+
+.facts dd {
+  margin: 0.4rem 0 0;
+  overflow-wrap: anywhere;
+}
+
+.section {
+  padding-block: 1rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.section h2 {
+  margin-top: 0;
+}
+
+.formActions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+@media (max-width: 650px) {
+  .fields,
+  .facts {
+    grid-template-columns: 1fr;
+  }
+}
+
+.page {
+  padding-block: 32px;
+  gap: 16px;
+}
+.page .heading {
+  display: grid;
+  gap: 8px;
+  padding: 0 0 16px;
+}
+.page .heading h1,
+.page .heading p {
+  margin: 0;
+}
+.page .heading h1 {
+  font-size: clamp(1.8rem, 3vw, 2.4rem);
+}
+.page :global(.actions) {
+  margin: 0;
+}
+.body {
+  gap: 16px;
+}
+.body h2 {
+  margin: 0 0 12px;
+}
+.body p {
+  margin-bottom: 0;
+}
